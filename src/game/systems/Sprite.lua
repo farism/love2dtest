@@ -1,5 +1,6 @@
 local Aspect = require('ecs/Aspect')
 local System = require('ecs/System')
+local Position = require('game/components/Position')
 local Sprite = require('game/components/Sprite')
 local constants = require('game/systems/constants')
 
@@ -10,16 +11,17 @@ local SpriteSystem = {
 local function noop()
 end
 
-function draw(entities)
+local function draw(entities)
   for _, entity in pairs(entities) do
     local sprite = entity:as(Sprite)
+    local position = entity:as(Position)
 
-    love.graphics.draw(sprite.image, sprite.frame, 0, 0)
+    love.graphics.draw(sprite.image, sprite.frame, position.x, position.y)
   end
 end
 
 function SpriteSystem:new()
-  local aspect = Aspect:new({Sprite})
+  local aspect = Aspect:new({Sprite, Position})
   local system = System:new('sprite', aspect, noop, noop, draw)
 
   return system

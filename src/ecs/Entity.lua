@@ -8,6 +8,10 @@ function Entity:new(id, manager)
     systems = 0
   }
 
+  function entity:has(cmp)
+    return bit.band(self.components, cmp._meta.flag) == cmp._meta.flag
+  end
+
   function entity:as(cmp)
     return self.manager:getComponent(self, cmp)
   end

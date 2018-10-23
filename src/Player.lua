@@ -4,31 +4,18 @@ local Player = {}
 
 function Player:new(world)
   local player = {}
-  setmetatable(player, self)
+  local body = love.physics.newBody(world, 0, 0, 'dynamic')
+  body:setLinearDamping(0.1)
+  body:setFixedRotation(true)
+  local shape = love.physics.newRectangleShape(16, 22)
+  local fixture = love.physics.newFixture(body, shape, 1)
 
-  function player:jump()
-  end
-
-  function player:jumpReset()
-  end
-
-  function player:jump()
-  end
-  -- local body = love.physics.newBody(world, 0, 0, 'dynamic')
-  -- body:setLinearDamping(0.1)
-  -- body:setFixedRotation(true)
-
-  -- local shape = love.physics.newRectangleShape(16, 22)
-  -- local fixture = love.physics.newFixture(body, shape, 1)
-
-  -- fixture:setUserData({player = true})
-
-  -- return {
-  --   spritesheet = Spritesheet.create('assets/sprites/player.png', 8, 0.3),
-  --   body = body,
-  --   shape = shape,
-  --   fixture = fixture
-  -- }
+  return {
+    spritesheet = Spritesheet.create('assets/sprites/player.png', 8, 0.3),
+    body = body,
+    shape = shape,
+    fixture = fixture
+  }
 end
 
 function Player.jump(player)
@@ -63,12 +50,12 @@ function Player.draw(player)
     player.body:getY() - 16
   )
 
-  -- love.graphics.setColor(255, 255, 255, 0.5)
+  love.graphics.setColor(255, 255, 255, 0.5)
 
-  -- love.graphics.polygon(
-  --   'fill',
-  --   player.body:getWorldPoints(player.shape:getPoints())
-  -- )
+  love.graphics.polygon(
+    'fill',
+    player.body:getWorldPoints(player.shape:getPoints())
+  )
 end
 
 return Player

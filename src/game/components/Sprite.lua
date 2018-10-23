@@ -7,15 +7,13 @@ local Sprite = {
 
 function Sprite:new(id, file, x, y, width, height)
   local image = Asset.getImage(file)
-  local imageWidth, imageHeight = image:getDimensions()
   local frame =
     love.graphics.newQuad(
     x or 0,
     y or 0,
     width or 32,
     height or 32,
-    imageWidth,
-    imageHeight
+    image:getDimensions()
   )
 
   return {
