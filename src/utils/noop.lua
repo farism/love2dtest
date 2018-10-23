@@ -1,0 +1,2 @@
+local function noop()
+end
