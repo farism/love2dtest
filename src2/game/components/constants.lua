@@ -1,4 +1,4 @@
-local flag = require 'utils.flag'
+local flag = require 'game.utils.flag'
 
 local constants = {}
 

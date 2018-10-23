@@ -1,4 +1,4 @@
-local Entity = require('ecs/entity')
+local Entity = require 'ecs.entity'
 
 local Manager = {}
 

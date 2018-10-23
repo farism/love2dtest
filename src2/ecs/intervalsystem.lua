@@ -1,11 +1,11 @@
-local Aspect = require('ecs/Aspect')
+local Aspect = require 'ecs.aspect'
 
-local VoidSystem = {}
+local IntervalSystem = {}
 
 local function noop()
 end
 
-function VoidSystem:new(id, world, aspect, input, update, draw)
+function IntervalSystem:new(id, aspect, interval, input, update, draw)
   local input = input or noop
   local update = update or noop
   local draw = draw or noop
@@ -13,6 +13,8 @@ function VoidSystem:new(id, world, aspect, input, update, draw)
   local system = {
     id = id,
     aspect = aspect or Aspect:new(),
+    interval = interval or 1,
+    elapsed = 0,
     entities = {}
   }
 
@@ -33,7 +35,14 @@ function VoidSystem:new(id, world, aspect, input, update, draw)
   end
 
   function system:update(dt)
-    update(dt, self.entities)
+    local elapsed = self.elapsed + dt
+
+    if (elapsed >= self.interval) then
+      self.elapsed = elapsed - self.interval
+      update(self.entities)
+    else
+      self.elapsed = elapsed
+    end
   end
 
   function system:draw()
@@ -43,4 +52,4 @@ function VoidSystem:new(id, world, aspect, input, update, draw)
   return system
 end
 
-return VoidSystem
+return IntervalSystem

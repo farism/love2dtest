@@ -1,23 +1,25 @@
-local sleep = require 'utils.sleep'
+local Layout = require 'vendor.luigi.layout'
 
-local Manager = require 'ecs.Manager'
-local Entity = require 'ecs.Entity'
-local Aspect = require 'ecs.Aspect'
+local Manager = require 'ecs.manager'
+local Entity = require 'ecs.entity'
+local Aspect = require 'ecs.aspect'
 
-local Fixture = require 'game.components.Fixture'
-local Input = require 'game.components.Input'
-local Player = require 'game.components.Player'
-local Position = require 'game.components.Position'
-local Sprite = require 'game.components.Sprite'
-local Spritesheet = require 'game.components.Spritesheet'
-local Velocity = require 'game.components.Velocity'
+local Fixture = require 'game.components.fixture'
+local Input = require 'game.components.input'
+local Player = require 'game.components.player'
+local Position = require 'game.components.position'
+local Sprite = require 'game.components.sprite'
+local Spritesheet = require 'game.components.spritesheet'
+local Velocity = require 'game.components.velocity'
 
-local InputSystem = require 'game.systems.Input'
-local LoggerSystem = require 'game.systems.Logger'
-local MovementSystem = require 'game.systems.Movement'
-local ProjectileSystem = require 'game.systems.Projectile'
-local FixtureRenderSystem = require 'game.systems.FixtureRender'
-local SpriteRenderSystem = require 'game.systems.SpriteRender'
+local InputSystem = require 'game.systems.input'
+local LoggerSystem = require 'game.systems.logger'
+local MovementSystem = require 'game.systems.movement'
+local ProjectileSystem = require 'game.systems.projectile'
+local FixtureRenderSystem = require 'game.systems.fixturerender'
+local SpriteRenderSystem = require 'game.systems.spriterender'
+
+local sleep = require 'game.utils.sleep'
 
 local world = nil
 local manager = nil

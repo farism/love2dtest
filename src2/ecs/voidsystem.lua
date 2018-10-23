@@ -1,11 +1,11 @@
-local Aspect = require('ecs/Aspect')
+local Aspect = require 'ecs.Aspect'
 
-local System = {}
+local VoidSystem = {}
 
 local function noop()
 end
 
-function System:new(id, aspect, input, update, draw)
+function VoidSystem:new(id, world, aspect, input, update, draw)
   local input = input or noop
   local update = update or noop
   local draw = draw or noop
@@ -28,7 +28,7 @@ function System:new(id, aspect, input, update, draw)
 
   -- callbacks
 
-  function system:input(key, scancode, isRepeat, isPressed)
+  function system:input(key, scancode, isRepeat)
     input(key, scancode, isRepeat, isPressed, self.entities)
   end
 
@@ -43,4 +43,4 @@ function System:new(id, aspect, input, update, draw)
   return system
 end
 
-return System
+return VoidSystem

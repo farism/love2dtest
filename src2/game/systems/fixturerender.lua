@@ -1,6 +1,6 @@
-local Aspect = require 'ecs.Aspect'
-local System = require 'ecs.System'
-local Fixture = require 'game.components.Fixture'
+local Aspect = require 'ecs.aspect'
+local System = require 'ecs.system'
+local Fixture = require 'game.components.fixture'
 local constants = require 'game.systems.constants'
 
 local FixtureRenderSystem = {

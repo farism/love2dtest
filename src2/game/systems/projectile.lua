@@ -1,6 +1,6 @@
-local Aspect = require 'ecs.Aspect'
-local System = require 'ecs.System'
-local Projectile = require 'game.components.Projectile'
+local Aspect = require 'ecs.aspect'
+local System = require 'ecs.system'
+local Projectile = require 'game.components.projectile'
 local constants = require 'game.systems.constants'
 
 local ProjectileSystem = {

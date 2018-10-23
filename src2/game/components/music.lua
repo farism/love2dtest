@@ -1,4 +1,4 @@
-local Asset = require 'utils.Asset'
+local Asset = require 'game.utils.Asset'
 local constants = require 'game.components.constants'
 
 local Music = {

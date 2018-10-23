@@ -1,11 +1,11 @@
-local Aspect = require('ecs/Aspect')
+local Aspect = require 'ecs.Aspect'
 
-local IntervalSystem = {}
+local System = {}
 
 local function noop()
 end
 
-function IntervalSystem:new(id, aspect, interval, input, update, draw)
+function System:new(id, aspect, input, update, draw)
   local input = input or noop
   local update = update or noop
   local draw = draw or noop
@@ -13,8 +13,6 @@ function IntervalSystem:new(id, aspect, interval, input, update, draw)
   local system = {
     id = id,
     aspect = aspect or Aspect:new(),
-    interval = interval or 1,
-    elapsed = 0,
     entities = {}
   }
 
@@ -30,19 +28,12 @@ function IntervalSystem:new(id, aspect, interval, input, update, draw)
 
   -- callbacks
 
-  function system:input(key, scancode, isRepeat)
+  function system:input(key, scancode, isRepeat, isPressed)
     input(key, scancode, isRepeat, isPressed, self.entities)
   end
 
   function system:update(dt)
-    local elapsed = self.elapsed + dt
-
-    if (elapsed >= self.interval) then
-      self.elapsed = elapsed - self.interval
-      update(self.entities)
-    else
-      self.elapsed = elapsed
-    end
+    update(dt, self.entities)
   end
 
   function system:draw()
@@ -52,4 +43,4 @@ function IntervalSystem:new(id, aspect, interval, input, update, draw)
   return system
 end
 
-return IntervalSystem
+return System

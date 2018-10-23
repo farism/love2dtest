@@ -1,6 +1,6 @@
-local Aspect = require 'ecs.Aspect'
-local IntervalSystem = require 'ecs.IntervalSystem'
-local Sprite = require 'game.components.Sprite'
+local Aspect = require 'ecs.aspect'
+local IntervalSystem = require 'ecs.intervalsystem'
+local Sprite = require 'game.components.sprite'
 local constants = require 'game.systems.constants'
 
 local Logger = {

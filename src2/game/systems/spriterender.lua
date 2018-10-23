@@ -1,7 +1,7 @@
-local Aspect = require 'ecs.Aspect'
-local System = require 'ecs.System'
-local Position = require 'game.components.Position'
-local Sprite = require 'game.components.Sprite'
+local Aspect = require 'ecs.aspect'
+local System = require 'ecs.system'
+local Position = require 'game.components.position'
+local Sprite = require 'game.components.sprite'
 local constants = require 'game.systems.constants'
 
 local SpriteRenderSystem = {
