@@ -81,6 +81,23 @@ function love.load()
     )
   )
 
+  for i = 1, 10 do
+    local mob = manager:newEntity()
+    manager:addComponent(mob, Sprite:new(1, 'assets/sprites/player.png'))
+    manager:addComponent(mob, Position:new(1))
+    manager:addComponent(mob, Velocity:new(1))
+    manager:addComponent(
+      mob,
+      Fixture:new(
+        1,
+        {},
+        {world, 0 + i * 64, 0, Fixture.DYNAMIC},
+        {Fixture.RECTANGLE, 32, 32},
+        1
+      )
+    )
+  end
+
   local ground = manager:newEntity()
   manager:addComponent(
     ground,
@@ -100,8 +117,8 @@ function love.update(dt)
 end
 
 function love.draw()
-  -- manager:draw()
   hud:draw()
+  manager:draw()
 end
 
 function love.keypressed(key, scancode, isRepeat)

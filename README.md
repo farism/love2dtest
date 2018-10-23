@@ -76,14 +76,13 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 
 ### Snares
 
--Freezing stream
-
+- Freezing stream
 - Hail
 
 ### Root
 
--Polar bear trap
--Frozen blast
+- Polar bear trap
+- Frozen blast
 
 ## Monsters
 

@@ -26,7 +26,7 @@ local function draw(entities)
 end
 
 function SpriteRenderSystem:new()
-  local aspect = Aspect:new({Sprite, Position})
+  local aspect = Aspect:new({Sprite})
   local system = System:new('sprite_render', aspect, noop, noop, draw)
 
   return system

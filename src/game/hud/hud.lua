@@ -6,12 +6,11 @@ function HUD:new()
   local hud = {}
 
   function hud:update(dt)
-    -- if suit.Button('Hello, World!', 100, 100, 300, 30).hit then
-    --   show_message = true
-    -- end
-    -- if show_message then
-    --   suit.Label('How are you today?', 100, 150, 300, 30)
-    -- end
+    if suit.Button('Play', (800 - 300) / 2, 100, 300, 30).hit then
+    end
+
+    if suit.Button('Settings', (800 - 300) / 2, 160, 300, 30).hit then
+    end
   end
 
   function hud:draw(dt)
