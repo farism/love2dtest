@@ -16,18 +16,40 @@ local InputSystem = require 'game/systems/Input'
 local LoggerSystem = require 'game/systems/Logger'
 local MovementSystem = require 'game/systems/Movement'
 local ProjectileSystem = require 'game/systems/Projectile'
-local SpriteSystem = require 'game/systems/Sprite'
+local FixtureRenderSystem = require 'game/systems/FixtureRender'
+local SpriteRenderSystem = require 'game/systems/SpriteRender'
 
 local world = nil
 local manager = nil
 
-local function newWorld(meter)
+local function resetJumps(a, b, contact)
+  local aData = a:getUserData()
+  local bData = b:getUserData()
+  local entity = nil
+
+  if (aData.isPlayer and b:getBody():getType() == Fixture.STATIC) then
+    entity = aData.entity
+  elseif (bData.isPlayer and a:getBody():getType() == Fixture.STATIC) then
+    entity = bData.entity
+  end
+
+  if entity then
+    entity:as(Input).jumps = 0
+  end
+end
+
+local function newWorld(meter, manager)
   love.physics.setMeter(meter)
 
-  return love.physics.newWorld(0, 9.81 * meter, true)
+  local world = love.physics.newWorld(0, 9.81 * meter, true)
+  world.setCallbacks(world, resetJumps)
+
+  return world
 end
 
 function love.load()
+  love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
+
   world = newWorld(100)
 
   manager = Manager:new()
@@ -35,7 +57,8 @@ function love.load()
   manager:addSystem(LoggerSystem:new())
   manager:addSystem(MovementSystem:new())
   manager:addSystem(ProjectileSystem:new())
-  manager:addSystem(SpriteSystem:new())
+  manager:addSystem(FixtureRenderSystem:new())
+  manager:addSystem(SpriteRenderSystem:new())
 
   local player = manager:newEntity()
   manager:addComponent(player, Input:new(1))
@@ -44,10 +67,25 @@ function love.load()
   manager:addComponent(player, Velocity:new(1))
   manager:addComponent(
     player,
-    Fixture:new(1, {world, 0, 0, Fixture.DYNAMIC}, {Fixture.RECTANGLE, 32, 32})
+    Fixture:new(
+      1,
+      {isPlayer = true, entity = player},
+      {world, 0, 0, Fixture.DYNAMIC},
+      {Fixture.RECTANGLE, 32, 32},
+      1
+    )
   )
 
-  love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
+  local ground = manager:newEntity()
+  manager:addComponent(
+    ground,
+    Fixture:new(
+      1,
+      {},
+      {world, 800 / 2, 480 - 15, Fixture.STATIC},
+      {Fixture.RECTANGLE, 800, 30}
+    )
+  )
 end
 
 function love.update(dt)

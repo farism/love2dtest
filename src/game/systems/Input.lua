@@ -9,6 +9,10 @@ local function noop()
 end
 
 local function input(key, scancode, isRepeat, isPressed, entities)
+  for _, entity in pairs(entities) do
+    local input = entity:as(Input)
+    input.jump = key == 'space' and isPressed
+  end
 end
 
 local function update(dt, entities)

@@ -71,11 +71,19 @@ function Manager:new()
   -- managing systems
 
   function manager:addSystem(sys)
-    self.systems[sys.id] = sys
+    table.insert(self.systems, sys)
   end
 
   function manager:removeSystem(sys)
-    self.systems[sys.id] = nil
+    local position = nil
+
+    for i, system in self.systems do
+      if system.id == sys then
+        position = i
+      end
+    end
+
+    table.remove(self.systems, position)
   end
 
   function manager:check(entity)

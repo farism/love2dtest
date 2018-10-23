@@ -33,9 +33,10 @@ local function update(dt, entities)
         newVelocityX = input.left and -200 or newVelocityX
         newVelocityX = input.right and 200 or newVelocityX
 
-        if (input.jump) then
-          newVelocityY = 200
+        if (input.jump and input.jumps < 2) then
+          newVelocityY = -500
           input.jump = false
+          input.jumps = input.jumps + 1
         end
 
         body:setLinearVelocity(newVelocityX, newVelocityY)

@@ -31,35 +31,24 @@ local function newShape(type, ...)
   end
 end
 
-function Fixture:new(id, body, shape, density)
-  local fixture = {
+function Fixture:raw(id, data, body, shape, density)
+  local fixture = love.physics.newFixture(body, shape, density or 1)
+  fixture:setUserData(data or {})
+
+  return {
     _meta = Fixture._meta,
     id = id,
     body = body,
     shape = shape,
-    fixture = love.physics.newFixture(
-      newBody(unpack(body)),
-      newShape(unpack(shape)),
-      density or 1
-    )
+    fixture = fixture
   }
-
-  return fixture
 end
 
-function Fixture:raw(id, body, shape)
-  local fixture = {
-    _meta = Fixture._meta,
-    id = id,
-    body = body,
-    shape = shape
-  }
+function Fixture:new(id, data, body, shape, density)
+  local body = newBody(unpack(body))
+  local shape = newShape(unpack(shape))
 
-  fixture.body = body
-  fixture.shape = shape
-  fixture.fixture = love.physics.newFixture(body, shape)
-
-  return fixture
+  return Fixture:raw(id, data, body, shape, density)
 end
 
 return Fixture
