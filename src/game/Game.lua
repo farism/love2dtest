@@ -1,8 +1,8 @@
-local Layout = require 'vendor.luigi.layout'
-
 local Manager = require 'ecs.manager'
 local Entity = require 'ecs.entity'
 local Aspect = require 'ecs.aspect'
+
+local HUD = require 'game.hud.hud'
 
 local Fixture = require 'game.components.fixture'
 local Input = require 'game.components.input'
@@ -23,6 +23,7 @@ local sleep = require 'game.utils.sleep'
 
 local world = nil
 local manager = nil
+local hud = nil
 
 local function resetJumps(a, b, contact)
   local aData = a:getUserData()
@@ -51,6 +52,8 @@ end
 
 function love.load()
   love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
+
+  hud = HUD:new()
 
   world = newWorld(100)
 
@@ -93,10 +96,12 @@ end
 function love.update(dt)
   world:update(dt)
   manager:update(dt)
+  hud:update(dt)
 end
 
 function love.draw()
-  manager:draw()
+  -- manager:draw()
+  hud:draw()
 end
 
 function love.keypressed(key, scancode, isRepeat)

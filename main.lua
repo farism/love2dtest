@@ -1,4 +1,4 @@
-require 'game/Game'
+require 'game.game'
 
 -- function love.load()
 --   love.physics.setMeter(64) --the height of a meter our worlds will be 64px
