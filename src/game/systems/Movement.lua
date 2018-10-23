@@ -1,10 +1,10 @@
-local Aspect = require('ecs/Aspect')
-local System = require('ecs/System')
-local constants = require('game/systems/constants')
-local Fixture = require('game/components/Fixture')
-local Input = require('game/components/Input')
-local Position = require('game/components/Position')
-local Velocity = require('game/components/Velocity')
+local Aspect = require 'ecs.Aspect'
+local System = require 'ecs.System'
+local constants = require 'game.systems.constants'
+local Fixture = require 'game.components.Fixture'
+local Input = require 'game.components.Input'
+local Position = require 'game.components.Position'
+local Velocity = require 'game.components.Velocity'
 
 local MovementSystem = {
   _meta = constants.Movement

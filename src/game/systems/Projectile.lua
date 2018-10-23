@@ -1,7 +1,7 @@
-local Aspect = require('ecs/Aspect')
-local System = require('ecs/System')
-local Projectile = require('game/components/Projectile')
-local constants = require('game/systems/constants')
+local Aspect = require 'ecs.Aspect'
+local System = require 'ecs.System'
+local Projectile = require 'game.components.Projectile'
+local constants = require 'game.systems.constants'
 
 local ProjectileSystem = {
   _meta = constants.Projectile

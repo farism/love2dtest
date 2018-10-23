@@ -1,7 +1,7 @@
-local Aspect = require('ecs/Aspect')
-local IntervalSystem = require('ecs/IntervalSystem')
-local Sprite = require('game/components/Sprite')
-local constants = require('game/systems/constants')
+local Aspect = require 'ecs.Aspect'
+local IntervalSystem = require 'ecs.IntervalSystem'
+local Sprite = require 'game.components.Sprite'
+local constants = require 'game.systems.constants'
 
 local Logger = {
   _meta = constants.Logger

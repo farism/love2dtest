@@ -1,4 +1,4 @@
-local constants = require('game/components/constants')
+local constants = require 'game.components.constants'
 
 local Velocity = {
   _meta = constants.Velocity

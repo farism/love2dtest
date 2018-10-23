@@ -1,7 +1,7 @@
-local Aspect = require('ecs/Aspect')
-local System = require('ecs/System')
-local Input = require('game/components/Input')
-local constants = require('game/systems/constants')
+local Aspect = require 'ecs.Aspect'
+local System = require 'ecs.System'
+local Input = require 'game.components.Input'
+local constants = require 'game.systems.constants'
 
 local InputSystem = {}
 

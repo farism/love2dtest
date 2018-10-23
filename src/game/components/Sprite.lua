@@ -1,5 +1,5 @@
-local Asset = require('utils/Asset')
-local constants = require('game/components/constants')
+local Asset = require 'utils.Asset'
+local constants = require 'game.components.constants'
 
 local Sprite = {
   _meta = constants.Sprite
