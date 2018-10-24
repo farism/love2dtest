@@ -13,7 +13,9 @@ constants = {
   Sound = {id = 'movement', flag = flag(8)},
   Sprite = {id = 'sprite', flag = flag(9)},
   Spritesheet = {id = 'spritesheet', flag = flag(10)},
-  Velocity = {id = 'velocity', flag = flag(11)}
+  Velocity = {id = 'velocity', flag = flag(11)},
+  Checkpoint = {id = 'checkpoint', flag = flag(5)},
+  Snare = {id = 'snare', flag = flag(12)}
 }
 
 return constants

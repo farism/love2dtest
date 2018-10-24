@@ -11,8 +11,8 @@ function Input.new(id)
     jumps = 0,
     left = false,
     right = false,
-    swing = false,
     shoot = false,
+    swing = false,
     grapple = false,
     dig = false
   }

@@ -14,8 +14,6 @@ end
 function JumpReset:collision(a, b, contact)
   local entity = getPlayerEntity(a, b) or getPlayerEntity(b, a)
 
-  print(entity)
-
   if entity then
     entity:as(Input).jumps = 0
   end

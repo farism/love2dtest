@@ -1,3 +1,4 @@
+local Checkpoint = require 'game.components.checkpoint'
 local Fixture = require 'game.components.fixture'
 local Input = require 'game.components.input'
 local Player = require 'game.components.player'
@@ -22,6 +23,13 @@ local function Prefabs(world)
         {Fixture.RECTANGLE, 32, 32},
         1
       )
+    }
+  end
+
+  function pf.checkpoint()
+    return {
+      Checkpoint.new(1),
+      Position.new(1)
     }
   end
 
