@@ -7,6 +7,7 @@ function System:new(id, aspect)
     id = id,
     aspect = aspect or Aspect:new(),
     entities = {},
+    manager = nil,
     paused = false
   }
 
@@ -14,6 +15,10 @@ function System:new(id, aspect)
   self.__index = self
 
   return system
+end
+
+function System:setManager(manager)
+  self.manager = manager
 end
 
 function System:check(entity)
@@ -40,7 +45,10 @@ function System:resume()
   self.paused = false
 end
 
-function System:input(key, scancode, isRepeat, isPressed)
+function System:keyboard(key, scancode, isrepeat, ispressed)
+end
+
+function System:mouse(x, y, button, istouch, presses)
 end
 
 function System:collision(a, b, contact)

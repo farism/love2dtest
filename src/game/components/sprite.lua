@@ -7,6 +7,7 @@ local Sprite = {
 
 function Sprite.new(id, file, x, y, width, height)
   local image = Asset.getImage(file)
+
   local frame =
     love.graphics.newQuad(
     x or 0,

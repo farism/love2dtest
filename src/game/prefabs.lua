@@ -12,8 +12,8 @@ local function Prefabs(world)
 
   function pf.player(e)
     return {
-      Input.new(1),
       Sprite.new(1, 'assets/sprites/player.png'),
+      Input.new(1),
       Position.new(1),
       Velocity.new(1),
       Fixture.new(
@@ -21,6 +21,20 @@ local function Prefabs(world)
         {isPlayer = true, entity = e},
         {world, 0, 0, Fixture.DYNAMIC},
         {Fixture.RECTANGLE, 32, 32},
+        1
+      )
+    }
+  end
+
+  function pf.throwingPick()
+    return {
+      Position.new(1),
+      Velocity.new(1),
+      Fixture.new(
+        1,
+        {},
+        {world, 0, 0, Fixture.DYNAMIC},
+        {Fixture.RECTANGLE, 5, 5},
         1
       )
     }

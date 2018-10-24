@@ -12,9 +12,13 @@ function Input.new(id)
     left = false,
     right = false,
     shoot = false,
-    swing = false,
+    shootCooldown = 0,
+    dash = false,
+    dashCooldown = 0,
     grapple = false,
-    dig = false
+    grappleCooldown = 0,
+    dig = false,
+    digCooldown = 0
   }
 end
 

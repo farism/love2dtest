@@ -15,7 +15,8 @@ constants = {
   Spritesheet = {id = 'spritesheet', flag = flag(10)},
   Velocity = {id = 'velocity', flag = flag(11)},
   Checkpoint = {id = 'checkpoint', flag = flag(5)},
-  Snare = {id = 'snare', flag = flag(12)}
+  Snare = {id = 'snare', flag = flag(12)},
+  Upgrades = {id = 'upgrades', flag = flag(13)}
 }
 
 return constants

@@ -4,11 +4,10 @@ local Projectile = {
   _meta = constants.Projectile
 }
 
-function Projectile.new(id, alias)
+function Projectile.new(id)
   return {
     _meta = Projectile._meta,
-    id = id,
-    alias = alias
+    id = id
   }
 end
 

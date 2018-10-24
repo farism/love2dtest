@@ -3,6 +3,7 @@ local Manager = require 'ecs.manager'
 local Prefabs = require 'game.prefabs'
 local State = require 'game.state'
 local HUD = require 'game.hud.hud'
+local Attack = require 'game.systems.attack'
 local Input = require 'game.systems.input'
 local Logger = require 'game.systems.logger'
 local JumpReset = require 'game.systems.jumpreset'
@@ -43,6 +44,7 @@ function Game:new()
     end
   )
 
+  game.manager:addSystem(Attack)
   game.manager:addSystem(Input)
   game.manager:addSystem(Logger)
   game.manager:addSystem(JumpReset)
@@ -61,8 +63,12 @@ function Game:new()
     love.load()
   end
 
-  function game:input(key, scancode, isRepeat, isPressed)
-    self.manager:input(key, scancode, isRepeat, isPressed)
+  function game:keyboard(key, scancode, isrepeat, ispressed)
+    self.manager:keyboard(key, scancode, isrepeat, ispressed)
+  end
+
+  function game:mouse(x, y, button, istouch, presses)
+    self.manager:mouse(x, y, button, istouch, presses)
   end
 
   function game:collision(a, b, contact)

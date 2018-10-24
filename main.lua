@@ -18,10 +18,14 @@ function love.draw()
   game:draw()
 end
 
-function love.keypressed(key, scancode, isRepeat)
-  game:input(key, scanecode, isRepeat, true)
+function love.keypressed(key, scancode, isrepeat)
+  game:keyboard(key, scanecode, isrepeat, true)
 end
 
 function love.keyreleased(key, scancode)
-  game:input(key, scancode, false, false)
+  game:keyboard(key, scancode, false, false)
+end
+
+function love.mousepressed(x, y, button, istouch, presses)
+  game:mouse(x, y, button, istouch, presses)
 end

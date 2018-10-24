@@ -77,6 +77,8 @@ function Manager:new()
       sys:check(entity)
     end
 
+    sys:setManager(this)
+
     table.insert(self.systems, sys)
   end
 
@@ -98,9 +100,15 @@ function Manager:new()
     end
   end
 
-  function manager:input(key, scancode, isRepeat, isPressed)
+  function manager:keyboard(key, scancode, isrepeat, ispressed)
     for _, sys in pairs(self.systems) do
-      sys:input(key, scancode, isRepeat, isPressed)
+      sys:keyboard(key, scancode, isrepeat, ispressed)
+    end
+  end
+
+  function manager:mouse(x, y, button, istouch, presses)
+    for _, sys in pairs(self.systems) do
+      sys:mouse(x, y, button, istouch, presses)
     end
   end
 
