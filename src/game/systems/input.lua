@@ -9,7 +9,7 @@ local InputSystem = System:new('input', aspect)
 function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
   for _, entity in pairs(self.entities) do
     local input = entity:as(Input)
-    input.jump = key == 'space' and ispressed
+    input.jump = key == 'space' and ispressed and input.jumps < 2
     input.shoot = key == 'j' and ispressed
     input.dash = key == 'k' and ispressed
   end
