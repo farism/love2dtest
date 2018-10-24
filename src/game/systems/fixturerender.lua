@@ -6,7 +6,7 @@ local constants = require 'game.systems.constants'
 local aspect = Aspect:new({Fixture})
 local FixtureRender = System:new('fixturerender', aspect)
 
-local function draw()
+function FixtureRender:draw()
   for _, entity in pairs(self.entities) do
     local fixture = entity:as(Fixture)
     local body = fixture.fixture:getBody()

@@ -5,6 +5,7 @@ local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Input = require 'game.systems.input'
 local Logger = require 'game.systems.logger'
+local JumpReset = require 'game.systems.jumpreset'
 local Movement = require 'game.systems.movement'
 local Projectile = require 'game.systems.projectile'
 local FixtureRender = require 'game.systems.fixturerender'
@@ -14,12 +15,12 @@ local Game = {}
 
 local function initEntities(manager, world)
   local pf = Prefabs(world)
-  local arr = {pf.player(), pf.ground()}
+  local arr = {pf.player, pf.ground}
 
   for _, prefab in pairs(arr) do
     local e = manager:newEntity()
 
-    for _, component in pairs(prefab) do
+    for _, component in pairs(prefab(e)) do
       manager:addComponent(e, component)
     end
   end
@@ -27,14 +28,24 @@ end
 
 function Game:new()
   local game = {
-    state = State.HOME,
+    state = State.PLAYING,
     hud = HUD:new(),
     manager = Manager:new(),
     world = love.physics.newWorld(0, 9.81, true)
   }
 
-  game.manager:addSystem(InputSystem)
+  love.physics.setMeter(128)
+
+  game.world.setCallbacks(
+    game.world,
+    function(a, b, contact)
+      game:collision(a, b, contact)
+    end
+  )
+
+  game.manager:addSystem(Input)
   game.manager:addSystem(Logger)
+  game.manager:addSystem(JumpReset)
   game.manager:addSystem(Movement)
   game.manager:addSystem(Projectile)
   game.manager:addSystem(FixtureRender)
@@ -47,10 +58,15 @@ function Game:new()
   end
 
   function game:restart()
+    love.load()
   end
 
   function game:input(key, scancode, isRepeat, isPressed)
     self.manager:input(key, scancode, isRepeat, isPressed)
+  end
+
+  function game:collision(a, b, contact)
+    self.manager:collision(a, b, contact)
   end
 
   function game:update(dt)
@@ -71,19 +87,3 @@ function Game:new()
 end
 
 return Game
-
--- local function resetJumps(a, b, contact)
---   local aData = a:getUserData()
---   local bData = b:getUserData()
---   local entity = nil
-
---   if (aData.isPlayer and b:getBody():getType() == Fixture.STATIC) then
---     entity = aData.entity
---   elseif (bData.isPlayer and a:getBody():getType() == Fixture.STATIC) then
---     entity = bData.entity
---   end
-
---   if entity then
---     entity:as(Input).jumps = 0
---   end
--- end

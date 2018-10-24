@@ -16,6 +16,14 @@ function System:new(id, aspect)
   return system
 end
 
+function System:check(entity)
+  if (self.aspect:check(entity)) then
+    self:add(entity)
+  else
+    self:remove(entity)
+  end
+end
+
 function System:add(entity)
   self.entities[entity.id] = entity
 end
@@ -33,6 +41,9 @@ function System:resume()
 end
 
 function System:input(key, scancode, isRepeat, isPressed)
+end
+
+function System:collision(a, b, contact)
 end
 
 function System:update(dt)

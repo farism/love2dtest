@@ -73,6 +73,10 @@ function Manager:new()
   -- managing systems
 
   function manager:addSystem(sys)
+    for _, entity in pairs(self.entities) do
+      sys:check(entity)
+    end
+
     table.insert(self.systems, sys)
   end
 
@@ -90,17 +94,19 @@ function Manager:new()
 
   function manager:check(entity)
     for _, sys in pairs(self.systems) do
-      if sys.aspect:check(entity) then
-        sys:add(entity)
-      else
-        sys:remove(entity)
-      end
+      sys:check(entity)
     end
   end
 
   function manager:input(key, scancode, isRepeat, isPressed)
     for _, sys in pairs(self.systems) do
       sys:input(key, scancode, isRepeat, isPressed)
+    end
+  end
+
+  function manager:collision(a, b, contact)
+    for _, sys in pairs(self.systems) do
+      sys:collision(a, b, contact)
     end
   end
 
