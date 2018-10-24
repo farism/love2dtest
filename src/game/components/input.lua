@@ -4,7 +4,7 @@ local Input = {
   _meta = constants.Input
 }
 
-function Input:new(id)
+function Input.new(id)
   return {
     _meta = Input._meta,
     id = id,

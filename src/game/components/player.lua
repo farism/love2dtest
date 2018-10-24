@@ -4,7 +4,7 @@ local Player = {
   _meta = constants.Player
 }
 
-function Player:new(id, alias)
+function Player.new(id, alias)
   return {
     _meta = Player._meta,
     id = id,

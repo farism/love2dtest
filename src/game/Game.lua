@@ -1,6 +1,7 @@
 local Manager = require 'ecs.manager'
 
 local Prefabs = require 'game.prefabs'
+local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Input = require 'game.systems.input'
 local Logger = require 'game.systems.logger'
@@ -26,6 +27,7 @@ end
 
 function Game:new()
   local game = {
+    state = State.HOME,
     hud = HUD:new(),
     manager = Manager:new(),
     world = love.physics.newWorld(0, 9.81, true)
@@ -40,14 +42,24 @@ function Game:new()
 
   initEntities(game.manager, game.world)
 
+  function game:setState(state)
+    self.state = state
+  end
+
+  function game:restart()
+  end
+
   function game:input(key, scancode, isRepeat, isPressed)
     self.manager:input(key, scancode, isRepeat, isPressed)
   end
 
   function game:update(dt)
-    self.world:update(dt)
-    self.manager:update(dt)
-    self.hud:update(dt)
+    if self.state == State.PLAYING then
+      self.world:update(dt)
+      self.manager:update(dt)
+    end
+
+    self.hud:update(dt, self)
   end
 
   function game:draw()

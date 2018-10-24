@@ -5,7 +5,7 @@ local Sprite = {
   _meta = constants.Sprite
 }
 
-function Sprite:new(id, file, x, y, width, height)
+function Sprite.new(id, file, x, y, width, height)
   local image = Asset.getImage(file)
   local frame =
     love.graphics.newQuad(

@@ -11,11 +11,11 @@ local function Prefabs(world)
 
   function pf.player()
     return {
-      Input:new(1),
-      Sprite:new(1, 'assets/sprites/player.png'),
-      Position:new(1),
-      Velocity:new(1),
-      Fixture:new(
+      Input.new(1),
+      Sprite.new(1, 'assets/sprites/player.png'),
+      Position.new(1),
+      Velocity.new(1),
+      Fixture.new(
         1,
         {isPlayer = true, entity = e},
         {world, 0, 0, Fixture.DYNAMIC},
@@ -27,7 +27,7 @@ local function Prefabs(world)
 
   function pf.ground()
     return {
-      Fixture:new(
+      Fixture.new(
         1,
         {},
         {world, 800 / 2, 480 - 15, Fixture.STATIC},

@@ -4,7 +4,7 @@ local Velocity = {
   _meta = constants.Velocity
 }
 
-function Velocity:new(id, x, y)
+function Velocity.new(id, x, y)
   return {
     _meta = Velocity._meta,
     id = id,

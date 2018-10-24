@@ -4,7 +4,7 @@ local Spritesheet = {
   _meta = constants.Spritesheet
 }
 
-function Spritesheet:new(id, file, x, y, width, height, frames)
+function Spritesheet.new(id, file, x, y, width, height, frames)
   return {
     _meta = Spritesheet._meta,
     id = id,

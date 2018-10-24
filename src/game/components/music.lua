@@ -5,7 +5,7 @@ local Music = {
   _meta = constants.Music
 }
 
-function Music:new(id, file)
+function Music.new(id, file)
   local sound = Asset.getMusic(file)
 
   return {

@@ -1,29 +1,18 @@
-local States = require 'game.utils.states'
+local State = require 'game.state'
+
 local Paused = {}
 
-local width, height = love.graphics.getDimensions()
+function Paused.update(dt, suit, width, height, game)
+  if suit.Button('Resume', (800 - 300) / 2, 100, 300, 30).hit then
+    game:setState(State.PLAYING)
+  end
 
-local function resume(dt, suit)
-  local btnWidth = 75
-  local btnHeight = 30
-  local x = width - btnWidth - 10
-  local y = 100
+  if suit.Button('Restart', (800 - 300) / 2, 160, 300, 30).hit then
+    game:restart()
+  end
 
-  return suit.Button('Settings', x, y, btnWidth, btnHeight)
-end
-
-local function restart(dt, suit)
-  local btnWidth = 300
-  local btnHeight = 30
-  local x = (width - btnWidth) / 2
-  local y = 160
-
-  return suit.Button('Play', x, y, btnWidth, btnHeight)
-end
-
-function Paused.update(dt, suit)
-  if resume(dt, suit).hit then
-    GameState = States.PLAYING
+  if suit.Button('Main Menu', (800 - 300) / 2, 220, 300, 30).hit then
+    game:setState(State.HOME)
   end
 end
 

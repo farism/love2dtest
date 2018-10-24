@@ -4,7 +4,7 @@ local Position = {
   _meta = constants.Position
 }
 
-function Position:new(id, x, y)
+function Position.new(id, x, y)
   return {
     _meta = Position._meta,
     id = id,
