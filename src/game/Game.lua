@@ -1,149 +1,77 @@
 local Manager = require 'ecs.manager'
-local Entity = require 'ecs.entity'
-local Aspect = require 'ecs.aspect'
 
+local Prefabs = require 'game.prefabs'
 local HUD = require 'game.hud.hud'
+local Input = require 'game.systems.input'
+local Logger = require 'game.systems.logger'
+local Movement = require 'game.systems.movement'
+local Projectile = require 'game.systems.projectile'
+local FixtureRender = require 'game.systems.fixturerender'
+local SpriteRender = require 'game.systems.spriterender'
 
-local Fixture = require 'game.components.fixture'
-local Input = require 'game.components.input'
-local Player = require 'game.components.player'
-local Position = require 'game.components.position'
-local Sprite = require 'game.components.sprite'
-local Spritesheet = require 'game.components.spritesheet'
-local Velocity = require 'game.components.velocity'
+local Game = {}
 
-local InputSystem = require 'game.systems.input'
-local LoggerSystem = require 'game.systems.logger'
-local MovementSystem = require 'game.systems.movement'
-local ProjectileSystem = require 'game.systems.projectile'
-local FixtureRenderSystem = require 'game.systems.fixturerender'
-local SpriteRenderSystem = require 'game.systems.spriterender'
+local function initEntities(manager, world)
+  local pf = Prefabs(world)
+  local arr = {pf.player(), pf.ground()}
 
-local sleep = require 'game.utils.sleep'
+  for _, prefab in pairs(arr) do
+    local e = manager:newEntity()
 
-local world = nil
-local manager = nil
-local hud = nil
-
-local function resetJumps(a, b, contact)
-  local aData = a:getUserData()
-  local bData = b:getUserData()
-  local entity = nil
-
-  if (aData.isPlayer and b:getBody():getType() == Fixture.STATIC) then
-    entity = aData.entity
-  elseif (bData.isPlayer and a:getBody():getType() == Fixture.STATIC) then
-    entity = bData.entity
-  end
-
-  if entity then
-    entity:as(Input).jumps = 0
+    for _, component in pairs(prefab) do
+      manager:addComponent(e, component)
+    end
   end
 end
 
-local function newWorld(meter, manager)
-  love.physics.setMeter(meter)
+function Game:new()
+  local game = {
+    hud = HUD:new(),
+    manager = Manager:new(),
+    world = love.physics.newWorld(0, 9.81, true)
+  }
 
-  local world = love.physics.newWorld(0, 9.81 * meter, true)
-  world.setCallbacks(world, resetJumps)
+  game.manager:addSystem(InputSystem)
+  game.manager:addSystem(Logger)
+  game.manager:addSystem(Movement)
+  game.manager:addSystem(Projectile)
+  game.manager:addSystem(FixtureRender)
+  game.manager:addSystem(SpriteRender)
 
-  return world
-end
+  initEntities(game.manager, game.world)
 
-function love.load()
-  love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
-
-  hud = HUD:new()
-
-  world = newWorld(100)
-
-  manager = Manager:new()
-  manager:addSystem(InputSystem:new())
-  manager:addSystem(LoggerSystem:new())
-  manager:addSystem(MovementSystem:new())
-  manager:addSystem(ProjectileSystem:new())
-  manager:addSystem(FixtureRenderSystem:new())
-  manager:addSystem(SpriteRenderSystem:new())
-
-  local player = manager:newEntity()
-  manager:addComponent(player, Input:new(1))
-  manager:addComponent(player, Sprite:new(1, 'assets/sprites/player.png'))
-  manager:addComponent(player, Position:new(1))
-  manager:addComponent(player, Velocity:new(1))
-  manager:addComponent(
-    player,
-    Fixture:new(
-      1,
-      {isPlayer = true, entity = player},
-      {world, 0, 0, Fixture.DYNAMIC},
-      {Fixture.RECTANGLE, 32, 32},
-      1
-    )
-  )
-
-  for i = 1, 10 do
-    local mob = manager:newEntity()
-    manager:addComponent(mob, Sprite:new(1, 'assets/sprites/player.png'))
-    manager:addComponent(mob, Position:new(1))
-    manager:addComponent(mob, Velocity:new(1))
-    manager:addComponent(
-      mob,
-      Fixture:new(
-        1,
-        {},
-        {world, 0 + i * 64, 0, Fixture.DYNAMIC},
-        {Fixture.RECTANGLE, 32, 32},
-        1
-      )
-    )
+  function game:input(key, scancode, isRepeat, isPressed)
+    self.manager:input(key, scancode, isRepeat, isPressed)
   end
 
-  local ground = manager:newEntity()
-  manager:addComponent(
-    ground,
-    Fixture:new(
-      1,
-      {},
-      {world, 800 / 2, 480 - 15, Fixture.STATIC},
-      {Fixture.RECTANGLE, 800, 30}
-    )
-  )
+  function game:update(dt)
+    self.world:update(dt)
+    self.manager:update(dt)
+    self.hud:update(dt)
+  end
+
+  function game:draw()
+    self.manager:draw()
+    self.hud:draw()
+  end
+
+  return game
 end
 
-function love.update(dt)
-  world:update(dt)
-  manager:update(dt)
-  hud:update(dt)
-end
+return Game
 
-function love.draw()
-  hud:draw()
-  manager:draw()
-end
+-- local function resetJumps(a, b, contact)
+--   local aData = a:getUserData()
+--   local bData = b:getUserData()
+--   local entity = nil
 
-function love.keypressed(key, scancode, isRepeat)
-  manager:input(key, scancode, isRepeat, true)
-end
-
-function love.keyreleased(key, scancode)
-  manager:input(key, scancode, false, false)
-end
-
--- function getPlayerContact(a, b)
---   local aData = a:getUserData() or {}
---   local bData = b:getUserData() or {}
-
---   if (aData.player) then
---     return a
---   elseif (bData.player) then
---     return b
+--   if (aData.isPlayer and b:getBody():getType() == Fixture.STATIC) then
+--     entity = aData.entity
+--   elseif (bData.isPlayer and a:getBody():getType() == Fixture.STATIC) then
+--     entity = bData.entity
 --   end
--- end
 
--- function beginContact(a, b, coll)
---   local player = getPlayerContact(a, b, coll)
-
---   if player then
---     Player.jumpReset(state.player)
+--   if entity then
+--     entity:as(Input).jumps = 0
 --   end
 -- end

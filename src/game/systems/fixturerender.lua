@@ -3,15 +3,11 @@ local System = require 'ecs.system'
 local Fixture = require 'game.components.fixture'
 local constants = require 'game.systems.constants'
 
-local FixtureRenderSystem = {
-  _meta = constants.FixtureRender
-}
+local aspect = Aspect:new({Fixture})
+local FixtureRender = System:new('fixturerender', aspect)
 
-local function noop()
-end
-
-local function draw(entities)
-  for _, entity in pairs(entities) do
+local function draw()
+  for _, entity in pairs(self.entities) do
     local fixture = entity:as(Fixture)
     local body = fixture.fixture:getBody()
     local shape = fixture.fixture:getShape()
@@ -29,11 +25,4 @@ local function draw(entities)
   end
 end
 
-function FixtureRenderSystem:new()
-  local aspect = Aspect:new({Fixture})
-  local system = System:new('fixture_render', aspect, noop, noop, draw)
-
-  return system
-end
-
-return FixtureRenderSystem
+return FixtureRender

@@ -33,6 +33,8 @@ function Manager:new()
   end
 
   function manager:addEntity(entity)
+    self:check(entity)
+
     self.entities[entity.id] = entity
   end
 

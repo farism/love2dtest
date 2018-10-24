@@ -4,15 +4,11 @@ local Position = require 'game.components.position'
 local Sprite = require 'game.components.sprite'
 local constants = require 'game.systems.constants'
 
-local SpriteRenderSystem = {
-  _meta = constants.SpriteRender
-}
+local aspect = Aspect:new({Sprite})
+local SpriteRender = System:new('spriterender', aspect)
 
-local function noop()
-end
-
-local function draw(entities)
-  for _, entity in pairs(entities) do
+function SpriteRender:draw()
+  for _, entity in pairs(self.entities) do
     local sprite = entity:as(Sprite)
     local position = entity:as(Position)
 
@@ -25,11 +21,4 @@ local function draw(entities)
   end
 end
 
-function SpriteRenderSystem:new()
-  local aspect = Aspect:new({Sprite})
-  local system = System:new('sprite_render', aspect, noop, noop, draw)
-
-  return system
-end
-
-return SpriteRenderSystem
+return SpriteRender

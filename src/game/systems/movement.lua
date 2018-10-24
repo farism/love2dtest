@@ -6,15 +6,11 @@ local Input = require 'game.components.input'
 local Position = require 'game.components.position'
 local Velocity = require 'game.components.velocity'
 
-local MovementSystem = {
-  _meta = constants.Movement
-}
+local aspect = Aspect:new({Position, Velocity})
+local MovementSystem = System:new('movement', aspect)
 
-local function noop()
-end
-
-local function update(dt, entities)
-  for _, entity in pairs(entities) do
+function MovementSystem:update(dt)
+  for _, entity in pairs(self.entities) do
     local position = entity:as(Position)
     local velocity = entity:as(Velocity)
 
@@ -47,13 +43,6 @@ local function update(dt, entities)
       position.y = position.y + velocity.y * dt
     end
   end
-end
-
-function MovementSystem:new()
-  local aspect = Aspect:new({Position, Velocity})
-  local system = System:new('movement', aspect, noop, update, noop)
-
-  return system
 end
 
 return MovementSystem

@@ -1,24 +1,12 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local Projectile = require 'game.components.projectile'
-local constants = require 'game.systems.constants'
 
-local ProjectileSystem = {
-  _meta = constants.Projectile
-}
+local aspect = Aspect:new({Projectile})
+local ProjectileSystem = System:new('projectile', aspect)
 
-local function noop()
-end
-
-local function update(dt, entities)
+function ProjectileSystem:update(dt)
   -- print('projectile update ', table.getn(entities))
-end
-
-function ProjectileSystem:new(world)
-  local aspect = Aspect:new({Projectile})
-  local system = System:new('projectile', aspect, noop, update, noop)
-
-  return system
 end
 
 return ProjectileSystem
