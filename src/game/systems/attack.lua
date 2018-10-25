@@ -19,22 +19,22 @@ function Attack:update(dt)
     setCooldowns(dt, input)
 
     if (input.shoot and input.shootCooldown == 0) then
-      print('shooting')
+      print(input.direction)
       input.shootCooldown = 0.5
     end
 
     if (input.dash and input.dashCooldown == 0) then
-      print('dashing')
+      -- print('dashing')
       input.dashCooldown = 3
     end
 
     if (input.grapple and input.grappleCooldown == 0) then
-      print('grappling')
+      -- print('grappling')
       input.grappleCooldown = 3
     end
 
     if (input.dig and input.digCooldown == 0) then
-      print('digging')
+      -- print('digging')
       input.digCooldown = 3
     end
   end

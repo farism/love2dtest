@@ -5,12 +5,13 @@ local Input = {
 }
 
 function Input.new(id)
-  return {
+  local input = {
     _meta = Input._meta,
     id = id,
     jumps = 0,
     left = false,
     right = false,
+    direction = 'right',
     shoot = false,
     shootCooldown = 0,
     dash = false,
@@ -20,6 +21,8 @@ function Input.new(id)
     dig = false,
     digCooldown = 0
   }
+
+  return input
 end
 
 return Input

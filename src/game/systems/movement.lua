@@ -26,8 +26,11 @@ function MovementSystem:update(dt)
         local newVelocityX = 0
         local newVelocityY = velocityY
 
-        newVelocityX = input.left and -200 or newVelocityX
-        newVelocityX = input.right and 200 or newVelocityX
+        if (input.left == true) then
+          newVelocityX = -200
+        elseif input.right == true then
+          newVelocityX = 200
+        end
 
         if (input.jump and input.jumps < 2) then
           newVelocityY = -500
