@@ -1,59 +1,61 @@
 local Manager = require 'ecs.manager'
 
-local Prefabs = require 'game.prefabs'
+local Factory = require 'game.factory'
 local State = require 'game.state'
 local HUD = require 'game.hud.hud'
-local Attack = require 'game.systems.attack'
+local Ability = require 'game.systems.ability'
+local Cooldown = require 'game.systems.cooldown'
+local Dash = require 'game.systems.dash'
 local Input = require 'game.systems.input'
+local InputMovement = require 'game.systems.inputmovement'
 local Logger = require 'game.systems.logger'
 local JumpReset = require 'game.systems.jumpreset'
-local Movement = require 'game.systems.movement'
 local Projectile = require 'game.systems.projectile'
 local FixtureRender = require 'game.systems.fixturerender'
 local SpriteRender = require 'game.systems.spriterender'
+local SyncBodyPosition = require 'game.systems.syncbodyposition'
 
 local Game = {}
 
-local function initEntities(manager, world)
-  local pf = Prefabs(world)
-  local arr = {pf.player, pf.ground}
-
-  for _, prefab in pairs(arr) do
-    local e = manager:newEntity()
-
-    for _, component in pairs(prefab(e)) do
-      manager:addComponent(e, component)
-    end
-  end
+local function initEntities(manager, factory)
+  factory.add(manager:newEntity(), factory.player)
+  factory.add(manager:newEntity(), factory.ground)
 end
 
 function Game:new()
+  local world = love.physics.newWorld(0, 9.81, true)
+  local factory = Factory(world)
+  local manager = Manager:new(factory)
+  local hud = HUD:new()
   local game = {
     state = State.PLAYING,
-    hud = HUD:new(),
-    manager = Manager:new(),
-    world = love.physics.newWorld(0, 9.81, true)
+    hud = hud,
+    manager = manager,
+    world = world
   }
 
   love.physics.setMeter(128)
 
-  game.world.setCallbacks(
-    game.world,
+  world.setCallbacks(
+    world,
     function(a, b, contact)
       game:collision(a, b, contact)
     end
   )
 
-  game.manager:addSystem(Attack)
-  game.manager:addSystem(Input)
-  game.manager:addSystem(Logger)
-  game.manager:addSystem(JumpReset)
-  game.manager:addSystem(Movement)
-  game.manager:addSystem(Projectile)
-  game.manager:addSystem(FixtureRender)
-  game.manager:addSystem(SpriteRender)
+  manager:addSystem(Input)
+  manager:addSystem(SyncBodyPosition)
+  manager:addSystem(InputMovement)
+  manager:addSystem(Dash)
+  manager:addSystem(JumpReset)
+  manager:addSystem(Cooldown)
+  manager:addSystem(Ability)
+  manager:addSystem(Projectile)
+  manager:addSystem(FixtureRender)
+  manager:addSystem(SpriteRender)
+  manager:addSystem(Logger)
 
-  initEntities(game.manager, game.world)
+  initEntities(manager, factory)
 
   function game:setState(state)
     self.state = state

@@ -1,41 +1,56 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
-
 local Input = require 'game.components.input'
+local Ability = require 'game.components.ability'
+local Movement = require 'game.components.movement'
 
 local aspect = Aspect:new({Input})
 local InputSystem = System:new('input', aspect)
 
+local inputs = {
+  left = 'a',
+  right = 'd',
+  jump = 'space',
+  throw = 'j',
+  dash = 'k'
+}
+
 function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
   for _, entity in pairs(self.entities) do
-    local input = entity:as(Input)
+    local ability = entity:as(Ability)
+    local movement = entity:as(Movement)
 
-    if (key == 'a') then
-      input.left = ispressed
-      input.direction = input.right and 'right' or 'left'
+    if (movement) then
+      if (key == inputs.left) then
+        movement.left = ispressed
+        movement.direction = movement.right and 'right' or 'left'
+      end
+
+      if (key == inputs.right) then
+        movement.right = ispressed
+        movement.direction = movement.left and 'left' or 'right'
+      end
+
+      movement.jump =
+        key == inputs.jump and ispressed and movement.jumpCount < 2
     end
 
-    if (key == 'd') then
-      input.right = ispressed
-      input.direction = input.left and 'left' or 'right'
-    end
+    if (ability) then
+      ability.throw = key == inputs.throw and ispressed
 
-    input.jump = key == 'space' and ispressed and input.jumps < 2
-    input.shoot = key == 'j' and ispressed
-    input.dash = key == 'k' and ispressed
+      ability.dash = key == inputs.dash and ispressed
+    end
   end
 end
 
--- function InputSystem:mouse(x, y, button, istouch, presses)
---   for _, entity in pairs(self.entities) do
---     local input = entity:as(Input)
---   end
--- end
+function InputSystem:mouse(x, y, button, istouch, presses)
+  -- for _, entity in pairs(self.entities) do
+  -- end
+end
 
--- function InputSystem:update(dt)
---   for _, entity in pairs(self.entities) do
---     local input = entity:as(Input)
---   end
--- end
+function InputSystem:update(dt)
+  -- for _, entity in pairs(self.entities) do
+  -- end
+end
 
 return InputSystem

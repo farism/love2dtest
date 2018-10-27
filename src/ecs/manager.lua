@@ -2,8 +2,9 @@ local Entity = require 'ecs.entity'
 
 local Manager = {}
 
-function Manager:new()
+function Manager:new(factory)
   local manager = {
+    factory = factory,
     entities = {},
     components = {},
     systems = {},
@@ -77,7 +78,7 @@ function Manager:new()
       sys:check(entity)
     end
 
-    sys:setManager(this)
+    sys:setManager(self)
 
     table.insert(self.systems, sys)
   end

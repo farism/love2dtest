@@ -15,7 +15,7 @@ function Playing.update(dt, suit, width, height, game)
     keypressed('space')
   end
 
-  if suit.Button('Shoot', width - 48 - 10, height - 64 - 48 - 48, 48, 48).hit then
+  if suit.Button('Throw', width - 48 - 10, height - 64 - 48 - 48, 48, 48).hit then
     keypressed('j')
   end
 

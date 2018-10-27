@@ -29,4 +29,14 @@ function Aspect:new(all, none, one)
   return aspect
 end
 
+function Aspect:any()
+  local aspect = {}
+
+  function aspect:check()
+    return true
+  end
+
+  return aspect
+end
+
 return Aspect

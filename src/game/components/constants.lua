@@ -16,7 +16,10 @@ constants = {
   Velocity = {id = 'velocity', flag = flag(11)},
   Checkpoint = {id = 'checkpoint', flag = flag(5)},
   Snare = {id = 'snare', flag = flag(12)},
-  Upgrades = {id = 'upgrades', flag = flag(13)}
+  Upgrades = {id = 'upgrades', flag = flag(13)},
+  Ability = {id = 'ability', flag = flag(14)},
+  Cooldown = {id = 'cooldown', flag = flag(15)},
+  Dash = {id = 'dash', flag = flag(16)}
 }
 
 return constants

@@ -17,10 +17,20 @@ function Entity:new(id, manager)
   end
 
   function entity:addComponent(cmp)
+    if self:has(cmp) then
+      print('entity:' .. self.id .. ' already has ' .. cmp._meta.id)
+      return
+    end
+
     self.components = bit.bxor(self.components, cmp._meta.flag)
   end
 
   function entity:removeComponent(cmp)
+    if not self:has(cmp) then
+      print('entity:' .. self.id .. ' does not have ' .. cmp._meta.id)
+      return
+    end
+
     self.components = bit.band(self.components, bit.bnot(cmp._meta.flag))
   end
 
