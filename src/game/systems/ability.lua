@@ -4,6 +4,7 @@ local Ability = require 'game.components.ability'
 local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
+local Projectile = require 'game.components.projectile'
 local Timer = require 'game.components.timer'
 
 local aspect = Aspect:new({Ability, Movement, Position, Timer})
@@ -13,15 +14,18 @@ function AbilitySystem:throw(dt, entity)
   local manager = entity.manager
   local factory = manager.factory
   local position = entity:as(Position)
-  local projectile = manager:newEntity()
-  factory.add(projectile, factory.throwingPick)
-  local fixture = projectile:as(Fixture)
-  local body = fixture.fixture:getBody()
+  local movement = entity:as(Movement)
+  local projectile = factory.add(manager:newEntity(), factory.throwingPick)
+  local body = projectile:as(Fixture).fixture:getBody()
   body:setFixedRotation(false)
   body:setGravityScale(0)
   body:setX(position.x + 10)
   body:setY(position.y)
-  body:setLinearVelocity(1000, 0)
+  if (movement.direction == 'left') then
+    body:setLinearVelocity(-1000, 0)
+  elseif movement.direction == 'right' then
+    body:setLinearVelocity(1000, 0)
+  end
 end
 
 function AbilitySystem:dash(dt, entity)
@@ -49,12 +53,15 @@ function AbilitySystem:update(dt)
     local abilities = entity:as(Ability).abilities
 
     for key, ability in pairs(abilities) do
-      if ability.active and (timer.timers[key .. '_cooldown'] or 0) == 0 then
-        timer.timers[key .. '_cooldown'] = ability.cooldown
-        timer.timers[key .. '_duration'] = ability.duration
+      local timers = timer.timers[key] or {}
+      timer.timers[key] = timers
+
+      if ability.active and (timer.timers[key].cooldown or 0) == 0 then
         ability.active = false
+        timer.timers[key].cooldown = ability.cooldown
+        timer.timers[key].duration = ability.duration
         self[key](self, dt, entity)
-      elseif (timer.timers[key .. '_duration'] or 0) > 0 then
+      elseif (timer.timers[key].duration or 0) > 0 then
         self[key](self, dt, entity)
       end
     end

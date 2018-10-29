@@ -31,8 +31,9 @@ local function newShape(type, ...)
   end
 end
 
-function Fixture.raw(id, data, body, shape, density)
+function Fixture.raw(id, data, body, shape, density, sensor)
   local fixture = love.physics.newFixture(body, shape, density or 1)
+  fixture:setSensor(sensor or false)
   fixture:setUserData(data or {})
 
   return {
@@ -44,11 +45,11 @@ function Fixture.raw(id, data, body, shape, density)
   }
 end
 
-function Fixture.new(id, data, body, shape, density)
+function Fixture.new(id, data, body, shape, density, sensor)
   local body = newBody(unpack(body))
   local shape = newShape(unpack(shape))
 
-  return Fixture.raw(id, data, body, shape, density)
+  return Fixture.raw(id, data, body, shape, density, sensor)
 end
 
 return Fixture

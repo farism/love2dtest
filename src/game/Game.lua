@@ -3,7 +3,9 @@ local Manager = require 'ecs.manager'
 local Factory = require 'game.factory'
 local State = require 'game.state'
 local HUD = require 'game.hud.hud'
+local Position = require 'game.components.position'
 local Ability = require 'game.systems.ability'
+local Death = require 'game.systems.death'
 local Input = require 'game.systems.input'
 local InputMovement = require 'game.systems.inputmovement'
 local Logger = require 'game.systems.logger'
@@ -17,8 +19,10 @@ local Timer = require 'game.systems.timer'
 local Game = {}
 
 local function initEntities(manager, factory)
-  factory.add(manager:newEntity(), factory.player)
   factory.add(manager:newEntity(), factory.ground)
+  factory.add(manager:newEntity(), factory.crate, 200)
+  factory.add(manager:newEntity(), factory.crate, 264)
+  return factory.add(manager:newEntity(), factory.player)
 end
 
 function Game:new()
@@ -42,6 +46,7 @@ function Game:new()
     end
   )
 
+  manager:addSystem(Death)
   manager:addSystem(Input)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
@@ -53,7 +58,7 @@ function Game:new()
   manager:addSystem(SpriteRender)
   manager:addSystem(Logger)
 
-  initEntities(manager, factory)
+  local player = initEntities(manager, factory)
 
   function game:setState(state)
     self.state = state
@@ -86,7 +91,7 @@ function Game:new()
 
   function game:draw()
     self.manager:draw()
-    self.hud:draw()
+    self.hud:draw(player)
   end
 
   return game

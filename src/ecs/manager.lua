@@ -71,6 +71,10 @@ function Manager:new(factory)
     self:check(entity)
   end
 
+  function manager:clearComponents(entity)
+    self.components[entity.id] = nil
+  end
+
   -- managing systems
 
   function manager:addSystem(sys)

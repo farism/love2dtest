@@ -18,7 +18,7 @@ function Ability.new(id)
     id = id,
     abilities = {
       throw = ability(1, 0),
-      dash = ability(1, 0.5),
+      dash = ability(1, 0.15),
       grapple = ability(1, 0),
       dig = ability(1, 1)
     }

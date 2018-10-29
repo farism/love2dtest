@@ -2,11 +2,12 @@ local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local Projectile = require 'game.components.projectile'
 
-local aspect = Aspect:new({Projectile, Position, Velocity})
+local aspect = Aspect:new({Projectile})
 local ProjectileSystem = System:new('projectile', aspect)
 
-function ProjectileSystem:update(dt)
-  -- print('projectile update ', table.getn(self.entities))
+function ProjectileSystem:collision(a, b, contact)
+  print(a:getUserData())
+  print(b:getUserData())
 end
 
 return ProjectileSystem
