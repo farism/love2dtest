@@ -1,5 +1,4 @@
 local Ability = require 'game.components.ability'
-local Cooldown = require 'game.components.cooldown'
 local Checkpoint = require 'game.components.checkpoint'
 local Fixture = require 'game.components.fixture'
 local Input = require 'game.components.input'
@@ -8,6 +7,7 @@ local Player = require 'game.components.player'
 local Position = require 'game.components.position'
 local Sprite = require 'game.components.sprite'
 local Spritesheet = require 'game.components.spritesheet'
+local Timer = require 'game.components.timer'
 local Velocity = require 'game.components.velocity'
 
 local function Factory(world)
@@ -24,9 +24,9 @@ local function Factory(world)
       Sprite.new(1, 'assets/sprites/player.png'),
       Input.new(1),
       Ability.new(1),
-      Cooldown.new(1),
       Movement.new(1),
       Position.new(1),
+      Timer.new(1),
       Fixture.new(
         1,
         {isPlayer = true, entity = e},

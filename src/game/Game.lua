@@ -4,8 +4,6 @@ local Factory = require 'game.factory'
 local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Ability = require 'game.systems.ability'
-local Cooldown = require 'game.systems.cooldown'
-local Dash = require 'game.systems.dash'
 local Input = require 'game.systems.input'
 local InputMovement = require 'game.systems.inputmovement'
 local Logger = require 'game.systems.logger'
@@ -14,6 +12,7 @@ local Projectile = require 'game.systems.projectile'
 local FixtureRender = require 'game.systems.fixturerender'
 local SpriteRender = require 'game.systems.spriterender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
+local Timer = require 'game.systems.timer'
 
 local Game = {}
 
@@ -46,11 +45,10 @@ function Game:new()
   manager:addSystem(Input)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
-  manager:addSystem(Dash)
   manager:addSystem(JumpReset)
-  manager:addSystem(Cooldown)
   manager:addSystem(Ability)
   manager:addSystem(Projectile)
+  manager:addSystem(Timer)
   manager:addSystem(FixtureRender)
   manager:addSystem(SpriteRender)
   manager:addSystem(Logger)

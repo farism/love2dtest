@@ -4,17 +4,25 @@ local Ability = {
   _meta = constants.Ability
 }
 
+local function ability(cooldown, duration)
+  return {
+    active = false,
+    cooldown = cooldown,
+    duration = duration
+  }
+end
+
 function Ability.new(id)
-  local ability = {
+  return {
     _meta = Ability._meta,
     id = id,
-    throw = false,
-    dash = false,
-    grapple = false,
-    dig = false
+    abilities = {
+      throw = ability(1, 0),
+      dash = ability(1, 0.5),
+      grapple = ability(1, 0),
+      dig = ability(1, 1)
+    }
   }
-
-  return ability
 end
 
 return Ability

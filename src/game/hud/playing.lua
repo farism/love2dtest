@@ -25,7 +25,7 @@ function Playing.update(dt, suit, width, height, game)
     keypressed('k')
   end
 
-  if suit.Button('Swing', width - 64 - 48 - 48, height - 48 - 10, 48, 48).hit then
+  if suit.Button('Dash', width - 64 - 48 - 48, height - 48 - 10, 48, 48).hit then
     keypressed('k')
   end
 

@@ -36,9 +36,8 @@ function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
     end
 
     if (ability) then
-      ability.throw = key == inputs.throw and ispressed
-
-      ability.dash = key == inputs.dash and ispressed
+      ability.abilities.throw.active = key == inputs.throw and ispressed
+      ability.abilities.dash.active = key == inputs.dash and ispressed
     end
   end
 end

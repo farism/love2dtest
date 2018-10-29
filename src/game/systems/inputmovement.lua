@@ -1,12 +1,13 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local Dash = require 'game.components.dash'
+local Dig = require 'game.components.dig'
 local Fixture = require 'game.components.fixture'
 local Input = require 'game.components.input'
 local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
 
-local aspect = Aspect:new({Fixture, Input, Movement, Position}, {Dash})
+local aspect = Aspect:new({Fixture, Input, Movement, Position}, {Dash, Dig})
 local InputMovement = System:new('inputmovement', aspect)
 
 function InputMovement:update(dt)

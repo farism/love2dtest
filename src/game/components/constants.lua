@@ -18,8 +18,8 @@ constants = {
   Snare = {id = 'snare', flag = flag(12)},
   Upgrades = {id = 'upgrades', flag = flag(13)},
   Ability = {id = 'ability', flag = flag(14)},
-  Cooldown = {id = 'cooldown', flag = flag(15)},
-  Dash = {id = 'dash', flag = flag(16)}
+  Timer = {id = 'timer', flag = flag(15)},
+  Dig = {id = 'dig', flag = flag(17)}
 }
 
 return constants
