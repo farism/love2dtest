@@ -17,10 +17,15 @@ local function check(a, b)
   return isThrowingPick(a) and isCrate(b)
 end
 
-function ProjectileSystem:collision(a, b, contact)
+function ProjectileSystem:destroy(fixture)
+  fixture:getBody():destroy()
+  self.manager:removeEntity(fixture:getUserData().entity)
+end
+
+function ProjectileSystem:collision(a, b, contact, world)
   if check(a, b) or check(b, a) then
-    self.manager:removeEntity(a:getUserData().entity)
-    self.manager:removeEntity(b:getUserData().entity)
+    self:destroy(a)
+    self:destroy(b)
   end
 end
 

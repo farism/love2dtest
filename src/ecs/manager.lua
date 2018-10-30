@@ -2,8 +2,9 @@ local Entity = require 'ecs.entity'
 
 local Manager = {}
 
-function Manager:new()
+function Manager:new(world)
   local manager = {
+    world = world,
     factory = nil,
     entities = {},
     components = {},
@@ -120,7 +121,7 @@ function Manager:new()
 
   function manager:collision(a, b, contact)
     for _, sys in pairs(self.systems) do
-      sys:collision(a, b, contact)
+      sys:collision(a, b, contact, self.world)
     end
   end
 

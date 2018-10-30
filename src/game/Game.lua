@@ -29,7 +29,7 @@ end
 
 function Game:new()
   local world = love.physics.newWorld(0, 9.81, true)
-  local manager = Manager:new()
+  local manager = Manager:new(world)
   local factory = Factory(world, manager)
   local hud = HUD:new()
   local game = {
