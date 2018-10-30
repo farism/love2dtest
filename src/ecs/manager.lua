@@ -48,6 +48,7 @@ function Manager:new()
       sys:remove(entity)
     end
 
+    self.components[entity.id] = nil
     self.entities[entity.id] = nil
   end
 
@@ -73,10 +74,6 @@ function Manager:new()
     entity:removeComponent(cmp)
     self:setComponent(entity, cmp, nil)
     self:check(entity)
-  end
-
-  function manager:clearComponents(entity)
-    self.components[entity.id] = nil
   end
 
   -- managing systems
