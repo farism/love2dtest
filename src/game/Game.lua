@@ -13,6 +13,7 @@ local JumpReset = require 'game.systems.jumpreset'
 local Projectile = require 'game.systems.projectile'
 local FixtureRender = require 'game.systems.fixturerender'
 local SpriteRender = require 'game.systems.spriterender'
+local SpritesheetRender = require 'game.systems.spritesheetrender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
 local Timer = require 'game.systems.timer'
 
@@ -59,6 +60,7 @@ function Game:new()
   manager:addSystem(Timer)
   manager:addSystem(FixtureRender)
   manager:addSystem(SpriteRender)
+  manager:addSystem(SpritesheetRender)
   manager:addSystem(Logger)
 
   local player = initEntities(factory)

@@ -43,7 +43,8 @@ local function Factory(world, manager)
       fixture:setFilterData(2, 1, 0)
 
       return entity, {
-        Sprite.new(1, 'assets/sprites/player.png'),
+        -- Sprite.new(1, 'assets/sprites/player.png'),
+        Spritesheet.new(1, 'assets/sprites/player.png', 8, 1),
         Input.new(1),
         Ability.new(1),
         Movement.new(1),
