@@ -5,12 +5,12 @@ local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Position = require 'game.components.position'
 local Ability = require 'game.systems.ability'
-local Death = require 'game.systems.death'
+local Container = require 'game.systems.container'
+local Damage = require 'game.systems.damage'
 local Input = require 'game.systems.input'
 local InputMovement = require 'game.systems.inputmovement'
 local Logger = require 'game.systems.logger'
 local JumpReset = require 'game.systems.jumpreset'
-local Projectile = require 'game.systems.projectile'
 local FixtureRender = require 'game.systems.fixturerender'
 local SpriteRender = require 'game.systems.spriterender'
 local SpritesheetRender = require 'game.systems.spritesheetrender'
@@ -23,6 +23,7 @@ local function initEntities(factory)
   factory.create(factory.ground())
   factory.create(factory.crate(200))
   factory.create(factory.crate(264))
+  factory.create(factory.wall())
 
   return factory.create(factory.player())
 end
@@ -39,7 +40,7 @@ function Game:new()
     world = world
   }
 
-  love.physics.setMeter(128)
+  love.physics.setMeter(256)
 
   manager:setFactory(factory)
 
@@ -50,13 +51,13 @@ function Game:new()
     end
   )
 
-  manager:addSystem(Death)
+  manager:addSystem(Container)
+  manager:addSystem(Damage)
   manager:addSystem(Input)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
   manager:addSystem(Ability)
-  manager:addSystem(Projectile)
   manager:addSystem(Timer)
   manager:addSystem(FixtureRender)
   manager:addSystem(SpriteRender)

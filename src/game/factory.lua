@@ -17,7 +17,8 @@ local types = {
   GROUND = 'ground',
   MOB = 'mob',
   PLAYER = 'player',
-  THROWING_PICK = 'throwingPick'
+  THROWING_PICK = 'throwingPick',
+  WALL = 'wall'
 }
 
 local function Factory(world, manager)
@@ -43,8 +44,8 @@ local function Factory(world, manager)
       fixture:setFilterData(2, 1, 0)
 
       return entity, {
-        -- Sprite.new(1, 'assets/sprites/player.png'),
-        Spritesheet.new(1, 'assets/sprites/player.png', 8, 1),
+        Sprite.new(1, 'assets/sprites/player.png'),
+        -- Spritesheet.new(1, 'assets/sprites/player.png', 8, 1),
         Input.new(1),
         Ability.new(1),
         Movement.new(1),
@@ -113,6 +114,20 @@ local function Factory(world, manager)
       entity.meta.type = types.GROUND
       local body = love.physics.newBody(world, 800 / 2, 480 - 15, 'static')
       local shape = love.physics.newRectangleShape(800, 30)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      return entity, {
+        Fixture.new(1, entity, fixture)
+      }
+    end
+  end
+
+  function factory.wall()
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.WALL
+      local body = love.physics.newBody(world, 400, 480 - 130, 'static')
+      local shape = love.physics.newRectangleShape(30, 200)
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {

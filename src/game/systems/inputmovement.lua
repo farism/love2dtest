@@ -25,7 +25,7 @@ function InputMovement:update(dt)
     end
 
     if (movement.jump and movement.jumpCount < 2) then
-      newVelocityY = -650
+      newVelocityY = -1000
       movement.jump = false
       movement.jumpCount = movement.jumpCount + 1
     end

@@ -9,6 +9,10 @@ function Entity:new(id, manager, meta)
     meta = meta or {}
   }
 
+  function entity:destroy()
+    self.manager:removeEntity(self)
+  end
+
   function entity:has(cmp)
     return bit.band(self.components, cmp._meta.flag) == cmp._meta.flag
   end
