@@ -18,17 +18,18 @@ local Timer = require 'game.systems.timer'
 
 local Game = {}
 
-local function initEntities(manager, factory)
-  factory.add(manager:newEntity(), factory.ground)
-  factory.add(manager:newEntity(), factory.crate, 200)
-  factory.add(manager:newEntity(), factory.crate, 264)
-  return factory.add(manager:newEntity(), factory.player)
+local function initEntities(factory)
+  factory.create(factory.ground())
+  factory.create(factory.crate(200))
+  factory.create(factory.crate(264))
+
+  return factory.create(factory.player())
 end
 
 function Game:new()
   local world = love.physics.newWorld(0, 9.81, true)
-  local factory = Factory(world)
-  local manager = Manager:new(factory)
+  local manager = Manager:new()
+  local factory = Factory(world, manager)
   local hud = HUD:new()
   local game = {
     state = State.PLAYING,
@@ -38,6 +39,8 @@ function Game:new()
   }
 
   love.physics.setMeter(128)
+
+  manager:setFactory(factory)
 
   world.setCallbacks(
     world,
@@ -58,7 +61,7 @@ function Game:new()
   manager:addSystem(SpriteRender)
   manager:addSystem(Logger)
 
-  local player = initEntities(manager, factory)
+  local player = initEntities(factory)
 
   function game:setState(state)
     self.state = state
@@ -91,7 +94,10 @@ function Game:new()
 
   function game:draw()
     self.manager:draw()
-    self.hud:draw(player)
+
+    if player then
+      self.hud:draw(player)
+    end
   end
 
   return game

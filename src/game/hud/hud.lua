@@ -58,7 +58,10 @@ function HUD:new(game)
 
   function hud:draw(player)
     suit.draw()
-    drawAbilityCooldowns(player)
+
+    if (player) then
+      drawAbilityCooldowns(player)
+    end
   end
 
   return hud

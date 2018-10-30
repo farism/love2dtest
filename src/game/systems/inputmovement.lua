@@ -19,13 +19,13 @@ function InputMovement:update(dt)
     local newVelocityY = velocityY
 
     if (movement.left == true) then
-      newVelocityX = -200
+      newVelocityX = -300
     elseif movement.right == true then
-      newVelocityX = 200
+      newVelocityX = 300
     end
 
     if (movement.jump and movement.jumpCount < 2) then
-      newVelocityY = -500
+      newVelocityY = -650
       movement.jump = false
       movement.jumpCount = movement.jumpCount + 1
     end

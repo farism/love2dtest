@@ -2,14 +2,18 @@ local Entity = require 'ecs.entity'
 
 local Manager = {}
 
-function Manager:new(factory)
+function Manager:new()
   local manager = {
-    factory = factory,
+    factory = nil,
     entities = {},
     components = {},
     systems = {},
     nextid = 1
   }
+
+  function manager:setFactory(factory)
+    self.factory = factory
+  end
 
   -- managing entities
 

@@ -11,108 +11,113 @@ local Spritesheet = require 'game.components.spritesheet'
 local Timer = require 'game.components.timer'
 local Velocity = require 'game.components.velocity'
 
-local function Factory(world)
+local types = {
+  CHECKPOINT = 'checkpoint',
+  CRATE = 'crate',
+  GROUND = 'ground',
+  MOB = 'mob',
+  PLAYER = 'player',
+  THROWING_PICK = 'throwingPick'
+}
+
+local function Factory(world, manager)
   local factory = {}
 
-  function factory.add(entity, components, ...)
-    for _, component in pairs(components(entity, ...)) do
+  function factory.create(prefab)
+    local entity, components = prefab()
+
+    for _, component in pairs(components) do
       entity.manager:addComponent(entity, component)
     end
 
     return entity
   end
 
-  function factory.player(e)
-    local fixture =
-      Fixture.new(
-      1,
-      {isPlayer = true, entity = e},
-      {world, 0, 0, Fixture.DYNAMIC},
-      {Fixture.RECTANGLE, 32, 32},
-      1
-    )
+  function factory.player()
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.PLAYER
+      local body = love.physics.newBody(world, 0, 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(32, 32)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFilterData(2, 1, 0)
 
-    fixture.fixture:setFilterData(2, 1, 0)
-
-    return {
-      Sprite.new(1, 'assets/sprites/player.png'),
-      Input.new(1),
-      Ability.new(1),
-      Movement.new(1),
-      Position.new(1),
-      Timer.new(1),
-      fixture
-    }
+      return entity, {
+        Sprite.new(1, 'assets/sprites/player.png'),
+        Input.new(1),
+        Ability.new(1),
+        Movement.new(1),
+        Position.new(1),
+        Timer.new(1),
+        Fixture.new(1, entity, fixture)
+      }
+    end
   end
 
-  function factory.mob(e)
-    local fixture =
-      Fixture.new(
-      1,
-      {entity = e},
-      {world, 0, 0, Fixture.DYNAMIC},
-      {Fixture.RECTANGLE, 32, 32},
-      1
-    )
+  function factory.mob()
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.MOB
+      local body = love.physics.newBody(world, 0, 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(32, 32)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFilterData(2, 1, 0)
 
-    return {
-      Position.new(1),
-      Velocity.new(1),
-      fixture
-    }
+      return entity, {
+        Position.new(1),
+        Velocity.new(1),
+        Fixture.new(1, entity, fixture)
+      }
+    end
   end
 
-  function factory.throwingPick(e)
-    local fixture =
-      Fixture.new(
-      1,
-      {e = entity},
-      {world, 0, 0, Fixture.DYNAMIC},
-      {Fixture.RECTANGLE, 8, 8},
-      1
-    )
+  function factory.throwingPick()
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.THROWING_PICK
+      local body = love.physics.newBody(world, 0, 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(8, 8)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFilterData(1, 1, 0)
 
-    fixture.fixture:setFilterData(1, 1, 0)
-
-    return {
-      Projectile.new(1),
-      Position.new(1),
-      Velocity.new(1),
-      fixture
-    }
+      return entity, {
+        Projectile.new(1),
+        Position.new(1),
+        Velocity.new(1),
+        Fixture.new(1, entity, fixture)
+      }
+    end
   end
 
-  function factory.crate(e, x, y)
-    x = x or 0
-    y = y or 0
+  function factory.crate(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.CRATE
+      local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(48, 48)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFilterData(1, 1, 0)
 
-    local fixture =
-      Fixture.new(
-      1,
-      {},
-      {world, x, y, Fixture.DYNAMIC},
-      {Fixture.RECTANGLE, 48, 48},
-      1
-    )
-
-    fixture.fixture:setFilterData(1, 1, 0)
-
-    return {
-      Position.new(1, x, y),
-      Velocity.new(1),
-      fixture
-    }
+      return entity, {
+        Position.new(1, x, y),
+        Velocity.new(1),
+        Fixture.new(1, entity, fixture)
+      }
+    end
   end
 
   function factory.ground()
-    return {
-      Fixture.new(
-        1,
-        {},
-        {world, 800 / 2, 480 - 15, Fixture.STATIC},
-        {Fixture.RECTANGLE, 800, 30}
-      )
-    }
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.GROUND
+      local body = love.physics.newBody(world, 800 / 2, 480 - 15, 'static')
+      local shape = love.physics.newRectangleShape(800, 30)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      return entity, {
+        Fixture.new(1, entity, fixture)
+      }
+    end
   end
 
   return factory

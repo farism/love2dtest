@@ -15,7 +15,7 @@ function AbilitySystem:throw(dt, entity)
   local factory = manager.factory
   local position = entity:as(Position)
   local movement = entity:as(Movement)
-  local projectile = factory.add(manager:newEntity(), factory.throwingPick)
+  local projectile = factory.create(factory.throwingPick())
   local body = projectile:as(Fixture).fixture:getBody()
   body:setFixedRotation(false)
   body:setGravityScale(0)

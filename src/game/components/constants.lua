@@ -1,8 +1,6 @@
 local flag = require 'game.utils.flag'
 
-local constants = {}
-
-constants = {
+local constants = {
   Input = {id = 'input', flag = flag(0)},
   Movement = {id = 'movement', flag = flag(1)},
   Music = {id = 'music', flag = flag(2)},

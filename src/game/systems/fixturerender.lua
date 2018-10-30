@@ -12,13 +12,13 @@ function FixtureRender:draw()
     local shape = fixture.fixture:getShape()
     local shapeType = shape:getType()
 
-    if shapeType == Fixture.POLYGON then
+    if shapeType == 'polygon' then
       love.graphics.polygon('fill', body:getWorldPoints(shape:getPoints()))
-    elseif shapeType == Fixture.CIRCLE then
+    elseif shapeType == 'circle' then
       love.graphics.circle('fill', body:getX(), body:getY(), shape:getRadius())
-    elseif shapeType == Fixture.EDGE then
+    elseif shapeType == 'edge' then
       -- return love.physics.newEdgeShape(...)
-    elseif shapeType == Fixture.CHAIN then
+    elseif shapeType == 'chain' then
     -- return love.physics.newChainShape(...)
     end
   end

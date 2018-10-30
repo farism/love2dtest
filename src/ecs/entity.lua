@@ -1,11 +1,12 @@
 local Entity = {}
 
-function Entity:new(id, manager)
+function Entity:new(id, manager, meta)
   local entity = {
     id = id,
     manager = manager,
     components = 0,
-    systems = 0
+    systems = 0,
+    meta = meta or {}
   }
 
   function entity:has(cmp)

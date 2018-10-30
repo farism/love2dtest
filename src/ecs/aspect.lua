@@ -39,4 +39,14 @@ function Aspect:any()
   return aspect
 end
 
+function Aspect:never()
+  local aspect = {}
+
+  function aspect:check()
+    return false
+  end
+
+  return aspect
+end
+
 return Aspect
