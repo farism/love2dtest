@@ -1,5 +1,3 @@
-fun = require 'vendor.fun'
-
 local Game = require 'game.game'
 
 local game

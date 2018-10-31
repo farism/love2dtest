@@ -4,7 +4,7 @@ local Input = require 'game.components.input'
 local Ability = require 'game.components.ability'
 local Movement = require 'game.components.movement'
 
-local aspect = Aspect:new({Input})
+local aspect = Aspect:new({Input, Movement, Ability})
 local InputSystem = System:new('input', aspect)
 
 local inputs = {

@@ -17,7 +17,7 @@ function Ability.new(id)
     _meta = Ability._meta,
     id = id,
     abilities = {
-      throw = ability(1, 0),
+      throw = ability(0.5, 0),
       dash = ability(1, 0.15),
       grapple = ability(1, 0),
       dig = ability(1, 1)

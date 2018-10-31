@@ -21,8 +21,8 @@ function DamageSystem:collision(a, b, contact)
     destroy('throwingPick', a) or destroy('throwingPick', b)
 
   if isProjectileCollision then
-    destroy('crate', a)
-    destroy('crate', b)
+    destroy('container', a)
+    destroy('container', b)
   end
 end
 

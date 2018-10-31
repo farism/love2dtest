@@ -1,8 +1,8 @@
 local Asset = {}
 
-_imageCache = {}
-_soundCache = {}
-_musicCache = {}
+local _imageCache = {}
+local _soundCache = {}
+local _musicCache = {}
 
 local function get(cache, loader, file)
   if (cache[file]) then

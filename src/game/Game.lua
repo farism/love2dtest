@@ -16,14 +16,16 @@ local SpriteRender = require 'game.systems.spriterender'
 local SpritesheetRender = require 'game.systems.spritesheetrender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
 local Timer = require 'game.systems.timer'
+local WaypointMovement = require 'game.systems.waypointmovement'
 
 local Game = {}
 
 local function initEntities(factory)
   factory.create(factory.ground())
-  factory.create(factory.crate(200))
-  factory.create(factory.crate(264))
-  factory.create(factory.wall())
+  factory.create(factory.crate(100))
+  factory.create(factory.crate(164))
+  factory.create(factory.wall(300))
+  factory.create(factory.mob(350))
 
   return factory.create(factory.player())
 end
@@ -57,6 +59,7 @@ function Game:new()
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
+  manager:addSystem(WaypointMovement)
   manager:addSystem(Ability)
   manager:addSystem(Timer)
   manager:addSystem(FixtureRender)
