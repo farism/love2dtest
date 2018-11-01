@@ -46,9 +46,26 @@ local function Factory(world, manager)
       fixture:setFriction(1)
       fixture:setFilterData(2, 1, 0)
 
+      local animations = {
+        walkRight = {
+          duration = .5,
+          step = 1,
+          steps = 8,
+          stepOffset = 0,
+          row = 1
+        },
+        standRight = {
+          duration = .5,
+          step = 1,
+          steps = 1,
+          stepOffset = 0,
+          row = 1
+        }
+      }
+
       return entity, {
-        Sprite.new(1, 'assets/sprites/player.png'),
-        -- Spritesheet.new(1, 'assets/sprites/player.png', 8, 1),
+        -- Sprite.new(1, 'assets/sprites/player.png'),
+        Spritesheet.new(1, 'assets/sprites/player.png', 32, 32, animations),
         Input.new(1),
         Ability.new(1),
         Movement.new(1),
@@ -93,7 +110,7 @@ local function Factory(world, manager)
       local entity = manager:newEntity()
       entity.meta.type = types.PLATFORM
       local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
-      local shape = love.physics.newRectangleShape(128, 16)
+      local shape = love.physics.newRectangleShape(128, 128)
       local fixture = love.physics.newFixture(body, shape, 1)
       -- fixture:setFriction(1)
 

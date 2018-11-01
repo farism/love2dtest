@@ -4,20 +4,20 @@ local Asset = require 'game.utils.Asset'
 local Spritesheet = {
   _meta = constants.Spritesheet
 }
-local function buildFrames(image, columns, rows)
-  local width, height = image:getDimensions()
-  local frames = {}
-  local frameWidth = width / columns
-  local frameHeight = height / rows
 
-  for n = 1, columns do
-    for m = 1, rows do
-      local quad =
-        table.insert(
+function Spritesheet.new(id, file, frameWidth, frameHeight, animations)
+  local image = Asset.getImage(file)
+  local width, height = image:getDimensions()
+  local currentAnimation = null
+  local frames = {}
+
+  local function buildAnimation(animation)
+    for step = 1, animation.steps do
+      table.insert(
         frames,
         love.graphics.newQuad(
-          0 + (n - 1) * frameWidth,
-          0 + (m - 1) * frameHeight,
+          (step - 1) * frameWidth,
+          (animation.row - 1) * frameHeight,
           frameWidth,
           frameHeight,
           width,
@@ -27,28 +27,25 @@ local function buildFrames(image, columns, rows)
     end
   end
 
-  return frames
-end
-
--- animation {
--- id
--- startframe
--- length
--- speed
--- currentframe
--- }
-
--- function Spritesheet.new(id, file, animations, frames)
-function Spritesheet.new(id, file, columns, rows, width, height, frames)
-  local image = Asset.getImage(file)
-  local frames = buildFrames(image, columns or 1, rows or 1)
+  for name, animation in pairs(animations) do
+    animation.stepOffset = #frames
+    animation.rate = animation.steps / animation.duration
+    buildAnimation(animation)
+    currentAnimation = currentAnimation or name
+  end
 
   return {
     _meta = Spritesheet._meta,
     id = id,
     file = file,
     image = image,
-    frames = frames
+    frameWidth = width,
+    frameHeight = height,
+    frames = frames,
+    currentFrame = 1,
+    currentAnimation = currentAnimation,
+    animations = animations,
+    elapsed = 0
   }
 end
 
