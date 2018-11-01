@@ -3,6 +3,7 @@ local Manager = require 'ecs.manager'
 local Factory = require 'game.factory'
 local State = require 'game.state'
 local HUD = require 'game.hud.hud'
+local Camera = require 'game.utils.camera'
 local Position = require 'game.components.position'
 local Ability = require 'game.systems.ability'
 local Container = require 'game.systems.container'
@@ -22,6 +23,7 @@ local Game = {}
 
 local function initEntities(factory)
   factory.create(factory.ground())
+  factory.create(factory.platform(400, 200))
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
   factory.create(factory.wall(300))
@@ -34,10 +36,12 @@ function Game:new()
   local world = love.physics.newWorld(0, 9.81, true)
   local manager = Manager:new(world)
   local factory = Factory(world, manager)
-  local hud = HUD:new()
+  local hud = HUD.new()
+  local camera = Camera.new()
   local game = {
     state = State.PLAYING,
     hud = hud,
+    camera = camera,
     manager = manager,
     world = world
   }
@@ -99,7 +103,9 @@ function Game:new()
   end
 
   function game:draw()
+    self.camera:set()
     self.manager:draw()
+    self.camera:unset()
 
     if player then
       self.hud:draw(player)

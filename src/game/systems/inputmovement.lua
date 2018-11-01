@@ -15,7 +15,7 @@ function InputMovement:update(dt)
     local body = fixture.fixture:getBody()
     local velocityX, velocityY = body:getLinearVelocity()
 
-    local newVelocityX = 0
+    local newVelocityX = velocityX
     local newVelocityY = velocityY
 
     if (movement.left == true) then

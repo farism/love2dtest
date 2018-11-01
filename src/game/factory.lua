@@ -17,6 +17,7 @@ local types = {
   CONTAINER = 'container',
   GROUND = 'ground',
   MOB = 'mob',
+  PLATFORM = 'platform',
   PLAYER = 'player',
   THROWING_PICK = 'throwingPick',
   WALL = 'wall'
@@ -42,6 +43,7 @@ local function Factory(world, manager)
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
       local shape = love.physics.newRectangleShape(32, 32)
       local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFriction(1)
       fixture:setFilterData(2, 1, 0)
 
       return entity, {
@@ -74,6 +76,32 @@ local function Factory(world, manager)
             {x = 400, y = 0, duration = 1000},
             {x = 500, y = 0, duration = 5000},
             {x = 450, y = 0, duration = 5000},
+            {x = 600, y = 0, duration = 5000}
+          }
+        ),
+        Movement.new(1),
+        Position.new(1),
+        Timer.new(1),
+        Velocity.new(1),
+        Fixture.new(1, entity, fixture)
+      }
+    end
+  end
+
+  function factory.platform(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.PLATFORM
+      local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
+      local shape = love.physics.newRectangleShape(128, 16)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      -- fixture:setFriction(1)
+
+      return entity, {
+        Waypoint.new(
+          1,
+          {
+            {x = 400, y = 0, duration = 1000},
             {x = 600, y = 0, duration = 5000}
           }
         ),

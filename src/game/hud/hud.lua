@@ -7,14 +7,14 @@ local upgrades = require 'game.hud.upgrades'
 local playing = require 'game.hud.playing'
 local paused = require 'game.hud.paused'
 
+local HUD = {}
+
 local screens = {
   [State.HOME] = {home},
   [State.UPGRADES] = {upgrades},
   [State.PLAYING] = {playing},
   [State.PAUSED] = {paused}
 }
-
-local HUD = {}
 
 local function getPercent(ability, timer, key)
   local total = ability.abilities[key].cooldown or 0
@@ -45,7 +45,7 @@ local function drawAbilityCooldowns(player)
   love.graphics.setColor(255, 255, 255)
 end
 
-function HUD:new(game)
+function HUD.new(game)
   local hud = {}
 
   function hud:update(dt, game)

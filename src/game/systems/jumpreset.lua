@@ -10,8 +10,8 @@ local function isPlayer(fixture)
   return fixture:getUserData().type == 'player'
 end
 
-local function isStatic(fixture)
-  return fixture:getBody():getType() == 'static'
+local function isNotDynamic(fixture)
+  return fixture:getBody():getType() ~= 'dynamic'
 end
 
 local function getPlayerFixture(a, b)
@@ -23,7 +23,7 @@ local function getPlayerFixture(a, b)
 end
 
 local function check(a, b)
-  return isPlayer(a) and isStatic(b)
+  return isPlayer(a) and isNotDynamic(b)
 end
 
 function JumpReset:collision(a, b, contact)

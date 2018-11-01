@@ -16,15 +16,22 @@ local function get(cache, loader, file)
 end
 
 function Asset.getImage(file)
-  return get(_imageCache, love.graphics.newImage, file)
+  local image = get(_imageCache, love.graphics.newImage, file)
+  image:setWrap('repeat', 'repeat')
+
+  return image
 end
 
 function Asset.getSound(file)
-  return get(_soundCache, love.audio.newSource, file)
+  local sound = get(_soundCache, love.audio.newSource, file)
+
+  return sound
 end
 
 function Asset.getMusic(file)
-  return get(_musicCache, love.audio.newSource, file)
+  local music = get(_musicCache, love.audio.newSource, file)
+
+  return music
 end
 
 return Asset
