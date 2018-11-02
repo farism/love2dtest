@@ -29,7 +29,7 @@ function Aspect:new(all, none, one)
   return aspect
 end
 
-function Aspect:any()
+function Aspect:always()
   local aspect = {}
 
   function aspect:check()

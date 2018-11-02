@@ -1,48 +1,50 @@
+local tween = require 'vendor.tween'
+local Movement = require 'game.components.movement'
+local Position = require 'game.components.position'
+
 local Camera = {}
+local LEFT_OFFSET = -WINDOW_WIDTH + 300
+local RIGHT_OFFSET = -200
 
 function Camera.new()
-  local camera = {}
-
-  camera.x = 0
-  camera.y = 0
-  camera.scaleX = 1
-  camera.scaleY = 1
-  camera.rotation = 0
+  local camera = {
+    x = 0,
+    y = 0,
+    offset = RIGHT_OFFSET,
+    direction = 'right',
+    tween = nil
+  }
 
   function camera:set()
     love.graphics.push()
-    love.graphics.rotate(-self.rotation)
-    love.graphics.scale(1 / self.scaleX, 1 / self.scaleY)
     love.graphics.translate(-self.x, -self.y)
   end
 
-  function camera:unset()
+  function camera:clear()
     love.graphics.pop()
   end
 
-  function camera:move(dx, dy)
-    self.x = self.x + (dx or 0)
-    self.y = self.y + (dy or 0)
-  end
+  function camera:update(dt, player)
+    local movement = player:as(Movement)
+    local position = player:as(Position)
+    local offset = self.offset
 
-  function camera:rotate(dr)
-    self.rotation = self.rotation + dr
-  end
+    if movement.direction == 'left' then
+      offset = LEFT_OFFSET
+    elseif movement.direction == 'right' then
+      offset = RIGHT_OFFSET
+    end
 
-  function camera:scale(sx, sy)
-    sx = sx or 1
-    self.scaleX = self.scaleX * sx
-    self.scaleY = self.scaleY * (sy or sx)
-  end
+    if self.direction ~= movement.direction then
+      self.tween = tween.new(2, self, {offset = offset}, 'outQuad')
+    end
 
-  function camera:setPosition(x, y)
-    self.x = x or self.x
-    self.y = y or self.y
-  end
+    if self.tween then
+      self.tween:update(dt)
+    end
 
-  function camera:setScale(sx, sy)
-    self.scaleX = sx or self.scaleX
-    self.scaleY = sy or self.scaleY
+    self.x = position.x + self.offset
+    self.direction = movement.direction
   end
 
   return camera

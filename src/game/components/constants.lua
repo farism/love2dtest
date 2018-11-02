@@ -17,9 +17,10 @@ local constants = {
   Upgrades = {id = 'upgrades', flag = flag(13)},
   Ability = {id = 'ability', flag = flag(14)},
   Timer = {id = 'timer', flag = flag(15)},
-  Dig = {id = 'dig', flag = flag(17)},
   Container = {id = 'container', flag = flag(18)},
-  Waypoint = {id = 'waypoint', flag = flag(19)}
+  Waypoint = {id = 'waypoint', flag = flag(19)},
+  Health = {id = 'health', flag = flag(20)},
+  Damage = {id = 'damage', flag = flag(21)}
 }
 
 return constants

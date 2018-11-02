@@ -6,6 +6,7 @@ local home = require 'game.hud.home'
 local upgrades = require 'game.hud.upgrades'
 local playing = require 'game.hud.playing'
 local paused = require 'game.hud.paused'
+local stats = require 'game.hud.stats'
 
 local HUD = {}
 
@@ -31,7 +32,6 @@ local function drawCooldownArc(x, y, percent)
 end
 
 local function drawAbilityCooldowns(player)
-  local width, height = love.graphics.getDimensions()
   local ability = player:as(Ability)
   local timer = player:as(Timer)
   local throw = getPercent(ability, timer, 'throw')
@@ -39,9 +39,8 @@ local function drawAbilityCooldowns(player)
   local dig = getPercent(ability, timer, 'dig')
 
   love.graphics.setColor(0, 0, 0, 0.5)
-  drawCooldownArc(width - 24 - 10, height - 64 - 24 - 48, throw)
-  drawCooldownArc(width - 64 - 24 - 48, height - 24 - 10, dash)
-  -- drawCooldownArc(width - 24 - 10, height - 64 - 24 - 48, dig)
+  drawCooldownArc(WINDOW_WIDTH - 24 - 10, WINDOW_HEIGHT - 64 - 24 - 48, throw)
+  drawCooldownArc(WINDOW_WIDTH - 64 - 24 - 48, WINDOW_HEIGHT - 24 - 10, dash)
   love.graphics.setColor(255, 255, 255)
 end
 
@@ -52,11 +51,12 @@ function HUD.new(game)
     local width, height = love.graphics.getDimensions()
 
     for _, screen in pairs(screens[game.state] or {}) do
-      screen.update(dt, suit, width, height, game)
+      screen.update(dt, suit, WINDOW_WIDTH, WINDOW_HEIGHT, game)
     end
   end
 
-  function hud:draw(player)
+  function hud:draw(game)
+    stats.draw()
     suit.draw()
 
     if (player) then

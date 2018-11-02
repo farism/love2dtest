@@ -4,11 +4,13 @@ local Player = {
   _meta = constants.Player
 }
 
-function Player.new(id, alias)
+function Player.new(id)
   return {
     _meta = Player._meta,
     id = id,
-    alias = alias
+    alias = alias,
+    lives = 3,
+    checkpoint = 0
   }
 end
 
