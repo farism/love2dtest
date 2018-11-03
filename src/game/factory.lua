@@ -52,19 +52,33 @@ local function Factory(world, manager)
       fixture:setFilterData(2, 1, 0)
 
       local animations = {
-        walkRight = {
+        walk_right = {
           duration = .5,
           step = 1,
           steps = 8,
           stepOffset = 0,
           row = 1
         },
-        standRight = {
+        walk_left = {
+          duration = .5,
+          step = 1,
+          steps = 8,
+          stepOffset = 0,
+          row = 2
+        },
+        stand_right = {
           duration = .5,
           step = 1,
           steps = 1,
           stepOffset = 0,
           row = 1
+        },
+        stand_left = {
+          duration = .5,
+          step = 1,
+          steps = 1,
+          stepOffset = 0,
+          row = 2
         }
       }
 

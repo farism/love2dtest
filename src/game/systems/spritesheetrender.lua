@@ -12,11 +12,15 @@ local function getAnimation(spritesheet)
 end
 
 local function setCurrent(spritesheet, movement)
-  local current = 'standRight'
-  if movement and movement.right then
-    current = 'walkRight'
+  local action = 'stand'
+  local direction = movement.direction or 'right'
+  if movement then
+    if movement.right or movement.left then
+      action = 'walk'
+    end
   end
-  spritesheet.currentAnimation = current
+  local animation = action .. '_' .. direction
+  spritesheet.currentAnimation = animation
 end
 
 local function updateAnimation(spritesheet, elapsed)
