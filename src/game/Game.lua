@@ -5,6 +5,7 @@ local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Camera = require 'game.utils.camera'
 local Ability = require 'game.systems.ability'
+local AnimateSprite = require 'game.systems.animatesprite'
 local Checkpoint = require 'game.systems.checkpoint'
 local Container = require 'game.systems.container'
 local Damage = require 'game.systems.damage'
@@ -16,6 +17,7 @@ local InputMovement = require 'game.systems.inputmovement'
 local JumpReset = require 'game.systems.jumpreset'
 local Logger = require 'game.systems.logger'
 local Projectile = require 'game.systems.projectile'
+local SetCurrentAnimation = require 'game.systems.setcurrentanimation'
 local SineMovement = require 'game.systems.sinemovement'
 local SpriteRender = require 'game.systems.spriterender'
 local SpritesheetRender = require 'game.systems.spritesheetrender'
@@ -79,7 +81,9 @@ function Game:new()
   manager:addSystem(Checkpoint)
   manager:addSystem(FixtureRender)
   manager:addSystem(SpriteRender)
-  manager:addSystem(SpritesheetRender)
+  manager:addSystem(SetCurrentAnimation)
+  manager:addSystem(AnimateSprite)
+  -- manager:addSystem(SpritesheetRender)
   manager:addSystem(Logger)
 
   manager:setFactory(factory)

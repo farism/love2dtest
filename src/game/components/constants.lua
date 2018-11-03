@@ -21,7 +21,8 @@ local constants = {
   Waypoint = {id = 'waypoint', flag = flag(19)},
   Health = {id = 'health', flag = flag(20)},
   Damage = {id = 'damage', flag = flag(21)},
-  Sine = {id = 'sine', flag = flag(22)}
+  Sine = {id = 'sine', flag = flag(22)},
+  Animation = {id = 'animation', flag = flag(23)}
 }
 
 return constants

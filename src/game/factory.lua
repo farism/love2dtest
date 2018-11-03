@@ -1,4 +1,5 @@
 local Ability = require 'game.components.ability'
+local Animation = require 'game.components.animation'
 local Checkpoint = require 'game.components.checkpoint'
 local Damage = require 'game.components.damage'
 local Fixture = require 'game.components.fixture'
@@ -53,38 +54,45 @@ local function Factory(world, manager)
 
       local animations = {
         walk_right = {
-          duration = .5,
-          step = 1,
-          steps = 8,
-          stepOffset = 0,
-          row = 1
+          x = 0,
+          y = 0,
+          width = 32,
+          height = 32,
+          length = 8,
+          duration = 1
         },
         walk_left = {
-          duration = .5,
-          step = 1,
-          steps = 8,
-          stepOffset = 0,
-          row = 2
+          x = 0,
+          y = 32,
+          width = 32,
+          height = 32,
+          length = 8,
+          duration = 1
         },
         stand_right = {
-          duration = .5,
-          step = 1,
-          steps = 1,
-          stepOffset = 0,
-          row = 1
+          x = 0,
+          y = 0,
+          width = 32,
+          height = 32,
+          length = 1,
+          duration = 1
         },
         stand_left = {
-          duration = .5,
-          step = 1,
-          steps = 1,
-          stepOffset = 0,
-          row = 2
+          x = 0,
+          y = 32,
+          width = 32,
+          height = 32,
+          length = 1,
+          duration = 1
         }
       }
 
+      local sprite = Sprite.new(1, 'assets/sprites/player.png')
+      local spriteWidth, spriteHeight = sprite.image:getDimensions()
+
       return entity, {
-        -- Sprite.new(1, 'assets/sprites/player.png'),
-        Spritesheet.new(1, 'assets/sprites/player.png', 32, 32, animations),
+        sprite,
+        Animation.new(1, 'walk_right', animations, spriteWidth, spriteHeight),
         Ability.new(1),
         Fixture.new(1, entity, fixture),
         Health.new(1, 1, 0),
@@ -92,7 +100,6 @@ local function Factory(world, manager)
         Movement.new(1),
         Player.new(1),
         Position.new(1),
-        Sprite.new(1, 'assets/sprites/player.png'),
         Timer.new(1)
       }
     end
