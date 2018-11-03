@@ -9,6 +9,7 @@ local Waypoint = require 'game.components.waypoint'
 local Player = require 'game.components.player'
 local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
+local Sine = require 'game.components.sine'
 local Sprite = require 'game.components.sprite'
 local Spritesheet = require 'game.components.spritesheet'
 local Timer = require 'game.components.timer'
@@ -22,6 +23,7 @@ local types = {
   MOB = 'mob',
   PLATFORM = 'platform',
   PLAYER = 'player',
+  SAW = 'saw',
   THROWING_PICK = 'throwingPick',
   WALL = 'wall'
 }
@@ -175,6 +177,38 @@ local function Factory(world, manager)
     end
   end
 
+  function factory.saw(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.SAW
+      local body =
+        love.physics.newBody(
+        world,
+        x or 0,
+        y or WINDOW_HEIGHT - 30 - 64,
+        'kinematic'
+      )
+      local shape = love.physics.newRectangleShape(64, 64)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      return entity, {
+        Damage.new(1, 1),
+        Fixture.new(1, entity, fixture),
+        Movement.new(1),
+        Position.new(1),
+        Sine.new(1, 200),
+        Timer.new(1),
+        Waypoint.new(
+          1,
+          {
+            {x = 400, y = 0, duration = 1000},
+            {x = 600, y = 0, duration = 5000}
+          }
+        )
+      }
+    end
+  end
+
   function factory.checkpoint(index, x, y)
     return function()
       local entity = manager:newEntity()
@@ -192,7 +226,8 @@ local function Factory(world, manager)
 
       return entity, {
         Checkpoint.new(1, index),
-        Fixture.new(1, entity, fixture)
+        Fixture.new(1, entity, fixture),
+        Position.new(1)
       }
     end
   end

@@ -2,7 +2,9 @@ local State = require 'game.state'
 
 local Paused = {}
 
-function Paused.update(dt, suit, width, height, game)
+local width, height = love.graphics.getDimensions()
+
+function Paused.update(dt, suit, player, game)
   if suit.Button('Resume', (800 - 300) / 2, 100, 300, 30).hit then
     game:setState(State.PLAYING)
   end
@@ -14,6 +16,9 @@ function Paused.update(dt, suit, width, height, game)
   if suit.Button('Main Menu', (800 - 300) / 2, 220, 300, 30).hit then
     game:setState(State.HOME)
   end
+end
+
+function Paused.draw(player, game)
 end
 
 return Paused

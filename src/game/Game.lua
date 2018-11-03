@@ -16,6 +16,7 @@ local InputMovement = require 'game.systems.inputmovement'
 local JumpReset = require 'game.systems.jumpreset'
 local Logger = require 'game.systems.logger'
 local Projectile = require 'game.systems.projectile'
+local SineMovement = require 'game.systems.sinemovement'
 local SpriteRender = require 'game.systems.spriterender'
 local SpritesheetRender = require 'game.systems.spritesheetrender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
@@ -30,8 +31,9 @@ local function initEntities(factory)
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
   factory.create(factory.icicle(300))
+  factory.create(factory.saw(400))
   factory.create(factory.checkpoint(1, 500))
-  factory.create(factory.checkpoint(2, 700))
+  factory.create(factory.checkpoint(2, 700, 200))
   -- factory.create(factory.wall(300))
   -- factory.create(factory.mob(350))
 
@@ -42,7 +44,6 @@ function Game:new()
   local world = love.physics.newWorld(0, 9.81, true)
   local manager = Manager:new(world)
   local factory = Factory(world, manager)
-  manager:setFactory(factory)
   local hud = HUD.new()
   local camera = Camera.new()
   local game = {
@@ -67,6 +68,7 @@ function Game:new()
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
+  manager:addSystem(SineMovement)
   manager:addSystem(WaypointMovement)
   manager:addSystem(Ability)
   manager:addSystem(Timer)
@@ -79,6 +81,8 @@ function Game:new()
   manager:addSystem(SpriteRender)
   manager:addSystem(SpritesheetRender)
   manager:addSystem(Logger)
+
+  manager:setFactory(factory)
 
   local player = initEntities(factory)
 
@@ -112,7 +116,7 @@ function Game:new()
       end
     end
 
-    self.hud:update(dt, self)
+    self.hud:update(dt, player, self)
   end
 
   function game:draw()
@@ -121,7 +125,7 @@ function Game:new()
     self.camera:clear()
 
     if player then
-      self.hud:draw(game)
+      self.hud:draw(player, self)
     end
   end
 

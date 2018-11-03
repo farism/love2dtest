@@ -36,7 +36,7 @@ function Camera.new()
     end
 
     if self.direction ~= movement.direction then
-      self.tween = tween.new(2, self, {offset = offset}, 'outQuad')
+      self.tween = tween.new(3, self, {offset = offset}, 'outQuad')
     end
 
     if self.tween then

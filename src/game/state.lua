@@ -1,8 +1,9 @@
 local State = {
+  GAMEOVER = 'gameover',
   HOME = 'home',
-  UPGRADES = 'upgrades',
+  PAUSED = 'paused',
   PLAYING = 'playing',
-  PAUSED = 'paused'
+  UPGRADES = 'upgrades'
 }
 
 return State

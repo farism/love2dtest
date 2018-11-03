@@ -1,7 +1,11 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
+local State = require 'game.state'
+local Checkpoint = require 'game.components.checkpoint'
+local Fixture = require 'game.components.fixture'
 local Health = require 'game.components.health'
 local Player = require 'game.components.player'
+local Position = require 'game.components.position'
 
 local aspect = Aspect:new({Health})
 local Death = System:new('death', aspect)
@@ -11,12 +15,27 @@ function Death:container(dt, entity)
 end
 
 function Death:player(dt, entity)
-  print('player dead')
-  local player = entity:as(Player)
   local health = entity:as(Health)
+  local player = entity:as(Player)
+  local fixture = entity:as(Fixture)
+
+  for _, entity in pairs(entity.manager.entities) do
+    local checkpoint = entity:as(Checkpoint)
+
+    if checkpoint and player.checkpoint == checkpoint.index then
+      local checkpointPosition = entity:as(Position)
+      local body = fixture.fixture:getBody()
+
+      body:setPosition(checkpointPosition.x, checkpointPosition.y)
+    end
+  end
 
   player.lives = math.max(0, player.lives - 1)
   health.hitpoints = 1
+
+  if (player.lives == 0) then
+  -- game:setState(State.GAMEOVER)
+  end
 end
 
 function Death:update(dt)

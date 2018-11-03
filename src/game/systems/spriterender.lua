@@ -3,7 +3,7 @@ local System = require 'ecs.system'
 local Position = require 'game.components.position'
 local Sprite = require 'game.components.sprite'
 
-local aspect = Aspect:new({Sprite})
+local aspect = Aspect:new({Position, Sprite})
 local SpriteRender = System:new('spriterender', aspect)
 
 function SpriteRender:draw()
