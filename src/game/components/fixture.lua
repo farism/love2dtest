@@ -5,17 +5,22 @@ local Fixture = {
 }
 
 function Fixture.new(id, entity, fixture)
-  local data = fixture:getUserData() or {}
-  data.entity = entity
-  data.type = entity.meta.type
-  fixture:setUserData(data)
-
-  return {
+  local instance = {
     _meta = Fixture._meta,
     id = id,
     entity = entity,
     fixture = fixture
   }
+
+  local data = fixture:getUserData() or {}
+  data.entity = entity
+  fixture:setUserData(data)
+
+  function instance:destroy()
+    self.fixture:getBody():destroy()
+  end
+
+  return instance
 end
 
 return Fixture

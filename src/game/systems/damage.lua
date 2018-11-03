@@ -1,28 +1,27 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
+local Damage = require 'game.components.damage'
+local Fixture = require 'game.components.fixture'
+local Health = require 'game.components.health'
 
-local DamageSystem = System:new('damage')
-
-local destroyOnContact = {'throwingPick'}
-
-local function destroy(type, fixture)
-  if fixture:getUserData().type == type then
-    fixture:getUserData().entity:destroy()
-    fixture:getBody():destroy()
-
-    return true
-  end
-
-  return false
-end
+local DamageSystem = System:new('damage', Aspect.always())
 
 function DamageSystem:collision(a, b, contact)
-  local isProjectileCollision =
-    destroy('throwingPick', a) or destroy('throwingPick', b)
+  a = a:getUserData().entity
+  b = b:getUserData().entity
+  local health
+  local damage
 
-  if isProjectileCollision then
-    destroy('container', a)
-    destroy('container', b)
+  if a:has(Damage) and b:has(Health) then
+    damage = a:as(Damage)
+    health = b:as(Health)
+  elseif a:has(Health) and b:has(Damage) then
+    health = a:as(Health)
+    damage = b:as(Damage)
+  end
+
+  if health and damage then
+    health.hitpoints = health.hitpoints - damage.hitpoints
   end
 end
 

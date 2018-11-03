@@ -12,6 +12,14 @@ function FixtureRender:draw()
     local shape = fixture.fixture:getShape()
     local shapeType = shape:getType()
 
+    if (entity.meta.type == 'icicle') then
+      love.graphics.setColor(255, 0, 0, 1)
+    elseif (entity.meta.type == 'checkpoint') then
+      love.graphics.setColor(0, 255, 0, 1)
+    elseif (entity.meta.type == 'container') then
+      love.graphics.setColor(0, 0, 255, 1)
+    end
+
     if shapeType == 'polygon' then
       love.graphics.polygon('fill', body:getWorldPoints(shape:getPoints()))
     elseif shapeType == 'circle' then
@@ -21,6 +29,8 @@ function FixtureRender:draw()
     elseif shapeType == 'chain' then
     -- return love.physics.newChainShape(...)
     end
+
+    love.graphics.setColor(255, 255, 255, 1)
   end
 end
 

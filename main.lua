@@ -1,12 +1,8 @@
 local Game = require 'game.game'
 
-local game
-
 function love.load()
   love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
   love.physics.setMeter(1)
-
-  game = nil
   game = Game:new()
 end
 

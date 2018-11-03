@@ -4,15 +4,19 @@ local Factory = require 'game.factory'
 local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Camera = require 'game.utils.camera'
-local Position = require 'game.components.position'
 local Ability = require 'game.systems.ability'
+local Checkpoint = require 'game.systems.checkpoint'
 local Container = require 'game.systems.container'
 local Damage = require 'game.systems.damage'
+local Death = require 'game.systems.death'
+local FallDeath = require 'game.systems.falldeath'
+local FixtureRender = require 'game.systems.fixturerender'
 local Input = require 'game.systems.input'
 local InputMovement = require 'game.systems.inputmovement'
-local Logger = require 'game.systems.logger'
 local JumpReset = require 'game.systems.jumpreset'
-local FixtureRender = require 'game.systems.fixturerender'
+local Logger = require 'game.systems.logger'
+local Projectile = require 'game.systems.projectile'
+local SineMovement = require 'game.systems.sinemovement'
 local SpriteRender = require 'game.systems.spriterender'
 local SpritesheetRender = require 'game.systems.spritesheetrender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
@@ -26,8 +30,12 @@ local function initEntities(factory)
   factory.create(factory.platform(400, 200))
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
-  factory.create(factory.wall(300))
-  factory.create(factory.mob(350))
+  factory.create(factory.icicle(300))
+  factory.create(factory.saw(400))
+  factory.create(factory.checkpoint(1, 500))
+  factory.create(factory.checkpoint(2, 700, 200))
+  -- factory.create(factory.wall(300))
+  -- factory.create(factory.mob(350))
 
   return factory.create(factory.player())
 end
@@ -48,8 +56,6 @@ function Game:new()
 
   love.physics.setMeter(256)
 
-  manager:setFactory(factory)
-
   world.setCallbacks(
     world,
     function(a, b, contact)
@@ -58,18 +64,25 @@ function Game:new()
   )
 
   manager:addSystem(Container)
-  manager:addSystem(Damage)
   manager:addSystem(Input)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
+  manager:addSystem(SineMovement)
   manager:addSystem(WaypointMovement)
   manager:addSystem(Ability)
   manager:addSystem(Timer)
+  manager:addSystem(Damage)
+  manager:addSystem(Death)
+  manager:addSystem(FallDeath)
+  manager:addSystem(Projectile)
+  manager:addSystem(Checkpoint)
   manager:addSystem(FixtureRender)
   manager:addSystem(SpriteRender)
   manager:addSystem(SpritesheetRender)
   manager:addSystem(Logger)
+
+  manager:setFactory(factory)
 
   local player = initEntities(factory)
 
@@ -97,18 +110,22 @@ function Game:new()
     if self.state == State.PLAYING then
       self.world:update(dt)
       self.manager:update(dt)
+
+      if (player) then
+        self.camera:update(dt, player)
+      end
     end
 
-    self.hud:update(dt, self)
+    self.hud:update(dt, player, self)
   end
 
   function game:draw()
     self.camera:set()
     self.manager:draw()
-    self.camera:unset()
+    self.camera:clear()
 
     if player then
-      self.hud:draw(player)
+      self.hud:draw(player, self)
     end
   end
 

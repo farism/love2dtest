@@ -49,6 +49,7 @@ function Manager:new(world)
       sys:remove(entity)
     end
 
+    self:removeComponents(entity)
     self.components[entity.id] = nil
     self.entities[entity.id] = nil
   end
@@ -75,6 +76,16 @@ function Manager:new(world)
     entity:removeComponent(cmp)
     self:setComponent(entity, cmp, nil)
     self:check(entity)
+  end
+
+  function manager:removeComponents(entity)
+    for _, component in pairs(self.components[entity.id]) do
+      if (component.destroy) then
+        component:destroy()
+      end
+
+      self:setComponent(entity, component, nil)
+    end
   end
 
   -- managing systems
