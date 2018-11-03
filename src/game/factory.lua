@@ -12,7 +12,6 @@ local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
 local Sine = require 'game.components.sine'
 local Sprite = require 'game.components.sprite'
-local Spritesheet = require 'game.components.spritesheet'
 local Timer = require 'game.components.timer'
 local Velocity = require 'game.components.velocity'
 

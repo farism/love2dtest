@@ -14,10 +14,6 @@ function SpriteRender:draw()
     local sprite = entity:as(Sprite)
     local frame = sprite.frame
 
-    if animation then
-      frame = animation.frame
-    end
-
     love.graphics.draw(
       sprite.image,
       frame,

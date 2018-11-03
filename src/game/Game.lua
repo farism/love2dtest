@@ -20,7 +20,6 @@ local Projectile = require 'game.systems.projectile'
 local SetCurrentAnimation = require 'game.systems.setcurrentanimation'
 local SineMovement = require 'game.systems.sinemovement'
 local SpriteRender = require 'game.systems.spriterender'
-local SpritesheetRender = require 'game.systems.spritesheetrender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
 local Timer = require 'game.systems.timer'
 local WaypointMovement = require 'game.systems.waypointmovement'
@@ -83,7 +82,6 @@ function Game:new()
   manager:addSystem(SpriteRender)
   manager:addSystem(SetCurrentAnimation)
   manager:addSystem(AnimateSprite)
-  -- manager:addSystem(SpritesheetRender)
   manager:addSystem(Logger)
 
   manager:setFactory(factory)
