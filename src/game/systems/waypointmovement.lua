@@ -42,14 +42,14 @@ function WaypointMovement:update(dt)
 
     if next.x < current.x then
       movement.right = true
-      newVelocityX = -50
+      newVelocityX = -100
 
       if (position.x < next.x) then
         advance(waypoint)
       end
     else
       movement.left = true
-      newVelocityX = 50
+      newVelocityX = 100
 
       if (position.x > next.x) then
         advance(waypoint)

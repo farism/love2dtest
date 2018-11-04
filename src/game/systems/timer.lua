@@ -9,9 +9,10 @@ function TimerSystem:update(dt)
   for _, entity in pairs(self.entities) do
     local timer = entity:as(Timer)
 
-    for k, v in pairs(timer.timers) do
-      timer.timers[k].cooldown = math.max(0, (v.cooldown or 0) - dt)
-      timer.timers[k].duration = math.max(0, (v.duration or 0) - dt)
+    for _, timer in pairs(timer.timers) do
+      for key, value in pairs(timer) do
+        timer[key] = math.max(0, (value or 0) - dt)
+      end
     end
   end
 end

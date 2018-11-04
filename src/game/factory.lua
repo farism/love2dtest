@@ -10,10 +10,9 @@ local Waypoint = require 'game.components.waypoint'
 local Player = require 'game.components.player'
 local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
-local Sine = require 'game.components.sine'
+local Wave = require 'game.components.wave'
 local Sprite = require 'game.components.sprite'
 local Timer = require 'game.components.timer'
-local Velocity = require 'game.components.velocity'
 
 local types = {
   CHECKPOINT = 'checkpoint',
@@ -24,6 +23,7 @@ local types = {
   PLATFORM = 'platform',
   PLAYER = 'player',
   SAW = 'saw',
+  SNOWBALL = 'snowball',
   THROWING_PICK = 'throwingPick',
   WALL = 'wall'
 }
@@ -48,6 +48,7 @@ local function Factory(world, manager)
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
       local shape = love.physics.newRectangleShape(32, 32)
       local fixture = love.physics.newFixture(body, shape, 1)
+      body:setFixedRotation(true)
       fixture:setFriction(1)
       fixture:setFilterData(2, 1, 0)
 
@@ -117,7 +118,6 @@ local function Factory(world, manager)
         Movement.new(1),
         Position.new(1),
         Timer.new(1),
-        Velocity.new(1),
         Waypoint.new(
           1,
           {
@@ -138,7 +138,7 @@ local function Factory(world, manager)
       local entity = manager:newEntity()
       entity.meta.type = types.PLATFORM
       local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
-      local shape = love.physics.newRectangleShape(128, 128)
+      local shape = love.physics.newRectangleShape(128, 16)
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {
@@ -146,7 +146,6 @@ local function Factory(world, manager)
         Movement.new(1),
         Position.new(1),
         Timer.new(1),
-        Velocity.new(1),
         Waypoint.new(
           1,
           {
@@ -171,8 +170,7 @@ local function Factory(world, manager)
         Damage.new(1, 1),
         Fixture.new(1, entity, fixture),
         Position.new(1),
-        Projectile.new(1),
-        Velocity.new(1)
+        Projectile.new(1)
       }
     end
   end
@@ -189,8 +187,7 @@ local function Factory(world, manager)
       return entity, {
         Fixture.new(1, entity, fixture),
         Health.new(1, 1, 0),
-        Position.new(1, x, y),
-        Velocity.new(1)
+        Position.new(1, x, y)
       }
     end
   end
@@ -227,7 +224,7 @@ local function Factory(world, manager)
         y or WINDOW_HEIGHT - 30 - 64,
         'kinematic'
       )
-      local shape = love.physics.newRectangleShape(64, 64)
+      local shape = love.physics.newCircleShape(32)
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {
@@ -235,15 +232,55 @@ local function Factory(world, manager)
         Fixture.new(1, entity, fixture),
         Movement.new(1),
         Position.new(1),
-        Sine.new(1, 200),
-        Timer.new(1),
-        Waypoint.new(
-          1,
-          {
-            {x = 400, y = 0, duration = 1000},
-            {x = 600, y = 0, duration = 5000}
-          }
-        )
+        Wave.newCircular(1, x or 0, y or 0, 100, 2)
+      }
+    end
+  end
+
+  function factory.saw2(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.SAW
+      local body =
+        love.physics.newBody(
+        world,
+        x or 0,
+        y or WINDOW_HEIGHT - 30 - 64,
+        'kinematic'
+      )
+      local shape = love.physics.newCircleShape(32)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      return entity, {
+        Damage.new(1, 1),
+        Fixture.new(1, entity, fixture),
+        Movement.new(1),
+        Position.new(1),
+        Wave.newHorizontal(1, x or 0, y or 0, 100, 2)
+      }
+    end
+  end
+
+  function factory.saw3(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = types.SAW
+      local body =
+        love.physics.newBody(
+        world,
+        x or 0,
+        y or WINDOW_HEIGHT - 30 - 64,
+        'kinematic'
+      )
+      local shape = love.physics.newCircleShape(32)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      return entity, {
+        Damage.new(1, 1),
+        Fixture.new(1, entity, fixture),
+        Movement.new(1),
+        Position.new(1),
+        Wave.newVertical(1, x or 0, y or 0, 100, 2)
       }
     end
   end
@@ -282,7 +319,7 @@ local function Factory(world, manager)
         WINDOW_HEIGHT - 15,
         'static'
       )
-      local shape = love.physics.newRectangleShape(WINDOW_WIDTH, 30)
+      local shape = love.physics.newRectangleShape(WINDOW_WIDTH * 10, 30)
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {

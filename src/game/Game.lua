@@ -17,11 +17,12 @@ local InputMovement = require 'game.systems.inputmovement'
 local JumpReset = require 'game.systems.jumpreset'
 local Logger = require 'game.systems.logger'
 local Projectile = require 'game.systems.projectile'
+local Respawn = require 'game.systems.respawn'
 local SetCurrentAnimation = require 'game.systems.setcurrentanimation'
-local SineMovement = require 'game.systems.sinemovement'
 local SpriteRender = require 'game.systems.spriterender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
 local Timer = require 'game.systems.timer'
+local WaveMovement = require 'game.systems.wavemovement'
 local WaypointMovement = require 'game.systems.waypointmovement'
 
 local Game = {}
@@ -31,8 +32,10 @@ local function initEntities(factory)
   factory.create(factory.platform(400, 200))
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
-  factory.create(factory.icicle(300))
-  factory.create(factory.saw(400))
+  factory.create(factory.icicle(300, 200))
+  factory.create(factory.saw(-800, 200))
+  factory.create(factory.saw2(-600, 200))
+  factory.create(factory.saw3(-400, 200))
   factory.create(factory.checkpoint(1, 500))
   factory.create(factory.checkpoint(2, 700, 200))
   -- factory.create(factory.wall(300))
@@ -64,20 +67,21 @@ function Game:new()
     end
   )
 
-  manager:addSystem(Container)
   manager:addSystem(Input)
+  manager:addSystem(Respawn)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
-  manager:addSystem(SineMovement)
   manager:addSystem(WaypointMovement)
+  manager:addSystem(WaveMovement)
   manager:addSystem(Ability)
   manager:addSystem(Timer)
   manager:addSystem(Damage)
   manager:addSystem(Death)
   manager:addSystem(FallDeath)
-  manager:addSystem(Projectile)
+  manager:addSystem(Container)
   manager:addSystem(Checkpoint)
+  manager:addSystem(Projectile)
   manager:addSystem(FixtureRender)
   manager:addSystem(SpriteRender)
   manager:addSystem(SetCurrentAnimation)

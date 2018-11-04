@@ -5,9 +5,10 @@ local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
+local Respawn = require 'game.components.respawn'
 local Timer = require 'game.components.timer'
 
-local aspect = Aspect:new({Ability, Movement, Position, Timer})
+local aspect = Aspect:new({Ability, Movement, Position, Timer}, {Respawn})
 local AbilitySystem = System:new('ability', aspect)
 
 function AbilitySystem:throw(dt, entity)
