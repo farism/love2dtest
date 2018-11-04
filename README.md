@@ -71,6 +71,7 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 - Icicles sticking out from ground
 - Icicles sticking out from ceiling
 - Hole in mountain ridge
+- Hole in bridge
 - Hole in ice
 - Rolling snowballs that become larger
 - Ice saws (circular, bandsaws etc)

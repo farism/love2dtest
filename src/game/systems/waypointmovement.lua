@@ -38,26 +38,13 @@ function WaypointMovement:update(dt)
     local body = fixture.fixture:getBody()
     local current = getCurrent(waypoint)
     local next = getNext(waypoint)
-    local newVelocityX = 0
 
-    if next.x < current.x then
-      movement.right = true
-      newVelocityX = -100
+    -- body:setX(lerp(position.x, next.x, dt))
+    -- body:setY(lerp(position.y, next.y, dt))
 
-      if (position.x < next.x) then
-        advance(waypoint)
-      end
-    else
-      movement.left = true
-      newVelocityX = 100
+    -- print(position.x)
 
-      if (position.x > next.x) then
-        advance(waypoint)
-      end
-    end
-
-    local _, velocityY = body:getLinearVelocity()
-    body:setLinearVelocity(newVelocityX, velocityY)
+    -- body:setLinearVelocity(newVelocityX, newVelocityY)
   end
 end
 

@@ -1,4 +1,4 @@
-local tween = require 'vendor.tween'
+local flux = require 'vendor.flux'
 local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
 
@@ -36,7 +36,8 @@ function Camera.new()
     end
 
     if self.direction ~= movement.direction then
-      self.tween = tween.new(3, self, {offset = offset}, 'outQuad')
+      self.tween = flux.group()
+      self.tween:to(self, 3, {offset = offset}):ease('quadout')
     end
 
     if self.tween then

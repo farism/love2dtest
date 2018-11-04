@@ -9,7 +9,8 @@ function Player.new(id)
     _meta = Player._meta,
     id = id,
     alias = alias,
-    lives = 3,
+    money = 0,
+    lives = 100,
     checkpoint = 1
   }
 end

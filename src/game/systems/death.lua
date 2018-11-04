@@ -1,6 +1,5 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
-local State = require 'game.state'
 local Health = require 'game.components.health'
 local Player = require 'game.components.player'
 local Respawn = require 'game.components.respawn'
@@ -17,7 +16,6 @@ function Death:player(dt, entity)
   local player = entity:as(Player)
 
   entity.manager:addComponent(entity, Respawn.new(1))
-  player.lives = math.max(0, player.lives - 1)
   health.hitpoints = 1
 end
 

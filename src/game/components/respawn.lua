@@ -4,11 +4,11 @@ local Respawn = {
   _meta = constants.Respawn
 }
 
-function Respawn.new(id)
+function Respawn.new(id, waitTime)
   return {
     _meta = Respawn._meta,
     id = id,
-    waitTime = 2
+    waitTime = waitTime or 3
   }
 end
 

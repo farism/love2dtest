@@ -25,10 +25,12 @@ end
 
 function RespawnSystem:update(dt)
   for _, entity in pairs(self.entities) do
+    local player = entity:as(Player)
     local respawn = entity:as(Respawn)
     local timers = entity:as(Timer).timers
 
     if timers.respawn == nil then
+      player.lives = math.max(0, player.lives - 1)
       timers.respawn = {waitTime = respawn.waitTime}
     elseif timers.respawn and timers.respawn.waitTime == 0 then
       timers.respawn = nil

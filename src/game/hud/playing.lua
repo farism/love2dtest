@@ -1,5 +1,6 @@
 local State = require 'game.state'
 local Ability = require 'game.components.ability'
+local Player = require 'game.components.player'
 local Timer = require 'game.components.timer'
 
 local Playing = {}
@@ -12,6 +13,14 @@ end
 
 local function keyreleased(key)
   love.event.push('keyreleased', key, nil, false, false)
+end
+
+local function money(player)
+  love.graphics.print('Money: ' .. tostring(player:as(Player).money), 10, 10, 0)
+end
+
+local function lives(player)
+  love.graphics.print('Lives: ' .. tostring(player:as(Player).lives), 10, 30, 0)
 end
 
 local function getPercent(player, key)
@@ -62,6 +71,8 @@ function Playing.update(dt, suit, player, game)
 end
 
 function Playing.draw(player, game)
+  money(player)
+  lives(player)
   cooldowns(player)
 end
 

@@ -12,6 +12,7 @@ local Damage = require 'game.systems.damage'
 local Death = require 'game.systems.death'
 local FallDeath = require 'game.systems.falldeath'
 local FixtureRender = require 'game.systems.fixturerender'
+local GameOver = require 'game.systems.gameover'
 local Input = require 'game.systems.input'
 local InputMovement = require 'game.systems.inputmovement'
 local JumpReset = require 'game.systems.jumpreset'
@@ -38,7 +39,7 @@ local function initEntities(factory)
   factory.create(factory.saw3(-400, 200))
   factory.create(factory.checkpoint(1, 500))
   factory.create(factory.checkpoint(2, 700, 200))
-  -- factory.create(factory.wall(300))
+  factory.create(factory.wall(300))
   -- factory.create(factory.mob(350))
 
   return factory.create(factory.player())
@@ -67,6 +68,7 @@ function Game:new()
     end
   )
 
+  manager:addSystem(GameOver)
   manager:addSystem(Input)
   manager:addSystem(Respawn)
   manager:addSystem(SyncBodyPosition)
