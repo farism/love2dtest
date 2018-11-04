@@ -1,6 +1,7 @@
 local flux = require 'vendor.flux'
 local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
+local Respawn = require 'game.components.respawn'
 
 local Camera = {}
 local LEFT_OFFSET = -WINDOW_WIDTH + 300
@@ -28,6 +29,10 @@ function Camera.new()
     local movement = player:as(Movement)
     local position = player:as(Position)
     local offset = self.offset
+
+    if (player:has(Respawn)) then
+      movement.direction = 'right'
+    end
 
     if movement.direction == 'left' then
       offset = LEFT_OFFSET

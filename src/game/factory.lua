@@ -120,13 +120,14 @@ local function Factory(world, manager)
         Timer.new(1),
         Waypoint.new(
           1,
+          100,
           {
-            {x = 500, y = 0, duration = 1000},
-            {x = 450, y = 0, duration = 3000},
-            {x = 400, y = 0, duration = 1000},
-            {x = 500, y = 0, duration = 5000},
-            {x = 450, y = 0, duration = 5000},
-            {x = 600, y = 0, duration = 5000}
+            {x = 500, y = 0},
+            {x = 450, y = 0},
+            {x = 400, y = 0},
+            {x = 500, y = 0},
+            {x = 450, y = 0},
+            {x = 600, y = 0}
           }
         )
       }
@@ -149,9 +150,11 @@ local function Factory(world, manager)
         Timer.new(1),
         Waypoint.new(
           1,
+          100,
           {
-            {x = 400, y = 0, duration = 1000},
-            {x = 600, y = 0, duration = 5000}
+            {x = 400, y = 100},
+            {x = 500, y = 200},
+            {x = 400, y = 300}
           }
         )
       }

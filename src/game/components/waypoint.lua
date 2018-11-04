@@ -4,12 +4,13 @@ local Waypoint = {
   _meta = constants.Waypoint
 }
 
-function Waypoint.new(id, waypoints)
+function Waypoint.new(id, speed, waypoints)
   return {
     _meta = Waypoint._meta,
     id = id,
-    waypoints = waypoints or {},
-    current = 1
+    current = 1,
+    speed = speed or 1,
+    waypoints = waypoints or {}
   }
 end
 

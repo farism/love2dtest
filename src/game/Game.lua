@@ -30,7 +30,7 @@ local Game = {}
 
 local function initEntities(factory)
   factory.create(factory.ground())
-  factory.create(factory.platform(400, 200))
+  factory.create(factory.platform(300, 100))
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
   factory.create(factory.icicle(300, 200))
@@ -68,10 +68,10 @@ function Game:new()
     end
   )
 
+  manager:addSystem(SyncBodyPosition)
   manager:addSystem(GameOver)
   manager:addSystem(Input)
   manager:addSystem(Respawn)
-  manager:addSystem(SyncBodyPosition)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
   manager:addSystem(WaypointMovement)
