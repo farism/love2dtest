@@ -10,7 +10,7 @@ function Player.new(id)
     id = id,
     alias = alias,
     lives = 3,
-    checkpoint = 0
+    checkpoint = 1
   }
 end
 

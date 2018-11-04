@@ -140,6 +140,7 @@ local function Factory(world, manager)
       local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
       local shape = love.physics.newRectangleShape(128, 16)
       local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFriction(1)
 
       return entity, {
         Fixture.new(1, entity, fixture),

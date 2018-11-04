@@ -9,12 +9,29 @@ local Respawn = require 'game.components.respawn'
 local aspect = Aspect:new({Fixture, Input, Movement, Position}, {Respawn})
 local InputMovement = System:new('inputmovement', aspect)
 
+local function isPlatform(fixture)
+  return fixture:getUserData().entity.meta.type == 'platform'
+end
+
+local function isPlatformContact(body)
+  for _, contact in pairs(body:getContacts()) do
+    local fixture1, fixture2 = contact:getFixtures()
+
+    if isPlatform(fixture1) or isPlatform(fixture2) then
+      return true
+    end
+  end
+
+  return false
+end
+
 function InputMovement:update(dt)
   for _, entity in pairs(self.entities) do
     local fixture = entity:as(Fixture)
     local movement = entity:as(Movement)
     local body = fixture.fixture:getBody()
     local velocityX, velocityY = body:getLinearVelocity()
+    local isPlatformContact = isPlatformContact(body)
 
     local newVelocityX = velocityX
     local newVelocityY = velocityY
@@ -23,6 +40,8 @@ function InputMovement:update(dt)
       newVelocityX = -300
     elseif movement.right == true then
       newVelocityX = 300
+    elseif not isPlatformContact then
+      newVelocityX = 0
     end
 
     if (movement.jump and movement.jumpCount < 2) then

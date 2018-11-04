@@ -92,9 +92,12 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 
 - Mercenary with melee pick
 - Mercenary with melee pick and riot shield
-- Mercenary with throwing pick
-- Mercenary with pistol
-- Mercenary with rifle
+- Mercenary with gun
+- Mercenary on snowmobile
+- Mercenary on snowmobile with gun
+- Mercenary on snowmobile with grenade
+- Mercenary in forklift with grenade
+- Mercenary in forklift with gun
 
 ### Animals
 
