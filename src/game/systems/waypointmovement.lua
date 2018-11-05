@@ -35,7 +35,9 @@ local function shouldAdvance(axis, velocity, position, next)
     return true
   elseif
     velocity > 0 and position[axis] >= next[axis] or
-      velocity < 0 and position[axis] <= next[axis]
+      velocity < 0 and position[axis] <= next[axis] or
+      -- this is hacky
+      math.abs(position[axis] - next[axis]) < 1
    then
     return true
   else
