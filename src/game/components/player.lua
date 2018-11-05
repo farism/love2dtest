@@ -11,6 +11,7 @@ function Player.new(id)
     alias = alias,
     money = 0,
     lives = 100,
+    documents = 0,
     checkpoint = 1
   }
 end

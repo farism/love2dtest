@@ -110,6 +110,7 @@ local function Factory(world, manager)
       local entity = manager:newEntity()
       entity.meta.type = types.MOB
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
+      body:setFixedRotation(true)
       local shape = love.physics.newRectangleShape(32, 32)
       local fixture = love.physics.newFixture(body, shape, 1)
 
@@ -122,12 +123,13 @@ local function Factory(world, manager)
           1,
           100,
           {
-            {x = 500, y = 0},
-            {x = 450, y = 0},
-            {x = 400, y = 0},
-            {x = 500, y = 0},
-            {x = 450, y = 0},
-            {x = 600, y = 0}
+            {x = x, y = y},
+            {x = 450},
+            {x = 300},
+            {x = 500}
+            -- {x = 500},
+            -- {x = 450},
+            -- {x = 600}
           }
         )
       }
@@ -152,9 +154,8 @@ local function Factory(world, manager)
           1,
           100,
           {
-            {x = 400, y = 100},
-            {x = 500, y = 200},
-            {x = 400, y = 300}
+            {x = 400, y = 200},
+            {x = 600, y = 200}
           }
         )
       }

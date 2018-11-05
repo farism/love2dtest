@@ -16,11 +16,18 @@ local function keyreleased(key)
 end
 
 local function money(player)
-  love.graphics.print('Money: ' .. tostring(player:as(Player).money), 10, 10, 0)
+  local label = 'Money: ' .. tostring(player:as(Player).money)
+  love.graphics.print(label, 10, 10, 0)
 end
 
 local function lives(player)
-  love.graphics.print('Lives: ' .. tostring(player:as(Player).lives), 10, 30, 0)
+  local label = 'Lives: ' .. tostring(player:as(Player).lives)
+  love.graphics.print(label, 10, 30, 0)
+end
+
+local function documents(player)
+  local label = 'Documents: ' .. tostring(player:as(Player).documents)
+  love.graphics.print(label, 10, 50, 0)
 end
 
 local function getPercent(player, key)
@@ -73,6 +80,7 @@ end
 function Playing.draw(player, game)
   money(player)
   lives(player)
+  documents(player)
   cooldowns(player)
 end
 

@@ -30,7 +30,7 @@ local Game = {}
 
 local function initEntities(factory)
   factory.create(factory.ground())
-  factory.create(factory.platform(300, 100))
+  -- factory.create(factory.platform(400, 200))
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
   factory.create(factory.icicle(300, 200))
@@ -39,8 +39,8 @@ local function initEntities(factory)
   factory.create(factory.saw3(-400, 200))
   factory.create(factory.checkpoint(1, 500))
   factory.create(factory.checkpoint(2, 700, 200))
-  factory.create(factory.wall(300))
-  -- factory.create(factory.mob(350))
+  -- factory.create(factory.wall(300))
+  factory.create(factory.mob(200, 100))
 
   return factory.create(factory.player())
 end
