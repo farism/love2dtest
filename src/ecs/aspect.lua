@@ -20,10 +20,9 @@ function Aspect:new(all, none, one)
   function aspect:check(entity)
     local all = bit.bor(self.all, entity.components) == entity.components
     local none = bit.band(self.none, entity.components) == 0
-    -- local one = bit.band(aspect.one, entity.components) ~= 0
+    local one = bit.band(self.one, entity.components) ~= 0
 
-    return all and none
-    -- and one
+    return (all or one) and none
   end
 
   return aspect

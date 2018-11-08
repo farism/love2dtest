@@ -11,11 +11,15 @@ function Death:container(dt, entity)
   entity:destroy()
 end
 
+function Death:mob(dt, entity)
+  entity:destroy()
+end
+
 function Death:player(dt, entity)
   local health = entity:as(Health)
   local player = entity:as(Player)
 
-  entity.manager:addComponent(entity, Respawn.new(1))
+  entity:addComponent(Respawn.new(1))
   health.hitpoints = 1
 end
 

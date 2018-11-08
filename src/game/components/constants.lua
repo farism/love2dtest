@@ -20,7 +20,9 @@ local constants = {
   Timer = {id = 'timer', flag = flag(16)},
   Upgrades = {id = 'upgrades', flag = flag(17)},
   Wave = {id = 'wave', flag = flag(18)},
-  Waypoint = {id = 'waypoint', flag = flag(19)}
+  Waypoint = {id = 'waypoint', flag = flag(19)},
+  Aggression = {id = 'aggression', flag = flag(20)},
+  Attack = {id = 'attack', flag = flag(21)}
 }
 
 return constants

@@ -81,7 +81,10 @@ function Playing.draw(player, game)
   money(player)
   lives(player)
   documents(player)
-  cooldowns(player)
+
+  if (player:has(Ability) and player:has(Timer)) then
+    cooldowns(player)
+  end
 end
 
 return Playing

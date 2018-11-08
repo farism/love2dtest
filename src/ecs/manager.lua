@@ -67,13 +67,13 @@ function Manager:new(world)
   end
 
   function manager:addComponent(entity, cmp)
-    entity:addComponent(cmp)
+    entity:setFlag(cmp)
     self:setComponent(entity, cmp, cmp)
     self:check(entity)
   end
 
   function manager:removeComponent(entity, cmp)
-    entity:removeComponent(cmp)
+    entity:clearFlag(cmp)
     self:setComponent(entity, cmp, nil)
     self:check(entity)
   end

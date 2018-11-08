@@ -8,9 +8,9 @@ local JumpReset = System:new('jumpreset', Aspect.never())
 
 function JumpReset:collision(a, b, contact)
   local entity
-  if collision.isType('player', a) and collision.isNotDynamic(b) then
+  if collision.is('player', a) and collision.isNotDynamic(b) then
     entity = a:getUserData().entity
-  elseif collision.isType('player', b) and collision.isNotDynamic(a) then
+  elseif collision.is('player', b) and collision.isNotDynamic(a) then
     entity = b:getUserData().entity
   end
 

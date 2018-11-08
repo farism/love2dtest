@@ -1,8 +1,10 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
+local collision = require 'game.utils.collision'
 local Ability = require 'game.components.ability'
 local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
+local Player = require 'game.components.player'
 local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
 local Respawn = require 'game.components.respawn'
@@ -12,19 +14,20 @@ local aspect = Aspect:new({Ability, Movement, Position, Timer}, {Respawn})
 local AbilitySystem = System:new('ability', aspect)
 
 function AbilitySystem:throw(dt, entity)
-  local manager = entity.manager
-  local factory = manager.factory
+  local factory = entity.manager.factory
   local position = entity:as(Position)
   local movement = entity:as(Movement)
-  local projectile = factory.create(factory.throwingPick())
-  local body = projectile:as(Fixture).fixture:getBody()
+  local projectile = factory.create(factory.throwingPick(entity))
+  local fixture = projectile:as(Fixture)
+  local body = fixture.fixture:getBody()
   body:setFixedRotation(false)
   body:setGravityScale(0)
-  body:setX(position.x + 10)
+  body:setX(position.x + 20)
   body:setY(position.y)
+
   if (movement.direction == 'left') then
     body:setLinearVelocity(-1000, 0)
-  elseif movement.direction == 'right' then
+  else
     body:setLinearVelocity(1000, 0)
   end
 end

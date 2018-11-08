@@ -5,7 +5,9 @@ local State = require 'game.state'
 local HUD = require 'game.hud.hud'
 local Camera = require 'game.utils.camera'
 local Ability = require 'game.systems.ability'
+local Aggression = require 'game.systems.aggression'
 local AnimateSprite = require 'game.systems.animatesprite'
+local Attack = require 'game.systems.attack'
 local Checkpoint = require 'game.systems.checkpoint'
 local Container = require 'game.systems.container'
 local Damage = require 'game.systems.damage'
@@ -40,9 +42,9 @@ local function initEntities(factory)
   factory.create(factory.checkpoint(1, 500))
   factory.create(factory.checkpoint(2, 700, 200))
   -- factory.create(factory.wall(300))
-  factory.create(factory.mob(200, 100))
+  factory.create(factory.mob(100, 100))
 
-  return factory.create(factory.player())
+  return factory.create(factory.player(-200))
 end
 
 function Game:new()
@@ -68,16 +70,18 @@ function Game:new()
     end
   )
 
-  manager:addSystem(SyncBodyPosition)
   manager:addSystem(GameOver)
-  manager:addSystem(Input)
+  manager:addSystem(Timer)
+  manager:addSystem(SyncBodyPosition)
   manager:addSystem(Respawn)
+  manager:addSystem(Aggression)
+  manager:addSystem(Attack)
+  manager:addSystem(Input)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
   manager:addSystem(WaypointMovement)
   manager:addSystem(WaveMovement)
   manager:addSystem(Ability)
-  manager:addSystem(Timer)
   manager:addSystem(Damage)
   manager:addSystem(Death)
   manager:addSystem(FallDeath)

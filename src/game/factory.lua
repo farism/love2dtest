@@ -1,3 +1,5 @@
+local flag = require 'game.utils.flag'
+local Aggression = require 'game.components.aggression'
 local Ability = require 'game.components.ability'
 local Animation = require 'game.components.animation'
 local Checkpoint = require 'game.components.checkpoint'
@@ -14,7 +16,7 @@ local Wave = require 'game.components.wave'
 local Sprite = require 'game.components.sprite'
 local Timer = require 'game.components.timer'
 
-local types = {
+local type = {
   CHECKPOINT = 'checkpoint',
   CONTAINER = 'container',
   GROUND = 'ground',
@@ -28,6 +30,17 @@ local types = {
   WALL = 'wall'
 }
 
+local category = {
+  STATIC = 1,
+  PLAYER = 2,
+  PLAYER_ATTACK = 3,
+  ENEMY = 4,
+  ENEMY_ATTACK = 5,
+  CONTAINER = 6,
+  BOMB = 7,
+  AGGRESSION = 8
+}
+
 local function Factory(world, manager)
   local factory = {}
 
@@ -35,7 +48,7 @@ local function Factory(world, manager)
     local entity, components = prefab()
 
     for _, component in pairs(components) do
-      entity.manager:addComponent(entity, component)
+      entity:addComponent(component)
     end
 
     return entity
@@ -44,13 +57,13 @@ local function Factory(world, manager)
   function factory.player(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.PLAYER
+      entity.meta.type = type.PLAYER
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
       local shape = love.physics.newRectangleShape(32, 32)
       local fixture = love.physics.newFixture(body, shape, 1)
       body:setFixedRotation(true)
       fixture:setFriction(1)
-      fixture:setFilterData(2, 1, 0)
+      fixture:setCategory(category.PLAYER)
 
       local animations = {
         walk_right = {
@@ -94,7 +107,7 @@ local function Factory(world, manager)
         sprite,
         Animation.new(1, 'walk_right', animations, spriteWidth, spriteHeight),
         Ability.new(1),
-        Fixture.new(1, entity, fixture),
+        Fixture.new(1, entity, fixture, category.PLAYER, 0),
         Health.new(1, 1, 0),
         Input.new(1),
         Movement.new(1),
@@ -108,14 +121,18 @@ local function Factory(world, manager)
   function factory.mob(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.MOB
+      entity.meta.type = type.MOB
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
-      body:setFixedRotation(true)
       local shape = love.physics.newRectangleShape(32, 32)
       local fixture = love.physics.newFixture(body, shape, 1)
+      body:setFixedRotation(true)
+      fixture:setCategory(category.ENEMY)
 
       return entity, {
+        Ability.new(1),
+        Aggression.new(1, world, entity, x, y),
         Fixture.new(1, entity, fixture),
+        Health.new(1, 1, 0),
         Movement.new(1),
         Position.new(1),
         Timer.new(1),
@@ -124,12 +141,9 @@ local function Factory(world, manager)
           50,
           {
             {x = x},
-            {x = 450},
-            {x = 300},
-            {x = 500}
-            -- {x = 500},
-            -- {x = 450},
-            -- {x = 600}
+            {x = 100},
+            {x = 0},
+            {x = 200}
           }
         )
       }
@@ -139,7 +153,7 @@ local function Factory(world, manager)
   function factory.platform(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.PLATFORM
+      entity.meta.type = type.PLATFORM
       local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
       local shape = love.physics.newRectangleShape(128, 16)
       local fixture = love.physics.newFixture(body, shape, 1)
@@ -162,14 +176,21 @@ local function Factory(world, manager)
     end
   end
 
-  function factory.throwingPick()
+  function factory.throwingPick(origin)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.THROWING_PICK
+      entity.meta.type = type.THROWING_PICK
       local body = love.physics.newBody(world, 0, 0, 'dynamic')
       local shape = love.physics.newRectangleShape(8, 8)
       local fixture = love.physics.newFixture(body, shape, 1)
-      fixture:setFilterData(1, 1, 0)
+
+      if (origin:has(Player)) then
+        fixture:setCategory(category.PLAYER_ATTACK)
+        fixture:setMask(category.PLAYER, category.AGGRESSION)
+      else
+        fixture:setCategory(category.ENEMY_ATTACK)
+        fixture:setMask(category.ENEMY, category.AGGRESSION)
+      end
 
       return entity, {
         Damage.new(1, 1),
@@ -183,11 +204,11 @@ local function Factory(world, manager)
   function factory.crate(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.CONTAINER
+      entity.meta.type = type.CONTAINER
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
       local shape = love.physics.newRectangleShape(48, 48)
       local fixture = love.physics.newFixture(body, shape, 1)
-      fixture:setFilterData(1, 1, 0)
+      fixture:setCategory(category.CONTAINER)
 
       return entity, {
         Fixture.new(1, entity, fixture),
@@ -200,7 +221,7 @@ local function Factory(world, manager)
   function factory.icicle(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.ICICLE
+      entity.meta.type = type.ICICLE
       local body =
         love.physics.newBody(
         world,
@@ -210,6 +231,7 @@ local function Factory(world, manager)
       )
       local shape = love.physics.newRectangleShape(64, 64)
       local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setCategory(category.STATIC)
 
       return entity, {
         Damage.new(1, 1),
@@ -221,7 +243,7 @@ local function Factory(world, manager)
   function factory.saw(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.SAW
+      entity.meta.type = type.SAW
       local body =
         love.physics.newBody(
         world,
@@ -245,7 +267,7 @@ local function Factory(world, manager)
   function factory.saw2(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.SAW
+      entity.meta.type = type.SAW
       local body =
         love.physics.newBody(
         world,
@@ -269,7 +291,7 @@ local function Factory(world, manager)
   function factory.saw3(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.SAW
+      entity.meta.type = type.SAW
       local body =
         love.physics.newBody(
         world,
@@ -293,14 +315,8 @@ local function Factory(world, manager)
   function factory.checkpoint(index, x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.CHECKPOINT
-      local body =
-        love.physics.newBody(
-        world,
-        x or 0,
-        y or WINDOW_HEIGHT - 30 - 64,
-        'static'
-      )
+      entity.meta.type = type.CHECKPOINT
+      local body = love.physics.newBody(world, x or 0, y or 0, 'static')
       local shape = love.physics.newRectangleShape(64, 64)
       local fixture = love.physics.newFixture(body, shape, 1)
       fixture:setSensor(true)
@@ -313,18 +329,12 @@ local function Factory(world, manager)
     end
   end
 
-  function factory.ground()
+  function factory.wall(x)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.GROUND
-      local body =
-        love.physics.newBody(
-        world,
-        WINDOW_WIDTH / 2,
-        WINDOW_HEIGHT - 15,
-        'static'
-      )
-      local shape = love.physics.newRectangleShape(WINDOW_WIDTH * 10, 30)
+      entity.meta.type = type.WALL
+      local body = love.physics.newBody(world, x, WINDOW_HEIGHT - 130, 'static')
+      local shape = love.physics.newRectangleShape(30, 200)
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {
@@ -333,12 +343,18 @@ local function Factory(world, manager)
     end
   end
 
-  function factory.wall(x)
+  function factory.ground()
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = types.WALL
-      local body = love.physics.newBody(world, x, WINDOW_HEIGHT - 130, 'static')
-      local shape = love.physics.newRectangleShape(30, 200)
+      entity.meta.type = type.GROUND
+      local body =
+        love.physics.newBody(
+        world,
+        WINDOW_WIDTH / 2,
+        WINDOW_HEIGHT - 15,
+        'static'
+      )
+      local shape = love.physics.newRectangleShape(WINDOW_WIDTH * 10, 30)
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {

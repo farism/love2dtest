@@ -22,6 +22,14 @@ function Entity:new(id, manager, meta)
   end
 
   function entity:addComponent(cmp)
+    return self.manager:addComponent(self, cmp)
+  end
+
+  function entity:removeComponent(cmp)
+    return self.manager:removeComponent(self, cmp)
+  end
+
+  function entity:setFlag(cmp)
     if self:has(cmp) then
       print('entity:' .. self.id .. ' already has ' .. cmp._meta.id)
       return
@@ -30,21 +38,13 @@ function Entity:new(id, manager, meta)
     self.components = bit.bxor(self.components, cmp._meta.flag)
   end
 
-  function entity:removeComponent(cmp)
+  function entity:clearFlag(cmp)
     if not self:has(cmp) then
       print('entity:' .. self.id .. ' does not have ' .. cmp._meta.id)
       return
     end
 
     self.components = bit.band(self.components, bit.bnot(cmp._meta.flag))
-  end
-
-  function entity:addSystem(sys)
-    self.systems = bit.bxor(self.systems, system.flag)
-  end
-
-  function entity:removeSystem(sys)
-    self.components = bit.band(self.systems, bit.bnot(sys.flag))
   end
 
   return entity

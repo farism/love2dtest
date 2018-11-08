@@ -4,7 +4,7 @@ local Fixture = {
   _meta = constants.Fixture
 }
 
-function Fixture.new(id, entity, fixture)
+function Fixture.new(id, entity, fixture, category, mask, group)
   local instance = {
     _meta = Fixture._meta,
     id = id,
@@ -12,6 +12,7 @@ function Fixture.new(id, entity, fixture)
     fixture = fixture
   }
 
+  -- set the entity to the fixture as userData
   local data = fixture:getUserData() or {}
   data.entity = entity
   fixture:setUserData(data)
