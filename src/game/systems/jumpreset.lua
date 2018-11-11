@@ -6,15 +6,18 @@ local collision = require 'game.utils.collision'
 
 local JumpReset = System:new('jumpreset', Aspect.never())
 
-function JumpReset:collision(a, b, contact)
+function JumpReset:beginContact(a, b, contact)
   local entity
+
   if collision.is('player', a) and collision.isNotDynamic(b) then
     entity = a:getUserData().entity
   elseif collision.is('player', b) and collision.isNotDynamic(a) then
     entity = b:getUserData().entity
   end
 
-  if entity then
+  local nx, ny = contact:getNormal()
+
+  if entity and (nx == -1 or nx == 1 or ny < 0) then
     entity:as(Movement).jumpCount = 0
   end
 end

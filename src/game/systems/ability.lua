@@ -22,7 +22,7 @@ function AbilitySystem:throw(dt, entity)
   local body = fixture.fixture:getBody()
   body:setFixedRotation(false)
   body:setGravityScale(0)
-  body:setX(position.x + 20)
+  body:setX(position.x)
   body:setY(position.y)
 
   if (movement.direction == 'left') then

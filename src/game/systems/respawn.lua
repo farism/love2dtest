@@ -47,7 +47,7 @@ function RespawnSystem:update(dt)
         body:setType('dynamic')
       end
 
-      entity.manager:removeComponent(entity, Respawn)
+      entity:remove(Respawn)
     end
   end
 end

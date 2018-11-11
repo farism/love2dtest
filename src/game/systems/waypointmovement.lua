@@ -10,23 +10,11 @@ local Waypoint = require 'game.components.waypoint'
 local aspect = Aspect:new({Fixture, Movement, Position, Waypoint}, {Attack})
 local WaypointMovement = System:new('waypointmovement', aspect)
 
-local function getCurrent(waypoint)
-  return waypoint.waypoints[waypoint.current]
-end
-
 local function getNext(waypoint)
   if waypoint.current == #waypoint.waypoints then
     return waypoint.waypoints[1]
   else
     return waypoint.waypoints[waypoint.current + 1]
-  end
-end
-
-local function advance(waypoint)
-  if waypoint.current == #waypoint.waypoints then
-    waypoint.current = 1
-  else
-    waypoint.current = waypoint.current + 1
   end
 end
 
@@ -45,20 +33,29 @@ local function shouldAdvance(axis, velocity, position, next)
   end
 end
 
+local function advance(waypoint)
+  if waypoint.current == #waypoint.waypoints then
+    waypoint.current = 1
+  else
+    waypoint.current = waypoint.current + 1
+  end
+end
+
 function WaypointMovement:update(dt)
   for _, entity in pairs(self.entities) do
     local fixture = entity:as(Fixture)
-    local pos = entity:as(Position)
+    local movement = entity:as(Movement)
+    local position = entity:as(Position)
     local waypoint = entity:as(Waypoint)
     local body = fixture.fixture:getBody()
     local velocityX, velocityY = body:getLinearVelocity()
-    local current = getCurrent(waypoint)
     local next = getNext(waypoint)
-    local shouldAdvanceX = shouldAdvance('x', velocityX, pos, next)
-    local shouldAdvanceY = shouldAdvance('y', velocityY, pos, next)
+    local shouldAdvanceX = shouldAdvance('x', velocityX, position, next)
+    local shouldAdvanceY = shouldAdvance('y', velocityY, position, next)
     local newVelocityX = 0
     local newVelocityY = 0
-    local angle = math.atan2((next.y or pos.y) - pos.y, next.x - pos.x)
+    local angle =
+      math.atan2((next.y or position.y) - position.y, next.x - position.x)
 
     body:setGravityScale(1)
 
@@ -70,6 +67,7 @@ function WaypointMovement:update(dt)
       end
 
       if next.y then
+        -- if we are moving in the y direction then don't apply gravity
         body:setGravityScale(0)
 
         if not shouldAdvanceY then
@@ -78,6 +76,12 @@ function WaypointMovement:update(dt)
       else
         newVelocityY = velocityY
       end
+    end
+
+    if newVelocityX < 0 then
+      movement.direction = 'left'
+    elseif newVelocityX > 0 then
+      movement.direction = 'right'
     end
 
     body:setLinearVelocity(newVelocityX, newVelocityY)

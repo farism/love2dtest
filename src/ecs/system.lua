@@ -51,7 +51,10 @@ end
 function System:mouse(x, y, button, istouch, presses)
 end
 
-function System:collision(a, b, contact)
+function System:beginContact(a, b, contact)
+end
+
+function System:endContact(a, b, contact)
 end
 
 function System:update(dt)

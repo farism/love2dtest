@@ -15,7 +15,7 @@ local function updateCheckpoint(player, checkpoint)
   checkpoint.visted = true
 end
 
-function CheckpointSystem:collision(a, b, contact)
+function CheckpointSystem:beginContact(a, b, contact)
   a = a:getUserData().entity
   b = b:getUserData().entity
 

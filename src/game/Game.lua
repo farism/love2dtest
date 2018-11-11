@@ -66,7 +66,10 @@ function Game:new()
   world.setCallbacks(
     world,
     function(a, b, contact)
-      game:collision(a, b, contact)
+      game:beginContact(a, b, contact)
+    end,
+    function(a, b, contact)
+      game:endContact(a, b, contact)
     end
   )
 
@@ -114,8 +117,12 @@ function Game:new()
     self.manager:mouse(x, y, button, istouch, presses)
   end
 
-  function game:collision(a, b, contact)
-    self.manager:collision(a, b, contact)
+  function game:beginContact(a, b, contact)
+    self.manager:beginContact(a, b, contact)
+  end
+
+  function game:endContact(a, b, contact)
+    self.manager:endContact(a, b, contact)
   end
 
   function game:update(dt)

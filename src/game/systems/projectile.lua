@@ -4,7 +4,7 @@ local Projectile = require 'game.components.projectile'
 
 local ProjectileSystem = System:new('damage', Aspect.never())
 
-function ProjectileSystem:collision(a, b, contact)
+function ProjectileSystem:beginContact(a, b, contact)
   local ae = a:getUserData().entity
   local be = b:getUserData().entity
 

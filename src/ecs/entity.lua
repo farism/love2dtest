@@ -21,11 +21,11 @@ function Entity:new(id, manager, meta)
     return self.manager:getComponent(self, cmp)
   end
 
-  function entity:addComponent(cmp)
+  function entity:add(cmp)
     return self.manager:addComponent(self, cmp)
   end
 
-  function entity:removeComponent(cmp)
+  function entity:remove(cmp)
     return self.manager:removeComponent(self, cmp)
   end
 

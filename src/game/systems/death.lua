@@ -19,7 +19,7 @@ function Death:player(dt, entity)
   local health = entity:as(Health)
   local player = entity:as(Player)
 
-  entity:addComponent(Respawn.new(1))
+  entity:add(Respawn.new(1))
   health.hitpoints = 1
 end
 

@@ -131,9 +131,15 @@ function Manager:new(world)
     end
   end
 
-  function manager:collision(a, b, contact)
+  function manager:beginContact(a, b, contact)
     for _, sys in pairs(self.systems) do
-      sys:collision(a, b, contact, self.world)
+      sys:beginContact(a, b, contact, self.world)
+    end
+  end
+
+  function manager:endContact(a, b, contact)
+    for _, sys in pairs(self.systems) do
+      sys:endContact(a, b, contact, self.world)
     end
   end
 

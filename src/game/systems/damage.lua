@@ -6,7 +6,7 @@ local Health = require 'game.components.health'
 
 local DamageSystem = System:new('damage', Aspect.always())
 
-function DamageSystem:collision(a, b, contact)
+function DamageSystem:beginContact(a, b, contact)
   a = a:getUserData().entity
   b = b:getUserData().entity
   local health

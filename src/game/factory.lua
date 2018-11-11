@@ -48,7 +48,7 @@ local function Factory(world, manager)
     local entity, components = prefab()
 
     for _, component in pairs(components) do
-      entity:addComponent(component)
+      entity:add(component)
     end
 
     return entity
@@ -130,7 +130,7 @@ local function Factory(world, manager)
 
       return entity, {
         Ability.new(1),
-        Aggression.new(1, world, entity, x, y),
+        Aggression.new(1, world, entity, x, y, 500, 100),
         Fixture.new(1, entity, fixture),
         Health.new(1, 1, 0),
         Movement.new(1),
@@ -209,6 +209,7 @@ local function Factory(world, manager)
       local shape = love.physics.newRectangleShape(48, 48)
       local fixture = love.physics.newFixture(body, shape, 1)
       fixture:setCategory(category.CONTAINER)
+      fixture:setMask(category.PLAYER, category.ENEMY, category.ENEMY_ATTACK)
 
       return entity, {
         Fixture.new(1, entity, fixture),
