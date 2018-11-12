@@ -10,6 +10,7 @@ local Input = require 'game.components.input'
 local Movement = require 'game.components.movement'
 local Waypoint = require 'game.components.waypoint'
 local Player = require 'game.components.player'
+local Platform = require 'game.components.platform'
 local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
 local Wave = require 'game.components.wave'
@@ -40,6 +41,12 @@ local category = {
   BOMB = 7,
   AGGRESSION = 8
 }
+
+local function merge(list1, list2)
+  for _, value in ipairs(list1) do
+    table.insert(list2, value)
+  end
+end
 
 local function Factory(world, manager)
   local factory = {}
@@ -129,24 +136,54 @@ local function Factory(world, manager)
       fixture:setCategory(category.ENEMY)
 
       return entity, {
-        Ability.new(1),
-        Aggression.new(1, world, entity, x, y, 500, 100),
         Fixture.new(1, entity, fixture),
         Health.new(1, 1, 0),
         Movement.new(1),
         Position.new(1),
-        Timer.new(1),
-        Waypoint.new(
-          1,
-          50,
-          {
-            {x = x},
-            {x = 100},
-            {x = 0},
-            {x = 200}
-          }
-        )
+        Timer.new(1)
       }
+    end
+  end
+
+  function factory.swingMob(x, y)
+    return function()
+      local entity, components = factory.mob(x, y)()
+
+      merge(
+        {
+          Ability.new(1):setEnabled('swing', true),
+          Aggression.new(1, world, entity, x, y, 250, 100),
+          Waypoint.new(
+            1,
+            50,
+            {
+              {x = x},
+              {x = 100},
+              {x = 0},
+              {x = 200}
+            }
+          )
+        },
+        components
+      )
+
+      return entity, components
+    end
+  end
+
+  function factory.shootMob(x, y)
+    return function()
+      local entity, components = factory.mob(x, y)()
+
+      merge(
+        {
+          Ability.new(1):setEnabled('shoot', true),
+          Aggression.new(1, world, entity, x, y, 500, 100, 2)
+        },
+        components
+      )
+
+      return entity, components
     end
   end
 
@@ -157,12 +194,14 @@ local function Factory(world, manager)
       local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
       local shape = love.physics.newRectangleShape(128, 16)
       local fixture = love.physics.newFixture(body, shape, 1)
+      body:setFixedRotation(true)
       fixture:setFriction(1)
 
       return entity, {
         Fixture.new(1, entity, fixture),
         Movement.new(1),
         Position.new(1),
+        Platform.new(1, 1, x, y),
         Timer.new(1),
         Waypoint.new(
           1,
@@ -176,13 +215,16 @@ local function Factory(world, manager)
     end
   end
 
-  function factory.throwingPick(origin)
+  function factory.throwingPick(origin, x, y)
     return function()
       local entity = manager:newEntity()
       entity.meta.type = type.THROWING_PICK
-      local body = love.physics.newBody(world, 0, 0, 'dynamic')
+      local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
       local shape = love.physics.newRectangleShape(8, 8)
       local fixture = love.physics.newFixture(body, shape, 1)
+      body:setBullet(true)
+      body:setGravityScale(0)
+      body:setFixedRotation(true)
 
       if (origin:has(Player)) then
         fixture:setCategory(category.PLAYER_ATTACK)

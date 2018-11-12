@@ -12,6 +12,10 @@ function Position.new(id, x, y)
     y = y or 0
   }
 
+  function position:coords()
+    return self.x, self.y
+  end
+
   return position
 end
 

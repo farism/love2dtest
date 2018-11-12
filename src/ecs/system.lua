@@ -23,8 +23,16 @@ end
 
 function System:check(entity)
   if (self.aspect:check(entity)) then
+    if not self.entities[entity.id] then
+      self:onAdd(entity)
+    end
+
     self:add(entity)
   else
+    if self.entities[entity.id] then
+      self:onRemove(entity)
+    end
+
     self:remove(entity)
   end
 end
@@ -33,8 +41,14 @@ function System:add(entity)
   self.entities[entity.id] = entity
 end
 
+function System:onAdd(entity)
+end
+
 function System:remove(entity)
   self.entities[entity.id] = nil
+end
+
+function System:onRemove(entity)
 end
 
 function System:pause()

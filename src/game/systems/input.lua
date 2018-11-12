@@ -36,8 +36,8 @@ function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
     end
 
     if (ability) then
-      ability.abilities.throw.active = key == inputs.throw and ispressed
-      ability.abilities.dash.active = key == inputs.dash and ispressed
+      ability:setActivated('throw', key == inputs.throw and ispressed)
+      ability:setActivated('dash', key == inputs.dash and ispressed)
     end
   end
 end

@@ -22,7 +22,7 @@ function Aspect:new(all, none, one)
     local none = bit.band(self.none, entity.components) == 0
     local one = bit.band(self.one, entity.components) ~= 0
 
-    return (all or one) and none
+    return (one or all) and none
   end
 
   return aspect

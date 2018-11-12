@@ -4,27 +4,75 @@ local Ability = {
   _meta = constants.Ability
 }
 
-local function ability(timers)
+local function ability(params)
   return {
-    active = false,
-    cooldown = timers.cooldown or 0,
-    duration = timers.duration or 0
+    cooldown = params.cd or 0,
+    duration = params.dur or 0,
+    castspeed = params.speed or 0,
+    enabled = params.enabled == nil and true or params.enabled,
+    activated = false,
+    timers = {}
   }
 end
 
 function Ability.new(id, timers)
   timers = timers or {}
 
-  return {
+  local ability = {
     _meta = Ability._meta,
     id = id,
     abilities = {
-      throw = ability(timers.throw or {cooldown = 0.5, duration = 0}),
-      dash = ability(timers.dash or {cooldown = 1, duration = 0.2}),
-      grapple = ability(timers.grapple or {cooldown = 1, duration = 0}),
-      dig = ability(timers.dig or {cooldown = 1, duration = 1})
+      -- player
+      throw = ability({cd = 0.5, dur = 0, speed = 0}),
+      dash = ability({cd = 1, dur = 0.2, speed = 0}),
+      grapple = ability({cd = 1, dur = 0, speed = 0}),
+      dig = ability({cd = 1, dur = 1, speed = 0}),
+      -- mob, only enable one at a time
+      shoot = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
+      swing = ability({cd = 1, dur = 1, speed = 0.5, enabled = false})
     }
   }
+
+  function ability:reset()
+    for _, ability in pairs(self.abilities) do
+      ability.activated = false
+      ability.timers = {}
+    end
+
+    return self
+  end
+
+  function ability:setEnabled(ability, enabled)
+    self.abilities[ability].enabled = enabled
+
+    return self
+  end
+
+  function ability:setActivated(ability, activated)
+    self.abilities[ability].activated = activated
+
+    return self
+  end
+
+  function ability:setCasting(ability, casting)
+    self.abilities[ability].casting = casting
+
+    return self
+  end
+
+  function ability:setCooldown(ability, cooldown)
+    self.abilities[ability].cooldown = cooldown
+
+    return self
+  end
+
+  function ability:setDuration(ability, duration)
+    self.abilities[ability].duration = duration
+
+    return self
+  end
+
+  return ability
 end
 
 return Ability

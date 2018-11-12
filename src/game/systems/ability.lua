@@ -1,3 +1,4 @@
+local cron = require 'vendor.cron'
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local collision = require 'game.utils.collision'
@@ -10,20 +11,17 @@ local Projectile = require 'game.components.projectile'
 local Respawn = require 'game.components.respawn'
 local Timer = require 'game.components.timer'
 
-local aspect = Aspect:new({Ability, Movement, Position, Timer}, {Respawn})
+local aspect = Aspect:new({Ability, Timer}, {Respawn})
 local AbilitySystem = System:new('ability', aspect)
 
-function AbilitySystem:throw(dt, entity)
+function AbilitySystem:throw(entity)
   local factory = entity.manager.factory
   local position = entity:as(Position)
   local movement = entity:as(Movement)
-  local projectile = factory.create(factory.throwingPick(entity))
+  local x, y = position:coords()
+  local projectile = factory.create(factory.throwingPick(entity, x, y))
   local fixture = projectile:as(Fixture)
   local body = fixture.fixture:getBody()
-  body:setFixedRotation(false)
-  body:setGravityScale(0)
-  body:setX(position.x)
-  body:setY(position.y)
 
   if (movement.direction == 'left') then
     body:setLinearVelocity(-1000, 0)
@@ -32,7 +30,7 @@ function AbilitySystem:throw(dt, entity)
   end
 end
 
-function AbilitySystem:dash(dt, entity)
+function AbilitySystem:dash(entity)
   local ability = entity:as(Ability)
   local fixture = entity:as(Fixture)
   local movement = entity:as(Movement)
@@ -45,28 +43,77 @@ function AbilitySystem:dash(dt, entity)
   end
 end
 
-function AbilitySystem:grapple(dt, entity)
+function AbilitySystem:grapple(entity)
 end
 
-function AbilitySystem:dig(dt, entity)
+function AbilitySystem:dig(entity)
+end
+
+function AbilitySystem:shoot(entity)
+  local factory = entity.manager.factory
+  local position = entity:as(Position)
+  local movement = entity:as(Movement)
+  local x, y = position:coords()
+  local projectile = factory.create(factory.throwingPick(entity, x, y))
+  local fixture = projectile:as(Fixture)
+  local body = fixture.fixture:getBody()
+
+  if (movement.direction == 'left') then
+    body:setLinearVelocity(-2000, 0)
+  else
+    body:setLinearVelocity(2000, 0)
+  end
+end
+
+function AbilitySystem:swing(entity)
+  -- print(dt)
 end
 
 function AbilitySystem:update(dt)
   for _, entity in pairs(self.entities) do
-    local timer = entity:as(Timer)
     local abilities = entity:as(Ability).abilities
 
     for key, ability in pairs(abilities) do
-      local timers = timer.timers[key] or {}
-      timer.timers[key] = timers
+      local timers = ability.timers
 
-      if ability.active and (timer.timers[key].cooldown or 0) == 0 then
-        ability.active = false
-        timer.timers[key].cooldown = ability.cooldown
-        timer.timers[key].duration = ability.duration
-        self[key](self, dt, entity)
-      elseif (timer.timers[key].duration or 0) > 0 then
-        self[key](self, dt, entity)
+      if timers.cooldown then
+        timers.cooldown:update(dt)
+      end
+
+      if timers.duration then
+        timers.duration:update(dt)
+      end
+
+      if timers.casting then
+        timers.casting:update(dt)
+      end
+
+      local cooldown = function()
+        timers.cooldown = nil
+      end
+
+      local casting = function()
+        timers.casting = nil
+        self[key](self, entity)
+      end
+
+      local duration = function()
+        print('finished')
+        timers.duration = nil
+      end
+
+      if ability.activated and not timers.cooldown then
+        ability.activated = false
+
+        timers.cooldown = cron.after(ability.cooldown, cooldown)
+
+        if (ability.castspeed or 0) > 0 and not timers.casting then
+          timers.casting = cron.after(ability.castspeed, casting)
+        elseif (ability.duration or 0) > 0 and not timers.duration then
+          timers.duration = cron.after(ability.duration, duration)
+        else
+          self[key](self, entity)
+        end
       end
     end
   end

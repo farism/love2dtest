@@ -1,35 +1,38 @@
+local cron = require 'vendor.cron'
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local Attack = require 'game.components.attack'
 local Aggression = require 'game.components.aggression'
 local Fixture = require 'game.components.fixture'
 local Position = require 'game.components.position'
-local Timer = require 'game.components.timer'
 local collision = require 'game.utils.collision'
 
-local aspect = Aspect:new({Aggression, Fixture, Position, Timer})
+local aspect = Aspect:new({Aggression, Fixture, Position})
 local AggressionSystem = System:new('aggression', aspect)
 
-local STOP_ATTACK_DURATION = 3
-
 function startAttack(origin, target)
-  collision.entity(origin):add(Attack.new(1, collision.entity(target)))
+  origin = collision.entity(origin)
+  target = collision.entity(target)
+  origin:add(Attack.new(1, target))
 end
 
 function stopAttack(origin)
-  local timer = collision.entity(origin):as(Timer)
-  timer.timers.stopAttack = {duration = STOP_ATTACK_DURATION}
+  origin = collision.entity(origin)
+  local aggression = origin:as(Aggression)
+  local callback = function()
+    origin:remove(Attack)
+    aggression.timeout = nil
+  end
+  aggression.timeout = cron.after(aggression.duration, callback)
 end
 
 function AggressionSystem:update(dt)
   for _, entity in pairs(self.entities) do
     local aggression = entity:as(Aggression)
     local fixture = entity:as(Fixture)
-    local timer = entity:as(Timer)
 
-    if timer.timers.stopAttack and timer.timers.stopAttack.duration == 0 then
-      timer.timers.stopAttack = nil
-      entity:remove(Attack)
+    if aggression.timeout then
+      aggression.timeout:update(dt)
     end
 
     aggression.fixture:getBody():setPosition(
@@ -61,9 +64,9 @@ end
 
 function AggressionSystem:endContact(a, b, contact)
   if collision.is('player', a) and collision.isAggression(b) then
-    stopAttack(b, a)
+    stopAttack(b)
   elseif collision.isAggression(a) and collision.is('player', b) then
-    stopAttack(a, b)
+    stopAttack(a)
   end
 end
 

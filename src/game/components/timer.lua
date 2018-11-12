@@ -5,11 +5,20 @@ local Timer = {
 }
 
 function Timer.new(id, length)
-  return {
+  local timer = {
     _meta = Timer._meta,
     id = id,
     timers = {}
   }
+
+  function timer:get(key)
+    local timers = self.timers[key] or {}
+    self.timers[key] = timers
+
+    return timers
+  end
+
+  return timer
 end
 
 return Timer

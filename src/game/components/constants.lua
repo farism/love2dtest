@@ -22,7 +22,9 @@ local constants = {
   Wave = {id = 'wave', flag = flag(18)},
   Waypoint = {id = 'waypoint', flag = flag(19)},
   Aggression = {id = 'aggression', flag = flag(20)},
-  Attack = {id = 'attack', flag = flag(21)}
+  Attack = {id = 'attack', flag = flag(21)},
+  Dash = {id = 'dash', flag = flag(22)},
+  Platform = {id = 'platform', flag = flag(23)}
 }
 
 return constants
