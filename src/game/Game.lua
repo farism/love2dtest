@@ -11,6 +11,7 @@ local Attack = require 'game.systems.attack'
 local Checkpoint = require 'game.systems.checkpoint'
 local Container = require 'game.systems.container'
 local Damage = require 'game.systems.damage'
+local Dash = require 'game.systems.dash'
 local Death = require 'game.systems.death'
 local FallDeath = require 'game.systems.falldeath'
 local FixtureRender = require 'game.systems.fixturerender'
@@ -33,6 +34,7 @@ local Game = {}
 
 local function initEntities(factory)
   factory.create(factory.ground())
+  factory.create(factory.slope())
   factory.create(factory.platform(400, 200))
   factory.create(factory.crate(100))
   factory.create(factory.crate(164))
@@ -42,13 +44,14 @@ local function initEntities(factory)
   factory.create(factory.saw3(-400, 200))
   factory.create(factory.checkpoint(1, 500))
   factory.create(factory.checkpoint(2, 700, 200))
+  factory.create(factory.snowball(2400, 100))
   -- factory.create(factory.wall(300))
   -- factory.create(factory.mob(100, 100))
   factory.create(factory.slashMob(100, 100))
   -- factory.create(factory.stabMob(100, 100))
   -- factory.create(factory.shootMob(100, 100))
 
-  return factory.create(factory.player(400))
+  return factory.create(factory.player(1500))
 end
 
 function Game:new()
@@ -81,14 +84,15 @@ function Game:new()
   manager:addSystem(Timer)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(Respawn)
-  manager:addSystem(Aggression)
   manager:addSystem(Input)
   manager:addSystem(InputMovement)
   manager:addSystem(JumpReset)
   manager:addSystem(WaypointMovement)
   manager:addSystem(WaveMovement)
-  manager:addSystem(Ability)
+  manager:addSystem(Aggression)
   manager:addSystem(Attack)
+  manager:addSystem(Ability)
+  manager:addSystem(Dash)
   manager:addSystem(Damage)
   manager:addSystem(Death)
   manager:addSystem(FallDeath)

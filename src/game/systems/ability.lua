@@ -3,6 +3,7 @@ local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local collision = require 'game.utils.collision'
 local Ability = require 'game.components.ability'
+local Dash = require 'game.components.dash'
 local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
 local Player = require 'game.components.player'
@@ -30,17 +31,12 @@ function AbilitySystem:throw(entity)
   end
 end
 
-function AbilitySystem:dash(entity)
-  local ability = entity:as(Ability)
-  local fixture = entity:as(Fixture)
-  local movement = entity:as(Movement)
-  local body = fixture.fixture:getBody()
-  local velocityX, velocityY = body:getLinearVelocity()
-  if (movement.direction == 'left') then
-    body:setLinearVelocity(-2000, 0)
-  elseif movement.direction == 'right' then
-    body:setLinearVelocity(2000, 0)
-  end
+function AbilitySystem:dashStart(entity)
+  entity:add(Dash.new(1))
+end
+
+function AbilitySystem:dashEnd(entity)
+  entity:remove(Dash)
 end
 
 function AbilitySystem:grapple(entity)
@@ -66,11 +62,9 @@ function AbilitySystem:shoot(entity)
 end
 
 function AbilitySystem:slash(entity)
-  print(entity)
 end
 
 function AbilitySystem:stab(entity)
-  -- print(dt)
 end
 
 function AbilitySystem:update(dt)
@@ -102,8 +96,8 @@ function AbilitySystem:update(dt)
       end
 
       local duration = function()
-        print('finished')
         timers.duration = nil
+        self[key .. 'End'](self, entity)
       end
 
       if ability.activated and not timers.cooldown then
@@ -114,6 +108,7 @@ function AbilitySystem:update(dt)
         if (ability.castspeed or 0) > 0 and not timers.casting then
           timers.casting = cron.after(ability.castspeed, casting)
         elseif (ability.duration or 0) > 0 and not timers.duration then
+          self[key .. 'Start'](self, entity)
           timers.duration = cron.after(ability.duration, duration)
         else
           self[key](self, entity)

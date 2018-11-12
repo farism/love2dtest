@@ -66,11 +66,12 @@ local function Factory(world, manager)
       local entity = manager:newEntity()
       entity.meta.type = type.PLAYER
       local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
-      local shape = love.physics.newRectangleShape(32, 32)
+      local shape = love.physics.newCircleShape(16)
       local fixture = love.physics.newFixture(body, shape, 1)
       body:setFixedRotation(true)
       fixture:setFriction(1)
       fixture:setCategory(category.PLAYER)
+      fixture:setMask(category.ENEMY)
 
       local animations = {
         walk_right = {
@@ -193,7 +194,7 @@ local function Factory(world, manager)
       entity.meta.type = type.PLATFORM
       local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
       local shape = love.physics.newRectangleShape(128, 16)
-      local fixture = love.physics.newFixture(body, shape, 1)
+      local fixture = love.physics.newFixture(body, shape, 100)
       body:setFixedRotation(true)
       fixture:setFriction(1)
 
@@ -355,6 +356,29 @@ local function Factory(world, manager)
     end
   end
 
+  function factory.snowball(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = type.SNOWBALL
+      local body =
+        love.physics.newBody(
+        world,
+        x or 0,
+        y or WINDOW_HEIGHT - 30 - 64,
+        'dynamic'
+      )
+      local shape = love.physics.newCircleShape(32)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setFriction(1)
+
+      return entity, {
+        Damage.new(1, 1),
+        Fixture.new(1, entity, fixture),
+        Position.new(1)
+      }
+    end
+  end
+
   function factory.checkpoint(index, x, y)
     return function()
       local entity = manager:newEntity()
@@ -378,6 +402,28 @@ local function Factory(world, manager)
       entity.meta.type = type.WALL
       local body = love.physics.newBody(world, x, WINDOW_HEIGHT - 130, 'static')
       local shape = love.physics.newRectangleShape(30, 200)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      return entity, {
+        Fixture.new(1, entity, fixture)
+      }
+    end
+  end
+
+  function factory.slope()
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = type.GROUND
+      local body = love.physics.newBody(world, 1000, 0, 'static')
+      local shape =
+        love.physics.newPolygonShape(
+        500,
+        WINDOW_HEIGHT - 30,
+        1500,
+        WINDOW_HEIGHT - 130,
+        1500,
+        WINDOW_HEIGHT - 30
+      )
       local fixture = love.physics.newFixture(body, shape, 1)
 
       return entity, {
