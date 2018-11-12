@@ -1,6 +1,5 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
-local Animation = require 'game.components.animation'
 local Position = require 'game.components.position'
 local Sprite = require 'game.components.sprite'
 
@@ -9,7 +8,6 @@ local SpriteRender = System:new('spriterender', aspect)
 
 function SpriteRender:draw()
   for _, entity in pairs(self.entities) do
-    local animation = entity:as(Animation)
     local position = entity:as(Position)
     local sprite = entity:as(Sprite)
     local frame = sprite.frame

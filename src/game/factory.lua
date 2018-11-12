@@ -145,13 +145,13 @@ local function Factory(world, manager)
     end
   end
 
-  function factory.swingMob(x, y)
+  function factory.slashMob(x, y)
     return function()
       local entity, components = factory.mob(x, y)()
 
       merge(
         {
-          Ability.new(1):setEnabled('swing', true),
+          Ability.new(1):setEnabled('slash', true),
           Aggression.new(1, world, entity, x, y, 250, 100),
           Waypoint.new(
             1,

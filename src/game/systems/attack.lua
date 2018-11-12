@@ -29,7 +29,7 @@ function AttackSystem:shoot(dt, entity)
   ability:setActivated('shoot', true)
 end
 
-function AttackSystem:swing(dt, entity)
+function AttackSystem:slash(dt, entity)
   local ability = entity:as(Ability)
   local attack = entity:as(Attack)
   local fixture = entity:as(Fixture)
@@ -42,6 +42,7 @@ function AttackSystem:swing(dt, entity)
 
   if math.abs(distance) < 50 then
     newVelocityX = 0
+    ability:setActivated('slash', true)
   end
 
   body:setLinearVelocity(newVelocityX, velocityY)
@@ -51,8 +52,8 @@ function AttackSystem:update(dt)
   for _, entity in pairs(self.entities) do
     local abilities = entity:as(Ability).abilities
 
-    if abilities.swing.enabled then
-      self:swing(dt, entity)
+    if abilities.slash.enabled then
+      self:slash(dt, entity)
     elseif abilities.shoot.enabled then
       self:shoot(dt, entity)
     end

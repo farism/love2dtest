@@ -35,7 +35,6 @@ function Animation.new(id, currentAnimation, animations, width, height)
   return {
     _meta = Animation._meta,
     id = id,
-    foo = 'bar',
     elapsedTime = 0,
     currentFrame = 1,
     currentAnimation = currentAnimation,

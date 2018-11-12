@@ -28,8 +28,9 @@ function Ability.new(id, timers)
       grapple = ability({cd = 1, dur = 0, speed = 0}),
       dig = ability({cd = 1, dur = 1, speed = 0}),
       -- mob, only enable one at a time
-      shoot = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
-      swing = ability({cd = 1, dur = 1, speed = 0.5, enabled = false})
+      shoot = ability({cd = 3, dur = 0, speed = 1.5, enabled = false}),
+      slash = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
+      stab = ability({cd = 3, dur = 0, speed = 1, enabled = false})
     }
   }
 
@@ -42,24 +43,6 @@ function Ability.new(id, timers)
     return self
   end
 
-  function ability:setEnabled(ability, enabled)
-    self.abilities[ability].enabled = enabled
-
-    return self
-  end
-
-  function ability:setActivated(ability, activated)
-    self.abilities[ability].activated = activated
-
-    return self
-  end
-
-  function ability:setCasting(ability, casting)
-    self.abilities[ability].casting = casting
-
-    return self
-  end
-
   function ability:setCooldown(ability, cooldown)
     self.abilities[ability].cooldown = cooldown
 
@@ -68,6 +51,24 @@ function Ability.new(id, timers)
 
   function ability:setDuration(ability, duration)
     self.abilities[ability].duration = duration
+
+    return self
+  end
+
+  function ability:setCastspeed(ability, castspeed)
+    self.abilities[ability].castspeed = castspeed
+
+    return self
+  end
+
+  function ability:setEnabled(ability, enabled)
+    self.abilities[ability].enabled = enabled
+
+    return self
+  end
+
+  function ability:setActivated(ability, activated)
+    self.abilities[ability].activated = activated
 
     return self
   end

@@ -18,7 +18,10 @@ function Camera.new()
 
   function camera:set()
     love.graphics.push()
-    love.graphics.translate(-self.x, -self.y)
+    love.graphics.translate(
+      math.floor(-self.x + 0.5),
+      math.floor(-self.y + 0.5)
+    )
   end
 
   function camera:clear()

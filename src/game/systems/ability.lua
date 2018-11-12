@@ -65,7 +65,11 @@ function AbilitySystem:shoot(entity)
   end
 end
 
-function AbilitySystem:swing(entity)
+function AbilitySystem:slash(entity)
+  print(entity)
+end
+
+function AbilitySystem:stab(entity)
   -- print(dt)
 end
 

@@ -16,10 +16,13 @@ function SetCurrentAnimation:update(dt)
     if movement.right or movement.left then
       action = 'walk'
     end
-    local current = action .. '_' .. movement.direction
 
-    animation.currentFrame = 1
-    animation.currentAnimation = current
+    local newAnimation = action .. '_' .. movement.direction
+
+    if newAnimation ~= animation.currentAnimation then
+      animation.currentAnimation = newAnimation
+      animation.currentFrame = 1
+    end
   end
 end
 
