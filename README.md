@@ -37,7 +37,6 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 
 - more lives
 - more money received
--
 
 ### Melee pick
 
@@ -86,6 +85,7 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 
 - Polar bear trap
 - Frozen blast
+- Taser
 
 ## Monsters
 
@@ -93,22 +93,24 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 
 - Mercenary with melee pick
 - Mercenary with melee pick and riot shield
+- Mercenary with taser and riot shield
 - Mercenary with gun
-- Mercenary on snowmobile
-- Mercenary on snowmobile with gun
 - Mercenary on snowmobile with grenade
-- Mercenary in forklift with grenade
-- Mercenary in forklift with gun
+- Mercenary in lift with grenade
+- Mercenary in lift with gun
 
 ### Animals
 
 - Arctic wolf
 - Snow leopard
 - Polar bear
+- Killer whale
 
 ### Prehistoric
 
-- Caveman
+- Caveman with club
+- Caveman with spear
+- Caveman with spear and shield
 - Sabertooth
 - Mammoth
 - Yeti

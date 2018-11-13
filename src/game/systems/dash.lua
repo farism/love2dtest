@@ -3,8 +3,9 @@ local System = require 'ecs.system'
 local Dash = require 'game.components.dash'
 local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
+local Respawn = require 'game.components.respawn'
 
-local aspect = Aspect.new({Dash, Fixture, Movement})
+local aspect = Aspect.new({Dash, Fixture, Movement}, {Respawn})
 local DashSystem = System:new('dash', aspect)
 
 function DashSystem:onAdd(entity)

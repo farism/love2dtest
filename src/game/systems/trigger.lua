@@ -12,8 +12,8 @@ function TriggerSystem:update(dt)
     local trigger = entity:as(Trigger)
 
     if (trigger.activated and not trigger.executed) then
-      trigger.executed = true
       trigger.action()
+      trigger.executed = true
     end
   end
 end
