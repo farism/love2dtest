@@ -5,7 +5,7 @@ local Health = require 'game.components.health'
 local Player = require 'game.components.player'
 local Position = require 'game.components.position'
 
-local aspect = Aspect:new({Fixture, Health, Player, Position})
+local aspect = Aspect.new({Fixture, Health, Player, Position})
 local Death = System:new('falldeath', aspect)
 
 local BUFFER = 100

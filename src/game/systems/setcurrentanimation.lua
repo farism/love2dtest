@@ -3,7 +3,7 @@ local System = require 'ecs.system'
 local Animation = require 'game.components.animation'
 local Movement = require 'game.components.movement'
 
-local aspect = Aspect:new({Animation, Movement})
+local aspect = Aspect.new({Animation, Movement})
 local SetCurrentAnimation = System:new('setcurrentanimation', aspect)
 
 function SetCurrentAnimation:update(dt)

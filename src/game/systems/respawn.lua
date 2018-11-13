@@ -7,7 +7,7 @@ local Position = require 'game.components.position'
 local Respawn = require 'game.components.respawn'
 local Timer = require 'game.components.timer'
 
-local aspect = Aspect:new({Respawn, Timer})
+local aspect = Aspect.new({Respawn, Timer})
 local RespawnSystem = System:new('respawn', aspect)
 
 function findCheckpoint(entity)

@@ -6,7 +6,7 @@ local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
 local Respawn = require 'game.components.respawn'
 
-local aspect = Aspect:new({Fixture, Input, Movement, Position}, {Respawn})
+local aspect = Aspect.new({Fixture, Input, Movement, Position}, {Respawn})
 local InputMovement = System:new('inputmovement', aspect)
 
 function InputMovement:update(dt)

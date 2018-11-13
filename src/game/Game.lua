@@ -27,6 +27,7 @@ local SetCurrentAnimation = require 'game.systems.setcurrentanimation'
 local SpriteRender = require 'game.systems.spriterender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
 local Timer = require 'game.systems.timer'
+local Trigger = require 'game.systems.trigger'
 local WaveMovement = require 'game.systems.wavemovement'
 local WaypointMovement = require 'game.systems.waypointmovement'
 
@@ -44,14 +45,25 @@ local function initEntities(factory)
   factory.create(factory.saw3(-400, 200))
   factory.create(factory.checkpoint(1, 500))
   factory.create(factory.checkpoint(2, 700, 200))
-  factory.create(factory.snowball(2400, 100))
+  factory.create(
+    factory.trigger(
+      1500,
+      200,
+      100,
+      100,
+      'spawn',
+      function()
+        factory.create(factory.snowball(2400, 100))
+      end
+    )
+  )
   -- factory.create(factory.wall(300))
   -- factory.create(factory.mob(100, 100))
   factory.create(factory.slashMob(100, 100))
   -- factory.create(factory.stabMob(100, 100))
   -- factory.create(factory.shootMob(100, 100))
 
-  return factory.create(factory.player(1500))
+  return factory.create(factory.player(1200))
 end
 
 function Game:new()
@@ -97,6 +109,7 @@ function Game:new()
   manager:addSystem(Death)
   manager:addSystem(FallDeath)
   manager:addSystem(Container)
+  manager:addSystem(Trigger)
   manager:addSystem(Checkpoint)
   manager:addSystem(Projectile)
   manager:addSystem(Platform)

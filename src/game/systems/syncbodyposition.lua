@@ -3,7 +3,7 @@ local System = require 'ecs.system'
 local Fixture = require 'game.components.fixture'
 local Position = require 'game.components.position'
 
-local aspect = Aspect:new({Fixture, Position})
+local aspect = Aspect.new({Fixture, Position})
 local SyncBodyPosition = System:new('syncbodyposition', aspect)
 
 function SyncBodyPosition:update(dt)

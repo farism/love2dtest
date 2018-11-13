@@ -2,7 +2,7 @@ local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local Timer = require 'game.components.timer'
 
-local aspect = Aspect:new({Timer})
+local aspect = Aspect.new({Timer})
 local TimerSystem = System:new('timer', aspect)
 
 function TimerSystem:update(dt)

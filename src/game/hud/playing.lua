@@ -31,10 +31,9 @@ local function documents(player)
 end
 
 local function getPercent(player, key)
-  local ability = player:as(Ability)
-  local timer = player:as(Timer)
-  local total = ability.abilities[key].cooldown or 0
-  local current = (timer.timers[key] or {}).cooldown or 0
+  local ability = player:as(Ability).abilities[key]
+  local total = ability.cooldown or 0
+  local current = total - ((ability.timers.cooldown or {}).running or 0)
 
   return (total - current) / total
 end
@@ -43,7 +42,16 @@ local function arc(x, y, percent)
   local start = -math.pi / 2
   local finish = math.pi * 2
 
-  love.graphics.arc('fill', x, y, 24, start + finish * percent, start + finish)
+  if percent > 0 then
+    love.graphics.arc(
+      'fill',
+      x,
+      y,
+      24,
+      start + finish * percent,
+      start + finish
+    )
+  end
 end
 
 local function cooldowns(player)

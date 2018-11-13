@@ -10,7 +10,7 @@ local function flags(components)
   return value
 end
 
-function Aspect:new(all, none, one)
+function Aspect.new(all, none, one)
   local aspect = {
     all = flags(all or {}),
     none = flags(none or {}),

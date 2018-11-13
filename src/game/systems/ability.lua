@@ -12,7 +12,7 @@ local Projectile = require 'game.components.projectile'
 local Respawn = require 'game.components.respawn'
 local Timer = require 'game.components.timer'
 
-local aspect = Aspect:new({Ability, Timer}, {Respawn})
+local aspect = Aspect.new({Ability, Timer}, {Respawn})
 local AbilitySystem = System:new('ability', aspect)
 
 function AbilitySystem:throw(entity)
@@ -25,9 +25,9 @@ function AbilitySystem:throw(entity)
   local body = fixture.fixture:getBody()
 
   if (movement.direction == 'left') then
-    body:setLinearVelocity(-1000, 0)
+    body:setLinearVelocity(-1500, 0)
   else
-    body:setLinearVelocity(1000, 0)
+    body:setLinearVelocity(1500, 0)
   end
 end
 

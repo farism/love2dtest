@@ -3,7 +3,7 @@ local System = require 'ecs.system'
 local Animation = require 'game.components.animation'
 local Sprite = require 'game.components.sprite'
 
-local aspect = Aspect:new({Animation, Sprite})
+local aspect = Aspect.new({Animation, Sprite})
 local AnimateSprite = System:new('animatesprite', aspect)
 
 function AnimateSprite:update(dt)

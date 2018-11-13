@@ -3,7 +3,7 @@ local System = require 'ecs.system'
 local State = require 'game.state'
 local Player = require 'game.components.player'
 
-local aspect = Aspect:new({Player})
+local aspect = Aspect.new({Player})
 local GameOver = System:new('gameover', aspect)
 
 function GameOver:update(dt)

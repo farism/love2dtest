@@ -16,6 +16,7 @@ local Projectile = require 'game.components.projectile'
 local Wave = require 'game.components.wave'
 local Sprite = require 'game.components.sprite'
 local Timer = require 'game.components.timer'
+local Trigger = require 'game.components.trigger'
 
 local type = {
   CHECKPOINT = 'checkpoint',
@@ -28,6 +29,7 @@ local type = {
   SAW = 'saw',
   SNOWBALL = 'snowball',
   THROWING_PICK = 'throwingPick',
+  TRIGGER = 'trigger',
   WALL = 'wall'
 }
 
@@ -367,7 +369,7 @@ local function Factory(world, manager)
         y or WINDOW_HEIGHT - 30 - 64,
         'dynamic'
       )
-      local shape = love.physics.newCircleShape(32)
+      local shape = love.physics.newCircleShape(64)
       local fixture = love.physics.newFixture(body, shape, 1)
       fixture:setFriction(1)
 
@@ -428,6 +430,22 @@ local function Factory(world, manager)
 
       return entity, {
         Fixture.new(1, entity, fixture)
+      }
+    end
+  end
+
+  function factory.trigger(x, y, width, height, type, action)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = type.TRIGGER
+      local body = love.physics.newBody(world, x, y, 'static')
+      local shape = love.physics.newRectangleShape(width, height)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      fixture:setSensor(true)
+
+      return entity, {
+        Fixture.new(1, entity, fixture),
+        Trigger.new(1, type, action)
       }
     end
   end

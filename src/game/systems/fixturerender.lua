@@ -2,7 +2,7 @@ local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local Fixture = require 'game.components.fixture'
 
-local aspect = Aspect:new({Fixture})
+local aspect = Aspect.new({Fixture})
 local FixtureRender = System:new('fixturerender', aspect)
 
 function FixtureRender:draw()

@@ -24,7 +24,8 @@ local constants = {
   Aggression = {id = 'aggression', flag = flag(20)},
   Attack = {id = 'attack', flag = flag(21)},
   Dash = {id = 'dash', flag = flag(22)},
-  Platform = {id = 'platform', flag = flag(23)}
+  Platform = {id = 'platform', flag = flag(23)},
+  Trigger = {id = 'trigger', flag = flag(24)}
 }
 
 return constants

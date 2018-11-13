@@ -7,7 +7,7 @@ local Fixture = require 'game.components.fixture'
 local Position = require 'game.components.position'
 local collision = require 'game.utils.collision'
 
-local aspect = Aspect:new({Aggression, Fixture, Position})
+local aspect = Aspect.new({Aggression, Fixture, Position})
 local AggressionSystem = System:new('aggression', aspect)
 
 function startAttack(origin, target)

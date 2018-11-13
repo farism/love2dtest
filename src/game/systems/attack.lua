@@ -6,7 +6,7 @@ local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
 
-local aspect = Aspect:new({Ability, Attack, Fixture, Movement, Position})
+local aspect = Aspect.new({Ability, Attack, Fixture, Movement, Position})
 local AttackSystem = System:new('aggression', aspect)
 
 function AttackSystem:onRemove(entity)

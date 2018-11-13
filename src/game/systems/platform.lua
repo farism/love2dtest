@@ -8,7 +8,7 @@ local Position = require 'game.components.position'
 local Waypoint = require 'game.components.waypoint'
 local collision = require 'game.utils.collision'
 
-local aspect = Aspect:new({Fixture, Platform})
+local aspect = Aspect.new({Fixture, Platform})
 local PlatformSystem = System:new('fall', aspect)
 
 local function reset(entity)

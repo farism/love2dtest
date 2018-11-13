@@ -4,7 +4,7 @@ local Dash = require 'game.components.dash'
 local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
 
-local aspect = Aspect:new({Dash, Fixture, Movement})
+local aspect = Aspect.new({Dash, Fixture, Movement})
 local DashSystem = System:new('dash', aspect)
 
 function DashSystem:onAdd(entity)

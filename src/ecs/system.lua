@@ -5,7 +5,7 @@ local System = {}
 function System:new(id, aspect)
   local system = {
     id = id,
-    aspect = aspect or Aspect:new(),
+    aspect = aspect or Aspect.new(),
     entities = {},
     manager = nil,
     paused = false

@@ -3,7 +3,7 @@ local System = require 'ecs.system'
 local Fixture = require 'game.components.fixture'
 local Wave = require 'game.components.wave'
 
-local aspect = Aspect:new({Fixture, Wave})
+local aspect = Aspect.new({Fixture, Wave})
 local WaveMovement = System:new('wavemovement', aspect)
 
 local time = 0

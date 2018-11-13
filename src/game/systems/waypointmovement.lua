@@ -7,7 +7,7 @@ local Movement = require 'game.components.movement'
 local Position = require 'game.components.position'
 local Waypoint = require 'game.components.waypoint'
 
-local aspect = Aspect:new({Fixture, Movement, Position, Waypoint}, {Attack})
+local aspect = Aspect.new({Fixture, Movement, Position, Waypoint}, {Attack})
 local WaypointMovement = System:new('waypointmovement', aspect)
 
 local function getNext(waypoint)

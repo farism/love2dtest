@@ -4,7 +4,7 @@ local Health = require 'game.components.health'
 local Player = require 'game.components.player'
 local Respawn = require 'game.components.respawn'
 
-local aspect = Aspect:new({Health})
+local aspect = Aspect.new({Health})
 local Death = System:new('death', aspect)
 
 function Death:container(dt, entity)
