@@ -1,5 +1,6 @@
 local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
+local Fixture = require 'game.components.fixture'
 local Health = require 'game.components.health'
 local Player = require 'game.components.player'
 local Respawn = require 'game.components.respawn'
@@ -7,11 +8,22 @@ local Respawn = require 'game.components.respawn'
 local aspect = Aspect.new({Health})
 local Death = System:new('death', aspect)
 
+local function destroyJoints(entity)
+  local fixture = entity:as(Fixture)
+  local joints = fixture.fixture:getBody():getJoints()
+  for _, joint in pairs(joints) do
+    local a, b = joint:getBodies()
+    a:getUserData().entity:destroy()
+    b:getUserData().entity:destroy()
+  end
+end
+
 function Death:container(dt, entity)
   entity:destroy()
 end
 
 function Death:mob(dt, entity)
+  destroyJoints(entity)
   entity:destroy()
 end
 

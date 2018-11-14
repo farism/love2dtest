@@ -30,7 +30,9 @@ function Ability.new(id, timers)
       -- mob, only enable one at a time
       shoot = ability({cd = 3, dur = 0, speed = 1.5, enabled = false}),
       slash = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
-      stab = ability({cd = 3, dur = 0, speed = 1, enabled = false})
+      stab = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
+      ambush = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
+      taser = ability({cd = 3, dur = 0, speed = 1, enabled = false})
     }
   }
 

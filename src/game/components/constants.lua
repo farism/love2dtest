@@ -17,7 +17,6 @@ local constants = {
   Snare = {id = 'snare', flag = flag(13)},
   Sound = {id = 'movement', flag = flag(14)},
   Sprite = {id = 'sprite', flag = flag(15)},
-  Timer = {id = 'timer', flag = flag(16)},
   Upgrades = {id = 'upgrades', flag = flag(17)},
   Wave = {id = 'wave', flag = flag(18)},
   Waypoint = {id = 'waypoint', flag = flag(19)},

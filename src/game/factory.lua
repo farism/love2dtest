@@ -1,3 +1,4 @@
+local cron = require 'vendor.cron'
 local flag = require 'game.utils.flag'
 local Aggression = require 'game.components.aggression'
 local Ability = require 'game.components.ability'
@@ -15,7 +16,6 @@ local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
 local Wave = require 'game.components.wave'
 local Sprite = require 'game.components.sprite'
-local Timer = require 'game.components.timer'
 local Trigger = require 'game.components.trigger'
 
 local type = {
@@ -27,7 +27,9 @@ local type = {
   PLATFORM = 'platform',
   PLAYER = 'player',
   SAW = 'saw',
+  SHIELD = 'shield',
   SNOWBALL = 'snowball',
+  PICK = 'pick',
   THROWING_PICK = 'throwingPick',
   TRIGGER = 'trigger',
   WALL = 'wall'
@@ -43,6 +45,16 @@ local category = {
   BOMB = 7,
   AGGRESSION = 8
 }
+
+local function find(component, components)
+  for _, c in pairs(components) do
+    if component._meta.id == c._meta.id then
+      return c
+    end
+  end
+
+  return nil
+end
 
 local function merge(list1, list2)
   for _, value in ipairs(list1) do
@@ -122,8 +134,7 @@ local function Factory(world, manager)
         Input.new(1),
         Movement.new(1),
         Player.new(1),
-        Position.new(1),
-        Timer.new(1)
+        Position.new(1)
       }
     end
   end
@@ -142,15 +153,30 @@ local function Factory(world, manager)
         Fixture.new(1, entity, fixture),
         Health.new(1, 1, 0),
         Movement.new(1),
-        Position.new(1),
-        Timer.new(1)
+        Position.new(1)
       }
     end
   end
 
   function factory.slashMob(x, y)
     return function()
+      local pick = factory.create(factory.pick(x, y))
       local entity, components = factory.mob(x, y)()
+      local fixture1 = find(Fixture, components)
+      local fixture2 = pick:as(Fixture)
+      local body1 = fixture1.fixture:getBody()
+      local body2 = fixture2.fixture:getBody()
+      local joint =
+        love.physics.newWeldJoint(
+        body1,
+        body2,
+        -24,
+        0,
+        0,
+        0,
+        false,
+        math.pi / 2
+      )
 
       merge(
         {
@@ -190,30 +216,91 @@ local function Factory(world, manager)
     end
   end
 
-  function factory.platform(x, y)
+  function factory.shieldMob(x, y)
+    return function()
+      local shield = factory.create(factory.shield(x, y))
+      local entity, components = factory.mob(x, y)()
+      local fixture1 = find(Fixture, components)
+      local fixture2 = shield:as(Fixture)
+      local body1 = fixture1.fixture:getBody()
+      local body2 = fixture2.fixture:getBody()
+      local joint = love.physics.newWeldJoint(body1, body2, -24, 0, 0, 0, false)
+
+      merge(
+        {
+          Aggression.new(1, world, entity, x, y, 300, 100, 2),
+          Waypoint.new(
+            1,
+            50,
+            {
+              {x = x},
+              {x = 100},
+              {x = 0},
+              {x = 200}
+            }
+          )
+        },
+        components
+      )
+
+      return entity, components
+    end
+  end
+
+  function factory.taserMob(x, y)
+    return function()
+      local entity, components = factory.shieldMob(x, y)()
+
+      merge(
+        {
+          Ability.new(1):setEnabled('taser', true),
+          Aggression.new(1, world, entity, x, y, 300, 100, 2),
+          Waypoint.new(
+            1,
+            50,
+            {
+              {x = x},
+              {x = 100},
+              {x = 0},
+              {x = 200}
+            }
+          )
+        },
+        components
+      )
+
+      return entity, components
+    end
+  end
+
+  function factory.pick(x, y)
     return function()
       local entity = manager:newEntity()
-      entity.meta.type = type.PLATFORM
-      local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
-      local shape = love.physics.newRectangleShape(128, 16)
-      local fixture = love.physics.newFixture(body, shape, 100)
+      entity.meta.type = type.SWORD
+      local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(4, 32)
+      local fixture = love.physics.newFixture(body, shape, 1)
       body:setFixedRotation(true)
-      fixture:setFriction(1)
+      fixture:setCategory(category.ENEMY)
 
       return entity, {
-        Fixture.new(1, entity, fixture),
-        Movement.new(1),
-        Position.new(1),
-        Platform.new(1, 1, x, y),
-        Timer.new(1),
-        Waypoint.new(
-          1,
-          100,
-          {
-            {x = 450, y = 200},
-            {x = 700, y = 200}
-          }
-        )
+        Fixture.new(1, entity, fixture)
+      }
+    end
+  end
+
+  function factory.shield(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = type.SHIELD
+      local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(4, 32)
+      local fixture = love.physics.newFixture(body, shape, 1)
+      body:setFixedRotation(true)
+      fixture:setCategory(category.ENEMY)
+
+      return entity, {
+        Fixture.new(1, entity, fixture)
       }
     end
   end
@@ -394,6 +481,33 @@ local function Factory(world, manager)
         Checkpoint.new(1, index),
         Fixture.new(1, entity, fixture),
         Position.new(1)
+      }
+    end
+  end
+
+  function factory.platform(x, y)
+    return function()
+      local entity = manager:newEntity()
+      entity.meta.type = type.PLATFORM
+      local body = love.physics.newBody(world, x or 0, y or 0, 'kinematic')
+      local shape = love.physics.newRectangleShape(128, 16)
+      local fixture = love.physics.newFixture(body, shape, 100)
+      body:setFixedRotation(true)
+      fixture:setFriction(1)
+
+      return entity, {
+        Fixture.new(1, entity, fixture),
+        Movement.new(1),
+        Position.new(1),
+        Platform.new(1, 1, x, y),
+        Waypoint.new(
+          1,
+          100,
+          {
+            {x = 450, y = 200},
+            {x = 700, y = 200}
+          }
+        )
       }
     end
   end

@@ -1,7 +1,6 @@
 local State = require 'game.state'
 local Ability = require 'game.components.ability'
 local Player = require 'game.components.player'
-local Timer = require 'game.components.timer'
 
 local Playing = {}
 
@@ -90,7 +89,7 @@ function Playing.draw(player, game)
   lives(player)
   documents(player)
 
-  if (player:has(Ability) and player:has(Timer)) then
+  if (player:has(Ability)) then
     cooldowns(player)
   end
 end

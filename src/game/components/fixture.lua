@@ -16,6 +16,7 @@ function Fixture.new(id, entity, fixture, category, mask, group)
   local data = fixture:getUserData() or {}
   data.entity = entity
   fixture:setUserData(data)
+  fixture:getBody():setUserData(data)
 
   function instance:destroy()
     self.fixture:getBody():destroy()

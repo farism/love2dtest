@@ -21,8 +21,8 @@ function Aggression.new(id, world, entity, x, y, width, height, duration)
     _meta = Aggression._meta,
     id = id,
     fixture = fixture,
-    minRange = minRange,
-    maxRange = maxRange,
+    width = width,
+    height = height,
     duration = duration
   }
 

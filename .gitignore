@@ -1,2 +1,5 @@
-/lua
-/lua_modules
+lua
+lua_modules
+node_modules
+elm-stuff
+.save

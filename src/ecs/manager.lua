@@ -80,7 +80,7 @@ function Manager:new(world)
 
   function manager:removeComponents(entity)
     -- need to make this better
-    for _, component in pairs(self.components[entity.id]) do
+    for _, component in pairs(self.components[entity.id] or {}) do
       if (component.destroy) then
         component:destroy()
       end

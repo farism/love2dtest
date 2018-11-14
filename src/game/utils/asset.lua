@@ -1,30 +1,44 @@
+local json = require('vendor.json')
+
 local Asset = {}
 
+local _levelCache = {}
 local _imageCache = {}
 local _soundCache = {}
 
-local function get(cache, loader, file)
-  if (cache[file]) then
-    return cache[file]
+function Asset.getLevel(file)
+  if _levelCache[file] then
+    return _levelCache[file]
   else
-    local asset = loader(file)
-    cache[file] = asset
-
-    return asset
+    local result = love.filesystem.newFile(file):read()
+    local level = json.decode(result)
+    _levelCache[file] = level
   end
+
+  return _levelCache[file]
 end
 
 function Asset.getImage(file)
-  local image = get(_imageCache, love.graphics.newImage, file)
-  image:setWrap('repeat', 'repeat')
+  if _imageCache[file] then
+    return _imageCache[file]
+  else
+    local image = love.graphics.newImage(file)
+    image:setWrap('repeat', 'repeat')
+    _imageCache[file] = image
+  end
 
-  return image
+  return _imageCache[file]
 end
 
 function Asset.getSound(file)
-  local sound = get(_soundCache, love.audio.newSource, file)
+  if _soundCache[file] then
+    return _soundCache[file]
+  else
+    local sound = love.audio.newSource(file)
+    _soundCache[file] = sound
+  end
 
-  return sound
+  return _soundCache[file]
 end
 
 return Asset

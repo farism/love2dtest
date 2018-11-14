@@ -26,7 +26,6 @@ local Respawn = require 'game.systems.respawn'
 local SetCurrentAnimation = require 'game.systems.setcurrentanimation'
 local SpriteRender = require 'game.systems.spriterender'
 local SyncBodyPosition = require 'game.systems.syncbodyposition'
-local Timer = require 'game.systems.timer'
 local Trigger = require 'game.systems.trigger'
 local WaveMovement = require 'game.systems.wavemovement'
 local WaypointMovement = require 'game.systems.waypointmovement'
@@ -59,11 +58,13 @@ local function initEntities(factory)
   )
   -- factory.create(factory.wall(300))
   -- factory.create(factory.mob(100, 100))
+  -- factory.create(factory.taserMob(100, 100))
   factory.create(factory.slashMob(100, 100))
   -- factory.create(factory.stabMob(100, 100))
   -- factory.create(factory.shootMob(100, 100))
+  -- factory.create(factory.shieldMob(100, 100))
 
-  return factory.create(factory.player(1200))
+  return factory.create(factory.player(-200))
 end
 
 function Game:new()
@@ -93,7 +94,6 @@ function Game:new()
   )
 
   manager:addSystem(GameOver)
-  manager:addSystem(Timer)
   manager:addSystem(SyncBodyPosition)
   manager:addSystem(Respawn)
   manager:addSystem(Input)

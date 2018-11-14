@@ -3,6 +3,7 @@ local Aspect = require 'ecs.aspect'
 local System = require 'ecs.system'
 local collision = require 'game.utils.collision'
 local Ability = require 'game.components.ability'
+local Damage = require 'game.components.damage'
 local Dash = require 'game.components.dash'
 local Fixture = require 'game.components.fixture'
 local Movement = require 'game.components.movement'
@@ -10,9 +11,8 @@ local Player = require 'game.components.player'
 local Position = require 'game.components.position'
 local Projectile = require 'game.components.projectile'
 local Respawn = require 'game.components.respawn'
-local Timer = require 'game.components.timer'
 
-local aspect = Aspect.new({Ability, Timer}, {Respawn})
+local aspect = Aspect.new({Ability}, {Respawn})
 local AbilitySystem = System:new('ability', aspect)
 
 function AbilitySystem:throw(entity)
@@ -32,11 +32,19 @@ function AbilitySystem:throw(entity)
 end
 
 function AbilitySystem:dashStart(entity)
+  local fixture = entity:as(Fixture)
+  fixture.fixture:setCategory(3)
+
   entity:add(Dash.new(1))
+  entity:add(Damage.new(1, 1))
 end
 
 function AbilitySystem:dashEnd(entity)
+  local fixture = entity:as(Fixture)
+  fixture.fixture:setCategory(2)
+
   entity:remove(Dash)
+  entity:remove(Damage)
 end
 
 function AbilitySystem:grapple(entity)
@@ -65,6 +73,9 @@ function AbilitySystem:slash(entity)
 end
 
 function AbilitySystem:stab(entity)
+end
+
+function AbilitySystem:taser(entity)
 end
 
 function AbilitySystem:update(dt)
