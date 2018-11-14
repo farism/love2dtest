@@ -318,7 +318,11 @@ local function Factory(world, manager)
 
       if (origin:has(Player)) then
         fixture:setCategory(category.PLAYER_ATTACK)
-        fixture:setMask(category.PLAYER, category.AGGRESSION)
+        fixture:setMask(
+          category.PLAYER,
+          category.PLAYER_ATTACK,
+          category.AGGRESSION
+        )
       else
         fixture:setCategory(category.ENEMY_ATTACK)
         fixture:setMask(category.ENEMY, category.AGGRESSION)
