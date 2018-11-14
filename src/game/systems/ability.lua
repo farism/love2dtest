@@ -24,11 +24,18 @@ function AbilitySystem:throw(entity)
   local fixture = projectile:as(Fixture)
   local body = fixture.fixture:getBody()
 
-  if (movement.direction == 'left') then
-    body:setLinearVelocity(-1500, 0)
-  else
-    body:setLinearVelocity(1500, 0)
-  end
+  local velocity = 1500
+  local angle = movement.aim
+  local direction = movement.direction == 'left' and -1 or 1
+  local vx = velocity * math.cos(angle) * direction
+  local vy = velocity * math.sin(angle)
+  body:setLinearVelocity(vx, vy)
+
+  -- if (movement.direction == 'left') then
+  --   body:setLinearVelocity(-1500, 0)
+  -- else
+  --   body:setLinearVelocity(1500, 0)
+  -- end
 end
 
 function AbilitySystem:dashStart(entity)

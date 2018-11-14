@@ -8,6 +8,8 @@ local aspect = Aspect.new({Input, Movement})
 local InputSystem = System:new('input', aspect)
 
 local inputs = {
+  up = 'w',
+  down = 's',
   left = 'a',
   right = 'd',
   jump = 'space',
@@ -21,6 +23,14 @@ function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
     local movement = entity:as(Movement)
 
     if (movement) then
+      if (key == inputs.up) then
+        movement.lookUp = ispressed
+      end
+
+      if (key == inputs.down) then
+        movement.lookDown = ispressed
+      end
+
       if (key == inputs.left) then
         movement.left = ispressed
         movement.direction = movement.right and 'right' or 'left'

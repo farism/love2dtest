@@ -12,7 +12,8 @@ function Movement.new(id)
     left = false,
     right = false,
     jump = false,
-    jumpCount = 0
+    jumpCount = 0,
+    aim = 0
   }
 
   return movement
