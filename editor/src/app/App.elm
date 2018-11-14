@@ -171,7 +171,7 @@ update msg model =
                 ( selectedEntity, entities ) =
                     case model.selectedEntity of
                         Nothing ->
-                            ( model.selectedEntity, model.entities )
+                            ( Nothing, model.entities )
 
                         Just entity ->
                             let
@@ -188,6 +188,7 @@ update msg model =
             in
                 ( { model
                     | queuedComponent = Nothing
+                    , selectedComponent = Just component
                     , selectedEntity = selectedEntity
                     , entities = entities
                   }
@@ -256,7 +257,7 @@ entityManagerView model =
                 (List.map
                     (\entity ->
                         li
-                            [ onClick (SelectEntity entity) ]
+                            [ entityListItemStyles, onClick (SelectEntity entity) ]
                             [ text <| String.fromInt entity.id ]
                     )
                     (Dict.values model.entities)
@@ -275,7 +276,7 @@ componentsListView msg components =
             (List.map
                 (\component ->
                     li
-                        [ onClick (msg component) ]
+                        [ componentListItemStyles, onClick (msg component) ]
                         [ text <| getComponentId component ]
                 )
                 components
@@ -362,27 +363,28 @@ addComponentButton model =
 
 componentManagerView : Model -> Html Msg
 componentManagerView model =
-    div [ componentManagerStyles ]
-        [ case model.selectedEntity of
-            Nothing ->
-                div [] [ text "Select an entity" ]
+    let
+        children =
+            case model.selectedEntity of
+                Nothing ->
+                    [ text "Select an entity" ]
 
-            Just entity ->
-                div []
+                Just entity ->
                     [ div [ availableComponentsStyles ]
                         [ div []
                             [ addComponentButton model ]
-                        , div []
+                        , div [ availableComponentsListStyles ]
                             [ availableComponentsView model ]
                         ]
                     , div [ selectedComponentsStyles ]
-                        [ div []
+                        [ div [ selectedComponentsListStyles ]
                             [ selectedComponentsView entity ]
-                        , div []
+                        , div [ selectedComponentStyles ]
                             [ selectedComponentView model ]
                         ]
                     ]
-        ]
+    in
+        div [ componentManagerStyles ] children
 
 
 toolbarView : Model -> Html Msg

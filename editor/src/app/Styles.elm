@@ -21,7 +21,6 @@ entityManagerStyles =
         , border3 (px 1) solid (rgb 0 0 0)
         , bottom (px 50)
         , flexDirection column
-        , overflowY scroll
         , position absolute
         , right (px 0)
         , top (px 0)
@@ -31,12 +30,25 @@ entityManagerStyles =
 
 entityListStyles =
     css
-        [ flexGrow (num 1) ]
+        [ borderTop3 (px 1) solid (rgb 0 0 0)
+        , flexGrow (num 1)
+        , overflowY scroll
+        ]
+
+
+entityListItemStyles =
+    css
+        [ cursor pointer
+        , hover [ backgroundColor (hex "#ddd") ]
+        , padding2 (px 5) (px 10)
+        ]
 
 
 selectedEntityStyles =
     css
-        [ flexShrink (num 0) ]
+        [ flexShrink (num 0)
+        , borderTop3 (px 1) solid (rgb 0 0 0)
+        ]
 
 
 componentManagerStyles =
@@ -52,17 +64,48 @@ componentManagerStyles =
         ]
 
 
+componentListItemStyles =
+    css
+        [ cursor pointer
+        , hover [ backgroundColor (hex "#ddd") ]
+        , padding2 (px 5) (px 10)
+        ]
+
+
 availableComponentsStyles =
     css
         [ displayFlex
         , flexDirection column
-        , flex none
-        , height (pct 50)
+        , flex (num 1)
+        ]
+
+
+availableComponentsListStyles =
+    css
+        [ borderTop3 (px 1) solid (rgb 0 0 0)
+        , flexGrow (num 1)
+        , overflowY scroll
         ]
 
 
 selectedComponentsStyles =
     css
-        [ flex none
-        , height (pct 50)
+        [ displayFlex
+        , flexDirection column
+        , flex (num 1)
+        ]
+
+
+selectedComponentsListStyles =
+    css
+        [ borderTop3 (px 1) solid (rgb 0 0 0)
+        , flexGrow (num 1)
+        , overflowY scroll
+        ]
+
+
+selectedComponentStyles =
+    css
+        [ borderTop3 (px 1) solid (rgb 0 0 0)
+        , flexShrink (num 0)
         ]
