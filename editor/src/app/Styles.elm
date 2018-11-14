@@ -10,7 +10,7 @@ toolbarStyles =
         , padding (px 10)
         , left (px 0)
         , position absolute
-        , right (px 401)
+        , right (px 501)
         , top (px 0)
         ]
 
@@ -75,7 +75,7 @@ componentManagerStyles =
         , position absolute
         , right (px 200)
         , top (px 0)
-        , width (px 200)
+        , width (px 300)
         ]
 
 
@@ -128,4 +128,24 @@ selectedComponentStyles =
     css
         [ borderTop3 (px 1) solid (rgb 0 0 0)
         , flexShrink (num 0)
+        ]
+
+
+paramStyle =
+    css
+        [ displayFlex
+        , padding (px 5)
+        ]
+
+
+paramLabelStyle =
+    css
+        [ width (px 150)
+        , flexShrink (num 0)
+        ]
+
+
+paramInputStyle =
+    css
+        [ width (pct 100)
         ]

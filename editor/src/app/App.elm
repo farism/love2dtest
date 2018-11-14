@@ -6,7 +6,7 @@ import Json.Decode as JD
 import Dict exposing (Dict)
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled.Attributes exposing (disabled, placeholder, value)
-import Html.Styled exposing (Html, button, div, input, li, text, ul, toUnstyled)
+import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
 import Styles exposing (..)
 
 
@@ -56,9 +56,10 @@ waveTypeToString type_ =
 
 type Component
     = Ability {}
-    | Aggression { x : Int, y : Int }
+    | Aggression { x : Int, y : Int, width : Int, height : Int, duration : Int }
     | Animation {}
     | Attack {}
+    | Checkpoint { index : Int }
     | Container {}
     | Damage { hitpoints : Int }
     | Fixture { x : Int, y : Int }
@@ -73,16 +74,17 @@ type Component
     | Sound {}
     | Sprite { asset : String }
     | Trigger {}
-    | Wave { type_ : WaveType, x : Int, y : Int, amplitude : Float, frequency : Float }
+    | Wave { type_ : String, x : Int, y : Int, amplitude : Float, frequency : Float }
     | Waypoint { speed : Int, waypoints : List { x : Int, y : Int } }
 
 
 getComponentsList : List Component
 getComponentsList =
     [ Ability {}
-    , Aggression { x = 0, y = 0 }
+    , Aggression { x = 0, y = 0, width = 0, height = 0, duration = 0 }
     , Animation {}
     , Attack {}
+    , Checkpoint { index = 0 }
     , Container {}
     , Damage { hitpoints = 0 }
     , Fixture { x = 0, y = 0 }
@@ -97,7 +99,7 @@ getComponentsList =
     , Sound {}
     , Sprite { asset = "" }
     , Trigger {}
-    , Wave { type_ = Circular, x = 0, y = 0, amplitude = 1, frequency = 1 }
+    , Wave { type_ = "circular", x = 0, y = 0, amplitude = 1, frequency = 1 }
     , Waypoint { speed = 1, waypoints = [] }
     ]
 
@@ -116,6 +118,9 @@ getComponentId component =
 
         Attack _ ->
             "attack"
+
+        Checkpoint _ ->
+            "checkpoint"
 
         Container _ ->
             "container"
@@ -494,54 +499,161 @@ toFloat default value =
                 int
 
 
-paramInput : String -> (String -> a) -> (a -> Component) -> Html Msg
-paramInput param converter updater =
-    input
-        [ onInput
-            (\value ->
-                UpdateComponent (updater <| converter value)
-            )
-        , value param
+paramInput : String -> String -> (String -> a) -> (a -> Component) -> Html Msg
+paramInput label_ param converter updater =
+    label [ paramStyle ]
+        [ div [ paramLabelStyle ]
+            [ text <| label_ ++ ": "
+            ]
+        , input
+            [ paramInputStyle
+            , onInput
+                (\value ->
+                    UpdateComponent (updater <| converter value)
+                )
+            , value param
+            ]
+            []
         ]
+
+
+paramSelect : String -> List String -> String -> (String -> Component) -> Html Msg
+paramSelect label_ options param updater =
+    label [ paramStyle ]
+        [ div [ paramLabelStyle ]
+            [ text <| label_ ++ ": "
+            ]
+        , select
+            [ paramInputStyle
+            , onInput (\value -> UpdateComponent (updater value))
+            , value param
+            ]
+            (List.map (\opt -> option [] [ text opt ]) options)
+        ]
+
+
+paramInputString : String -> String -> (String -> Component) -> Html Msg
+paramInputString label param updater =
+    paramInput label param (\val -> val) updater
+
+
+paramInputInt : String -> Int -> (Int -> Component) -> Html Msg
+paramInputInt label param updater =
+    paramInput label (String.fromInt param) (toInt param) updater
+
+
+paramInputFloat : String -> Float -> (Float -> Component) -> Html Msg
+paramInputFloat label param updater =
+    paramInput label (String.fromFloat param) (toFloat param) updater
+
+
+abilityParams : {} -> Html Msg
+abilityParams p =
+    div []
         []
 
 
-paramInputString : String -> (String -> Component) -> Html Msg
-paramInputString param updater =
-    paramInput param (\val -> val) updater
-
-
-paramInputInt : Int -> (Int -> Component) -> Html Msg
-paramInputInt param updater =
-    paramInput (String.fromInt param) (toInt param) updater
-
-
-paramInputFloat : Float -> (Float -> Component) -> Html Msg
-paramInputFloat param updater =
-    paramInput (String.fromFloat param) (toFloat param) updater
-
-
-positionParams : { x : Int, y : Int } -> Html Msg
-positionParams position =
+aggressionParams : { x : Int, y : Int, width : Int, height : Int, duration : Int } -> Html Msg
+aggressionParams p =
     div []
-        [ paramInputInt position.x (\x -> Position { position | x = x })
-        , paramInputInt position.y (\y -> Position { position | y = y })
+        [ paramInputInt "x" p.x (\val -> Aggression { p | x = val })
+        , paramInputInt "y" p.y (\val -> Aggression { p | y = val })
+        , paramInputInt "width" p.width (\val -> Aggression { p | width = val })
+        , paramInputInt "height" p.height (\val -> Aggression { p | height = val })
+        , paramInputInt "duration" p.duration (\val -> Aggression { p | duration = val })
         ]
 
 
-fixtureParams : { x : Int, y : Int } -> Html Msg
-fixtureParams fixture =
+animationParams : {} -> Html Msg
+animationParams p =
     div []
-        [ paramInputInt fixture.x (\x -> Fixture { fixture | x = x })
-        , paramInputInt fixture.y (\y -> Fixture { fixture | y = y })
+        []
+
+
+containerParams : {} -> Html Msg
+containerParams p =
+    div []
+        []
+
+
+damageParams : { hitpoints : Int } -> Html Msg
+damageParams p =
+    div []
+        [ paramInputInt "hitpoints" p.hitpoints (\val -> Damage { p | hitpoints = val }) ]
+
+
+fixtureParams : { x : Int, y : Int } -> Html Msg
+fixtureParams p =
+    div []
+        [ paramInputInt "x" p.x (\val -> Fixture { p | x = val })
+        , paramInputInt "y" p.y (\val -> Fixture { p | y = val })
+        ]
+
+
+healthParams : { hitpoints : Int, armor : Int } -> Html Msg
+healthParams p =
+    div []
+        [ paramInputInt "hitpoints" p.hitpoints (\val -> Health { p | hitpoints = val })
+        , paramInputInt "armor" p.armor (\val -> Health { p | armor = val })
+        ]
+
+
+platformParams : { fall : Int, initialX : Int, initialY : Int } -> Html Msg
+platformParams p =
+    div []
+        [ paramInputInt "fall" p.fall (\val -> Platform { p | fall = val })
+        , paramInputInt "initialX" p.initialX (\val -> Platform { p | initialX = val })
+        , paramInputInt "initialY" p.initialY (\val -> Platform { p | initialY = val })
+        ]
+
+
+playerParams : { alias : String, money : Int, lives : Int, documents : Int, checkpoint : Int } -> Html Msg
+playerParams p =
+    div []
+        [ paramInputString "alias" p.alias (\val -> Player { p | alias = val })
+        , paramInputInt "money" p.money (\val -> Player { p | money = val })
+        , paramInputInt "lives" p.lives (\val -> Player { p | lives = val })
+        , paramInputInt "documents" p.documents (\val -> Player { p | documents = val })
+        , paramInputInt "checkpoint" p.checkpoint (\val -> Player { p | checkpoint = val })
+        ]
+
+
+positionParams : { x : Int, y : Int } -> Html Msg
+positionParams p =
+    div []
+        [ paramInputInt "x" p.x (\val -> Position { p | x = val })
+        , paramInputInt "y" p.y (\val -> Position { p | y = val })
         ]
 
 
 spriteParams : { asset : String } -> Html Msg
-spriteParams sprite =
+spriteParams p =
     div []
-        [ paramInputString sprite.asset (\asset -> Sprite { sprite | asset = asset })
+        [ paramInputString "asset" p.asset (\val -> Sprite { p | asset = val })
         ]
+
+
+waveParams : { type_ : String, x : Int, y : Int, amplitude : Float, frequency : Float } -> Html Msg
+waveParams p =
+    let
+        options =
+            [ "circular", "horizontal", "vertical" ]
+    in
+        div []
+            [ paramSelect "type" options p.type_ (\val -> Wave { p | type_ = val })
+            , paramInputInt "x" p.x (\val -> Wave { p | x = val })
+            , paramInputInt "y" p.y (\val -> Wave { p | y = val })
+            , paramInputFloat "amplitude" p.amplitude (\val -> Wave { p | amplitude = val })
+            , paramInputFloat "frequency" p.frequency (\val -> Wave { p | frequency = val })
+            ]
+
+
+
+-- spriteParams : { asset : String } -> Html Msg
+-- spriteParams sprite =
+--     div []
+--         [ paramInputString sprite.asset (\val -> Sprite { sprite | asset = val })
+--         ]
 
 
 selectedComponentsView : Entity -> Model -> Html Msg
@@ -563,14 +675,38 @@ selectedComponentView entity model =
 
                     Just component ->
                         case component of
-                            Position params ->
-                                positionParams params
+                            Aggression params ->
+                                aggressionParams params
+
+                            Animation params ->
+                                animationParams params
+
+                            Container params ->
+                                containerParams params
+
+                            Damage params ->
+                                damageParams params
 
                             Fixture params ->
                                 fixtureParams params
 
+                            Health params ->
+                                healthParams params
+
+                            Platform params ->
+                                platformParams params
+
+                            Player params ->
+                                playerParams params
+
+                            Position params ->
+                                positionParams params
+
                             Sprite params ->
                                 spriteParams params
+
+                            Wave params ->
+                                waveParams params
 
                             _ ->
                                 div [] []
