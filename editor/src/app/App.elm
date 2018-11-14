@@ -4,9 +4,9 @@ import Maybe
 import Browser
 import Json.Decode as JD
 import Dict exposing (Dict)
-import Html.Styled.Events exposing (onClick)
-import Html.Styled.Attributes exposing (disabled, value)
-import Html.Styled exposing (..)
+import Html.Styled.Events exposing (onClick, onInput)
+import Html.Styled.Attributes exposing (disabled, placeholder, value)
+import Html.Styled exposing (Html, button, div, input, li, text, ul, toUnstyled)
 import Styles exposing (..)
 
 
@@ -32,34 +32,138 @@ type Msg
     | SelectEntity Entity
     | SelectComponent Component
     | QueueComponent Component
+    | UpdateComponent Component
+
+
+type WaveType
+    = Circular
+    | Horizontal
+    | Vertical
+
+
+waveTypeToString : WaveType -> String
+waveTypeToString type_ =
+    case type_ of
+        Circular ->
+            "circular"
+
+        Horizontal ->
+            "horizontal"
+
+        Vertical ->
+            "vertical"
 
 
 type Component
-    = Position
-        { x : Float
-        , y : Float
-        }
-    | Sprite
-        { x : Float
-        , y : Float
-        }
+    = Ability {}
+    | Aggression { x : Int, y : Int }
+    | Animation {}
+    | Attack {}
+    | Container {}
+    | Damage { hitpoints : Int }
+    | Fixture { x : Int, y : Int }
+    | Health { hitpoints : Int, armor : Int }
+    | Input {}
+    | Movement {}
+    | Platform { fall : Int, initialX : Int, initialY : Int }
+    | Player { alias : String, money : Int, lives : Int, documents : Int, checkpoint : Int }
+    | Position { x : Int, y : Int }
+    | Projectile {}
+    | Snare {}
+    | Sound {}
+    | Sprite { asset : String }
+    | Trigger {}
+    | Wave { type_ : WaveType, x : Int, y : Int, amplitude : Float, frequency : Float }
+    | Waypoint { speed : Int, waypoints : List { x : Int, y : Int } }
 
 
 getComponentsList : List Component
 getComponentsList =
-    [ Position { x = 0, y = 0 }
-    , Sprite { x = 0, y = 0 }
+    [ Ability {}
+    , Aggression { x = 0, y = 0 }
+    , Animation {}
+    , Attack {}
+    , Container {}
+    , Damage { hitpoints = 0 }
+    , Fixture { x = 0, y = 0 }
+    , Health { hitpoints = 0, armor = 0 }
+    , Input {}
+    , Movement {}
+    , Platform { fall = 1, initialX = 0, initialY = 0 }
+    , Player { alias = "", money = 0, lives = 100, documents = 0, checkpoint = 1 }
+    , Position { x = 0, y = 0 }
+    , Projectile {}
+    , Snare {}
+    , Sound {}
+    , Sprite { asset = "" }
+    , Trigger {}
+    , Wave { type_ = Circular, x = 0, y = 0, amplitude = 1, frequency = 1 }
+    , Waypoint { speed = 1, waypoints = [] }
     ]
 
 
 getComponentId : Component -> String
 getComponentId component =
     case component of
+        Ability _ ->
+            "ability"
+
+        Aggression _ ->
+            "aggression"
+
+        Animation _ ->
+            "animation"
+
+        Attack _ ->
+            "attack"
+
+        Container _ ->
+            "container"
+
+        Damage _ ->
+            "damage"
+
+        Fixture _ ->
+            "fixture"
+
+        Health _ ->
+            "health"
+
+        Input _ ->
+            "input"
+
+        Movement _ ->
+            "movement"
+
+        Platform _ ->
+            "platform"
+
+        Player _ ->
+            "player"
+
         Position _ ->
             "position"
 
+        Projectile _ ->
+            "projectile"
+
+        Snare _ ->
+            "snare"
+
+        Sound _ ->
+            "sound"
+
         Sprite _ ->
             "sprite"
+
+        Trigger _ ->
+            "trigger"
+
+        Wave _ ->
+            "wave"
+
+        Waypoint _ ->
+            "waypoint"
 
 
 type alias Entity =
@@ -73,7 +177,7 @@ type alias Model =
     { nextId : Int
     , entities : Dict Int Entity
     , selectedEntity : Maybe Entity
-    , selectedComponent : Maybe Component
+    , selectedComponent : Maybe String
     , queuedComponent : Maybe Component
     }
 
@@ -111,22 +215,6 @@ createEntity id label =
     , label = label
     , components = Dict.empty
     }
-
-
-createPosition : Int -> Float -> Float -> Component
-createPosition id x y =
-    Position
-        { x = x
-        , y = y
-        }
-
-
-createSprite : Int -> Float -> Float -> Component
-createSprite id x y =
-    Sprite
-        { x = x
-        , y = y
-        }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -188,7 +276,7 @@ update msg model =
             in
                 ( { model
                     | queuedComponent = Nothing
-                    , selectedComponent = Just component
+                    , selectedComponent = Just <| getComponentId component
                     , selectedEntity = selectedEntity
                     , entities = entities
                   }
@@ -211,10 +299,13 @@ update msg model =
 
         SelectComponent component ->
             let
+                componentId =
+                    getComponentId component
+
                 foo =
                     Debug.log "selected component" component
             in
-                ( { model | queuedComponent = Nothing, selectedComponent = Just component }, Cmd.none )
+                ( { model | queuedComponent = Nothing, selectedComponent = Just componentId }, Cmd.none )
 
         QueueComponent component ->
             let
@@ -222,6 +313,28 @@ update msg model =
                     Debug.log "queued component" component
             in
                 ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
+
+        UpdateComponent component ->
+            let
+                ( selectedEntity, newEntities ) =
+                    case model.selectedEntity of
+                        Nothing ->
+                            ( model.selectedEntity, model.entities )
+
+                        Just entity ->
+                            let
+                                componentId =
+                                    getComponentId component
+
+                                components =
+                                    Dict.insert componentId component entity.components
+
+                                newEntity =
+                                    { entity | components = components }
+                            in
+                                ( Just newEntity, Dict.insert newEntity.id newEntity model.entities )
+            in
+                ( { model | entities = newEntities, selectedEntity = selectedEntity }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -240,10 +353,43 @@ selectedEntityView model =
 
             Just entity ->
                 div []
-                    [ div [] [ text <| "id: " ++ (String.fromInt entity.id) ]
-                    , div [] [ text <| "label: " ++ entity.label ]
+                    [ div []
+                        [ text <| "id: " ++ (String.fromInt entity.id)
+                        ]
+                    , div []
+                        [ input [ value entity.label, placeholder "label" ] []
+                        ]
                     ]
         ]
+
+
+entityListView : Model -> Html Msg
+entityListView model =
+    let
+        selectedId =
+            case model.selectedEntity of
+                Nothing ->
+                    -1
+
+                Just entity ->
+                    entity.id
+    in
+        ul []
+            (List.map
+                (\entity ->
+                    let
+                        style =
+                            if selectedId == entity.id then
+                                entityListItemSelectedStyles
+                            else
+                                entityListItemStyles
+                    in
+                        li
+                            [ style, onClick (SelectEntity entity) ]
+                            [ text <| String.fromInt entity.id ]
+                )
+                (Dict.values model.entities)
+            )
 
 
 entityManagerView : Model -> Html Msg
@@ -253,15 +399,7 @@ entityManagerView model =
             [ button [ onClick AddEntity ] [ text "add entity" ]
             ]
         , div [ entityListStyles ]
-            [ ul []
-                (List.map
-                    (\entity ->
-                        li
-                            [ entityListItemStyles, onClick (SelectEntity entity) ]
-                            [ text <| String.fromInt entity.id ]
-                    )
-                    (Dict.values model.entities)
-                )
+            [ entityListView model
             ]
         , div [ selectedEntityStyles ]
             [ selectedEntityView model
@@ -269,24 +407,48 @@ entityManagerView model =
         ]
 
 
-componentsListView : (Component -> Msg) -> List Component -> Html Msg
-componentsListView msg components =
-    div []
-        [ ul []
-            (List.map
-                (\component ->
-                    li
-                        [ componentListItemStyles, onClick (msg component) ]
-                        [ text <| getComponentId component ]
+componentsListView : (Component -> Msg) -> List Component -> Maybe String -> Html Msg
+componentsListView msg components selected =
+    let
+        selectedId =
+            case selected of
+                Nothing ->
+                    ""
+
+                Just componentId ->
+                    componentId
+    in
+        div []
+            [ ul []
+                (List.map
+                    (\component ->
+                        let
+                            style =
+                                if selectedId == (getComponentId component) then
+                                    componentListItemSelectedStyles
+                                else
+                                    componentListItemStyles
+                        in
+                            li
+                                [ style, onClick (msg component) ]
+                                [ text <| getComponentId component ]
+                    )
+                    components
                 )
-                components
-            )
-        ]
+            ]
 
 
 availableComponentsView : Model -> Html Msg
 availableComponentsView model =
     let
+        queuedComponentId =
+            case model.queuedComponent of
+                Nothing ->
+                    ""
+
+                Just component ->
+                    getComponentId component
+
         available =
             case model.selectedEntity of
                 Nothing ->
@@ -302,63 +464,131 @@ availableComponentsView model =
                             getComponentsList
     in
         div []
-            [ componentsListView QueueComponent available
+            [ componentsListView QueueComponent available (Just queuedComponentId)
             ]
 
 
-positionParams : { x : Float, y : Float } -> Html Msg
-positionParams { x, y } =
+toInt : Int -> String -> Int
+toInt default value =
+    if value == "" then
+        0
+    else
+        case String.toInt value of
+            Nothing ->
+                default
+
+            Just int ->
+                int
+
+
+toFloat : Float -> String -> Float
+toFloat default value =
+    if value == "" then
+        0
+    else
+        case String.toFloat value of
+            Nothing ->
+                default
+
+            Just int ->
+                int
+
+
+paramInput : String -> (String -> a) -> (a -> Component) -> Html Msg
+paramInput param converter updater =
+    input
+        [ onInput
+            (\value ->
+                UpdateComponent (updater <| converter value)
+            )
+        , value param
+        ]
+        []
+
+
+paramInputString : String -> (String -> Component) -> Html Msg
+paramInputString param updater =
+    paramInput param (\val -> val) updater
+
+
+paramInputInt : Int -> (Int -> Component) -> Html Msg
+paramInputInt param updater =
+    paramInput (String.fromInt param) (toInt param) updater
+
+
+paramInputFloat : Float -> (Float -> Component) -> Html Msg
+paramInputFloat param updater =
+    paramInput (String.fromFloat param) (toFloat param) updater
+
+
+positionParams : { x : Int, y : Int } -> Html Msg
+positionParams position =
     div []
-        [ input [ value <| String.fromFloat x ] []
-        , input [ value <| String.fromFloat y ] []
+        [ paramInputInt position.x (\x -> Position { position | x = x })
+        , paramInputInt position.y (\y -> Position { position | y = y })
         ]
 
 
-spriteParams : { x : Float, y : Float } -> Html Msg
-spriteParams { x, y } =
+fixtureParams : { x : Int, y : Int } -> Html Msg
+fixtureParams fixture =
     div []
-        [ input [ value <| String.fromFloat x ] []
-        , input [ value <| String.fromFloat y ] []
+        [ paramInputInt fixture.x (\x -> Fixture { fixture | x = x })
+        , paramInputInt fixture.y (\y -> Fixture { fixture | y = y })
         ]
 
 
-selectedComponentsView : Entity -> Html Msg
-selectedComponentsView entity =
-    componentsListView SelectComponent (Dict.values entity.components)
+spriteParams : { asset : String } -> Html Msg
+spriteParams sprite =
+    div []
+        [ paramInputString sprite.asset (\asset -> Sprite { sprite | asset = asset })
+        ]
 
 
-selectedComponentView : Model -> Html Msg
-selectedComponentView model =
+selectedComponentsView : Entity -> Model -> Html Msg
+selectedComponentsView entity model =
+    componentsListView SelectComponent (Dict.values entity.components) model.selectedComponent
+
+
+selectedComponentView : Entity -> Model -> Html Msg
+selectedComponentView entity model =
     div []
         [ case model.selectedComponent of
             Nothing ->
                 text "Select a component"
 
-            Just component ->
-                case component of
-                    Position params ->
-                        positionParams params
+            Just componentId ->
+                case Dict.get componentId entity.components of
+                    Nothing ->
+                        text "Undefined component"
 
-                    Sprite params ->
-                        spriteParams params
+                    Just component ->
+                        case component of
+                            Position params ->
+                                positionParams params
+
+                            Fixture params ->
+                                fixtureParams params
+
+                            Sprite params ->
+                                spriteParams params
+
+                            _ ->
+                                div [] []
         ]
 
 
 addComponentButton : Model -> Html Msg
 addComponentButton model =
     let
-        label =
-            "add component"
-
         disabledBtn =
-            button [ disabled True ] [ text label ]
+            button [ disabled True ] [ text "add component" ]
     in
         case model.queuedComponent of
             Nothing ->
                 disabledBtn
 
             Just component ->
-                button [ onClick (AddComponent component) ] [ text label ]
+                button [ onClick (AddComponent component) ] [ text "add component" ]
 
 
 componentManagerView : Model -> Html Msg
@@ -378,9 +608,9 @@ componentManagerView model =
                         ]
                     , div [ selectedComponentsStyles ]
                         [ div [ selectedComponentsListStyles ]
-                            [ selectedComponentsView entity ]
+                            [ selectedComponentsView entity model ]
                         , div [ selectedComponentStyles ]
-                            [ selectedComponentView model ]
+                            [ selectedComponentView entity model ]
                         ]
                     ]
     in

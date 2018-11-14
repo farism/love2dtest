@@ -28,6 +28,16 @@ entityManagerStyles =
         ]
 
 
+listItemStyles =
+    batch
+        [ cursor pointer
+        , padding2 (px 5) (px 10)
+        , hover
+            [ backgroundColor (hex "#ddd")
+            ]
+        ]
+
+
 entityListStyles =
     css
         [ borderTop3 (px 1) solid (rgb 0 0 0)
@@ -38,9 +48,14 @@ entityListStyles =
 
 entityListItemStyles =
     css
-        [ cursor pointer
-        , hover [ backgroundColor (hex "#ddd") ]
-        , padding2 (px 5) (px 10)
+        [ listItemStyles
+        ]
+
+
+entityListItemSelectedStyles =
+    css
+        [ listItemStyles
+        , backgroundColor (hex "#ddd")
         ]
 
 
@@ -66,9 +81,14 @@ componentManagerStyles =
 
 componentListItemStyles =
     css
-        [ cursor pointer
-        , hover [ backgroundColor (hex "#ddd") ]
-        , padding2 (px 5) (px 10)
+        [ listItemStyles
+        ]
+
+
+componentListItemSelectedStyles =
+    css
+        [ listItemStyles
+        , backgroundColor (hex "#ddd")
         ]
 
 
