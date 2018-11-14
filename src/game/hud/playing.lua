@@ -55,6 +55,7 @@ end
 
 local function cooldowns(player)
   love.graphics.setColor(0, 0, 0, 0.5)
+  arc(width - 24 - 10, height - 64 - 24 - 130, getPercent(player, 'grapple'))
   arc(width - 24 - 10, height - 64 - 24 - 48, getPercent(player, 'throw'))
   arc(width - 64 - 24 - 48, height - 24 - 10, getPercent(player, 'dash'))
   love.graphics.setColor(255, 255, 255)
@@ -63,6 +64,10 @@ end
 function Playing.update(dt, suit, player, game)
   if suit.Button('Jump', (width - 64) - 10, height - 64 - 10, 64, 64).hit then
     keypressed('space')
+  end
+
+  if suit.Button('Hook', width - 48 - 10, height - 64 - 48 - 130, 48, 48).hit then
+    keypressed('g')
   end
 
   if suit.Button('Throw', width - 48 - 10, height - 64 - 48 - 48, 48, 48).hit then

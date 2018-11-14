@@ -14,7 +14,8 @@ local inputs = {
   right = 'd',
   jump = 'space',
   throw = 'j',
-  dash = 'k'
+  dash = 'k',
+  grapple = 'g'
 }
 
 function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
@@ -48,6 +49,7 @@ function InputSystem:keyboard(key, scancode, isrepeat, ispressed)
     if (ability) then
       ability:setActivated('throw', key == inputs.throw and ispressed)
       ability:setActivated('dash', key == inputs.dash and ispressed)
+      ability:setActivated('grapple', key == inputs.grapple and ispressed)
     end
   end
 end
