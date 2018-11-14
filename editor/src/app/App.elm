@@ -5,7 +5,7 @@ import Browser
 import Json.Decode as JD
 import Dict exposing (Dict)
 import Html.Styled.Events exposing (onClick)
-import Html.Styled.Attributes exposing (disabled)
+import Html.Styled.Attributes exposing (disabled, value)
 import Html.Styled exposing (..)
 import Styles exposing (..)
 
@@ -152,7 +152,7 @@ update msg model =
                 entities =
                     Dict.insert entity.id entity model.entities
             in
-                ( { model | nextId = nextId, entities = entities }, Cmd.none )
+                ( { model | nextId = nextId, entities = entities, selectedEntity = Just entity }, Cmd.none )
 
         RemoveEntity ->
             let
@@ -186,7 +186,13 @@ update msg model =
                             in
                                 ( Just newEntity, Dict.insert newEntity.id newEntity model.entities )
             in
-                ( { model | selectedEntity = selectedEntity, entities = entities }, Cmd.none )
+                ( { model
+                    | queuedComponent = Nothing
+                    , selectedEntity = selectedEntity
+                    , entities = entities
+                  }
+                , Cmd.none
+                )
 
         OpenFileIn value ->
             let
@@ -198,23 +204,23 @@ update msg model =
         SelectEntity entity ->
             let
                 foo =
-                    Debug.log "selectedEntity" entity
+                    Debug.log "selected entity" entity
             in
-                ( { model | selectedEntity = Just entity }, Cmd.none )
+                ( { model | selectedEntity = Just entity, selectedComponent = Nothing }, Cmd.none )
 
         SelectComponent component ->
             let
                 foo =
-                    Debug.log "selectedComponent" component
+                    Debug.log "selected component" component
             in
-                ( { model | selectedComponent = Just component }, Cmd.none )
+                ( { model | queuedComponent = Nothing, selectedComponent = Just component }, Cmd.none )
 
         QueueComponent component ->
             let
                 foo =
-                    Debug.log "queued" component
+                    Debug.log "queued component" component
             in
-                ( { model | queuedComponent = Just component }, Cmd.none )
+                ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -239,28 +245,14 @@ selectedEntityView model =
         ]
 
 
-entityListView : Model -> Html Msg
-entityListView model =
-    let
-        removeDisabled =
-            case model.selectedEntity of
-                Nothing ->
-                    True
-
-                Just _ ->
-                    False
-    in
-        div [ entityListStyles ]
-            [ div []
-                [ button
-                    [ onClick AddEntity ]
-                    [ text "add entity" ]
-                , button
-                    [ disabled removeDisabled, onClick RemoveEntity ]
-                    [ text "remove entity" ]
-                ]
-            , selectedEntityView model
-            , ul []
+entityManagerView : Model -> Html Msg
+entityManagerView model =
+    div [ entityManagerStyles ]
+        [ div []
+            [ button [ onClick AddEntity ] [ text "add entity" ]
+            ]
+        , div [ entityListStyles ]
+            [ ul []
                 (List.map
                     (\entity ->
                         li
@@ -270,6 +262,25 @@ entityListView model =
                     (Dict.values model.entities)
                 )
             ]
+        , div [ selectedEntityStyles ]
+            [ selectedEntityView model
+            ]
+        ]
+
+
+componentsListView : (Component -> Msg) -> List Component -> Html Msg
+componentsListView msg components =
+    div []
+        [ ul []
+            (List.map
+                (\component ->
+                    li
+                        [ onClick (msg component) ]
+                        [ text <| getComponentId component ]
+                )
+                components
+            )
+        ]
 
 
 availableComponentsView : Model -> Html Msg
@@ -290,16 +301,29 @@ availableComponentsView model =
                             getComponentsList
     in
         div []
-            [ ul []
-                (List.map
-                    (\component ->
-                        li
-                            [ onClick (QueueComponent component) ]
-                            [ text <| getComponentId component ]
-                    )
-                    available
-                )
+            [ componentsListView QueueComponent available
             ]
+
+
+positionParams : { x : Float, y : Float } -> Html Msg
+positionParams { x, y } =
+    div []
+        [ input [ value <| String.fromFloat x ] []
+        , input [ value <| String.fromFloat y ] []
+        ]
+
+
+spriteParams : { x : Float, y : Float } -> Html Msg
+spriteParams { x, y } =
+    div []
+        [ input [ value <| String.fromFloat x ] []
+        , input [ value <| String.fromFloat y ] []
+        ]
+
+
+selectedComponentsView : Entity -> Html Msg
+selectedComponentsView entity =
+    componentsListView SelectComponent (Dict.values entity.components)
 
 
 selectedComponentView : Model -> Html Msg
@@ -310,7 +334,12 @@ selectedComponentView model =
                 text "Select a component"
 
             Just component ->
-                text <| getComponentId component
+                case component of
+                    Position params ->
+                        positionParams params
+
+                    Sprite params ->
+                        spriteParams params
         ]
 
 
@@ -323,40 +352,36 @@ addComponentButton model =
         disabledBtn =
             button [ disabled True ] [ text label ]
     in
-        case model.selectedEntity of
+        case model.queuedComponent of
             Nothing ->
                 disabledBtn
 
-            Just _ ->
-                case model.queuedComponent of
-                    Nothing ->
-                        disabledBtn
-
-                    Just component ->
-                        button [ onClick (AddComponent component) ] [ text label ]
+            Just component ->
+                button [ onClick (AddComponent component) ] [ text label ]
 
 
-componentListView : Model -> Html Msg
-componentListView model =
-    div [ componentListStyles ]
-        [ div []
-            [ addComponentButton model
-            ]
-        , availableComponentsView model
-        , case model.selectedEntity of
+componentManagerView : Model -> Html Msg
+componentManagerView model =
+    div [ componentManagerStyles ]
+        [ case model.selectedEntity of
             Nothing ->
-                text "Select an entity"
+                div [] [ text "Select an entity" ]
 
             Just entity ->
-                ul []
-                    (List.map
-                        (\component ->
-                            li
-                                [ onClick (SelectComponent component) ]
-                                [ text <| getComponentId component ]
-                        )
-                        (Dict.values entity.components)
-                    )
+                div []
+                    [ div [ availableComponentsStyles ]
+                        [ div []
+                            [ addComponentButton model ]
+                        , div []
+                            [ availableComponentsView model ]
+                        ]
+                    , div [ selectedComponentsStyles ]
+                        [ div []
+                            [ selectedComponentsView entity ]
+                        , div []
+                            [ selectedComponentView model ]
+                        ]
+                    ]
         ]
 
 
@@ -373,7 +398,7 @@ view model =
     div []
         [ div []
             [ toolbarView model
-            , entityListView model
-            , componentListView model
+            , entityManagerView model
+            , componentManagerView model
             ]
         ]
