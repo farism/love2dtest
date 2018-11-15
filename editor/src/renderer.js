@@ -1,5 +1,6 @@
 import 'normalize.css'
 import 'reset-css'
+import { resolve } from 'path'
 import { remote, shell } from 'electron'
 import fs from 'fs'
 
@@ -14,14 +15,18 @@ const app = Elm.App.init({
   flags,
 })
 
-app.ports.openFileOut.subscribe(() => {
+app.ports.openLevelOut.subscribe(() => {
   remote.dialog.showOpenDialog(
     null,
     {
-      defaultPath: process.cwd(),
+      defaultPath: resolve(process.cwd(), '../assets/levels'),
     },
     ([file]) => {
-      app.ports.openFileIn.send(fs.readFileSync(file, 'utf8'))
+      app.ports.openLevelIn.send(fs.readFileSync(file, 'utf8'))
     }
   )
+})
+
+app.ports.saveLevelOut.subscribe(level => {
+  console.log(JSON.parse(level))
 })

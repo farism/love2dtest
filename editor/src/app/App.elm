@@ -2,80 +2,22 @@ port module App exposing (..)
 
 import Maybe
 import Browser
-import Json.Decode as JD
 import Dict exposing (Dict)
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled.Attributes exposing (disabled, placeholder, value)
 import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
+import Types exposing (..)
+import Serializers exposing (..)
 import Styles exposing (..)
 
 
-port openFileIn : (String -> msg) -> Sub msg
+port openLevelIn : (String -> msg) -> Sub msg
 
 
-port openFileOut : () -> Cmd msg
+port openLevelOut : () -> Cmd msg
 
 
-type alias Flags =
-    { foo : String
-    }
-
-
-type Msg
-    = NoOp
-    | OpenLevel
-    | SaveLevel
-    | AddEntity
-    | RemoveEntity
-    | AddComponent Component
-    | OpenFileIn String
-    | SelectEntity Entity
-    | SelectComponent Component
-    | QueueComponent Component
-    | UpdateComponent Component
-
-
-type WaveType
-    = Circular
-    | Horizontal
-    | Vertical
-
-
-waveTypeToString : WaveType -> String
-waveTypeToString type_ =
-    case type_ of
-        Circular ->
-            "circular"
-
-        Horizontal ->
-            "horizontal"
-
-        Vertical ->
-            "vertical"
-
-
-type Component
-    = Ability {}
-    | Aggression { x : Int, y : Int, width : Int, height : Int, duration : Int }
-    | Animation {}
-    | Attack {}
-    | Checkpoint { index : Int }
-    | Container {}
-    | Damage { hitpoints : Int }
-    | Fixture { x : Int, y : Int }
-    | Health { hitpoints : Int, armor : Int }
-    | Input {}
-    | Movement {}
-    | Platform { fall : Int, initialX : Int, initialY : Int }
-    | Player { alias : String, money : Int, lives : Int, documents : Int, checkpoint : Int }
-    | Position { x : Int, y : Int }
-    | Projectile {}
-    | Snare {}
-    | Sound {}
-    | Sprite { asset : String }
-    | Trigger {}
-    | Wave { type_ : String, x : Int, y : Int, amplitude : Float, frequency : Float }
-    | Waypoint { speed : Int, waypoints : List { x : Int, y : Int } }
+port saveLevelOut : String -> Cmd msg
 
 
 getComponentsList : List Component
@@ -171,22 +113,6 @@ getComponentId component =
             "waypoint"
 
 
-type alias Entity =
-    { id : Int
-    , label : String
-    , components : Dict String Component
-    }
-
-
-type alias Model =
-    { nextId : Int
-    , entities : Dict Int Entity
-    , selectedEntity : Maybe Entity
-    , selectedComponent : Maybe String
-    , queuedComponent : Maybe Component
-    }
-
-
 main : Program Flags Model Msg
 main =
     Browser.element
@@ -229,10 +155,14 @@ update msg model =
             ( model, Cmd.none )
 
         OpenLevel ->
-            ( model, openFileOut () )
+            ( model, openLevelOut () )
 
         SaveLevel ->
-            ( model, Cmd.none )
+            let
+                level =
+                    encodeLevel 0 "level1" model.entities
+            in
+                ( model, saveLevelOut (level) )
 
         AddEntity ->
             let
@@ -243,7 +173,7 @@ update msg model =
                     createEntity nextId ""
 
                 entities =
-                    Dict.insert entity.id entity model.entities
+                    Dict.insert (String.fromInt entity.id) entity model.entities
             in
                 ( { model | nextId = nextId, entities = entities, selectedEntity = Just entity }, Cmd.none )
 
@@ -255,7 +185,7 @@ update msg model =
                             ( model.selectedEntity, model.entities )
 
                         Just entity ->
-                            ( Nothing, Dict.remove entity.id model.entities )
+                            ( Nothing, Dict.remove (String.fromInt entity.id) model.entities )
             in
                 ( { model | selectedEntity = selectedEntity, entities = entities }, Cmd.none )
 
@@ -277,7 +207,7 @@ update msg model =
                                 newEntity =
                                     { entity | components = components }
                             in
-                                ( Just newEntity, Dict.insert newEntity.id newEntity model.entities )
+                                ( Just newEntity, Dict.insert (String.fromInt newEntity.id) newEntity model.entities )
             in
                 ( { model
                     | queuedComponent = Nothing
@@ -288,12 +218,40 @@ update msg model =
                 , Cmd.none
                 )
 
+        RemoveComponent componentId ->
+            let
+                ( selectedEntity, entities ) =
+                    case model.selectedEntity of
+                        Nothing ->
+                            ( Nothing, model.entities )
+
+                        Just entity ->
+                            let
+                                components =
+                                    Dict.remove componentId entity.components
+
+                                newEntity =
+                                    { entity | components = components }
+                            in
+                                ( Just newEntity, Dict.insert (String.fromInt newEntity.id) newEntity model.entities )
+            in
+                ( { model
+                    | selectedComponent = Nothing
+                    , selectedEntity = selectedEntity
+                    , entities = entities
+                  }
+                , Cmd.none
+                )
+
         OpenFileIn value ->
             let
-                foo =
-                    Debug.log "opened" value
+                level =
+                    decodeLevel value
+
+                log =
+                    Debug.log "opened" level
             in
-                ( model, Cmd.none )
+                ( { model | entities = level.entities }, Cmd.none )
 
         SelectEntity entity ->
             let
@@ -337,7 +295,7 @@ update msg model =
                                 newEntity =
                                     { entity | components = components }
                             in
-                                ( Just newEntity, Dict.insert newEntity.id newEntity model.entities )
+                                ( Just newEntity, Dict.insert (String.fromInt newEntity.id) newEntity model.entities )
             in
                 ( { model | entities = newEntities, selectedEntity = selectedEntity }, Cmd.none )
 
@@ -345,7 +303,7 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ openFileIn OpenFileIn
+        [ openLevelIn OpenFileIn
         ]
 
 
@@ -727,6 +685,20 @@ addComponentButton model =
                 button [ onClick (AddComponent component) ] [ text "add component" ]
 
 
+removeComponentButton : Model -> Html Msg
+removeComponentButton model =
+    let
+        disabledBtn =
+            button [ disabled True ] [ text "remove component" ]
+    in
+        case model.selectedComponent of
+            Nothing ->
+                disabledBtn
+
+            Just componentId ->
+                button [ onClick (RemoveComponent componentId) ] [ text "remove component" ]
+
+
 componentManagerView : Model -> Html Msg
 componentManagerView model =
     let
@@ -737,13 +709,15 @@ componentManagerView model =
 
                 Just entity ->
                     [ div [ availableComponentsStyles ]
-                        [ div []
-                            [ addComponentButton model ]
-                        , div [ availableComponentsListStyles ]
+                        [ div [ availableComponentsListStyles ]
                             [ availableComponentsView model ]
                         ]
                     , div [ selectedComponentsStyles ]
-                        [ div [ selectedComponentsListStyles ]
+                        [ div []
+                            [ addComponentButton model
+                            , removeComponentButton model
+                            ]
+                        , div [ selectedComponentsListStyles ]
                             [ selectedComponentsView entity model ]
                         , div [ selectedComponentStyles ]
                             [ selectedComponentView entity model ]

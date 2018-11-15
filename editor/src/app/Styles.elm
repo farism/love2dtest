@@ -10,7 +10,7 @@ toolbarStyles =
         , padding (px 10)
         , left (px 0)
         , position absolute
-        , right (px 501)
+        , right (px 527)
         , top (px 0)
         ]
 
@@ -24,7 +24,7 @@ entityManagerStyles =
         , position absolute
         , right (px 0)
         , top (px 0)
-        , width (px 199)
+        , width (px 225)
         ]
 
 
@@ -73,7 +73,7 @@ componentManagerStyles =
         , border3 (px 1) solid (rgb 0 0 0)
         , height (pct 100)
         , position absolute
-        , right (px 200)
+        , right (px 226)
         , top (px 0)
         , width (px 300)
         ]
@@ -110,7 +110,8 @@ availableComponentsListStyles =
 
 selectedComponentsStyles =
     css
-        [ displayFlex
+        [ borderTop3 (px 1) solid (rgb 0 0 0)
+        , displayFlex
         , flexDirection column
         , flex (num 1)
         ]
