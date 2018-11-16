@@ -2,6 +2,7 @@ module Types exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode as JE
+import Draggable
 
 
 type alias Flags =
@@ -10,24 +11,33 @@ type alias Flags =
 
 
 type alias Model =
-    { nextId : Int
+    { tree : Maybe TreeNode
+    , selectedDirectory : String
+    , selectedFile : String
     , queuedComponent : Maybe Component
     , selectedComponent : Maybe String
     , selectedEntity : Maybe Entity
-    , file : String
-    , id : Int
-    , name : String
+    , levelParseError : Maybe String
+    , levelId : Int
+    , levelName : String
     , entities : Dict String Entity
+    , nextId :
+        Int
+        --
+    , drag : Draggable.State ()
+    , position : Point
     }
 
 
 type Msg
     = NoOp
-    | LoadLevel
+    | SelectProjectOut
+    | SelectProjectIn String
+    | LoadLevelOut String
     | LoadLevelIn ( String, String )
     | SaveLevel
-    | SetId String
-    | SetName String
+    | SetLevelId String
+    | SetLevelName String
     | AddEntity
     | RemoveEntity
     | AddComponent Component
@@ -36,6 +46,27 @@ type Msg
     | SelectComponent Component
     | QueueComponent Component
     | UpdateComponent Component
+    | DragMsg (Draggable.Msg ())
+    | OnDragBy Draggable.Delta
+
+
+type alias DirectoryFields =
+    { path : String
+    , name : String
+    , children : List TreeNode
+    }
+
+
+type alias FileFields =
+    { path : String
+    , name : String
+    , extension : String
+    }
+
+
+type TreeNode
+    = Directory DirectoryFields
+    | File FileFields
 
 
 type alias Level =
@@ -48,13 +79,14 @@ type alias Level =
 type alias Entity =
     { id : Int
     , label : String
+    , position : Point
     , components : Dict String Component
     }
 
 
 type alias Point =
-    { x : Int
-    , y : Int
+    { x : Float
+    , y : Float
     }
 
 

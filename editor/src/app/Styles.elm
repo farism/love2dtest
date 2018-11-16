@@ -2,30 +2,7 @@ module Styles exposing (..)
 
 import Html.Styled.Attributes exposing (css)
 import Css exposing (..)
-
-
-toolbarStyles =
-    css
-        [ border3 (px 1) solid (rgb 0 0 0)
-        , padding (px 10)
-        , left (px 0)
-        , position absolute
-        , right (px 527)
-        , top (px 0)
-        ]
-
-
-entityManagerStyles =
-    css
-        [ displayFlex
-        , border3 (px 1) solid (rgb 0 0 0)
-        , bottom (px 50)
-        , flexDirection column
-        , position absolute
-        , right (px 0)
-        , top (px 0)
-        , width (px 225)
-        ]
+import Types exposing (..)
 
 
 listItemStyles =
@@ -35,6 +12,86 @@ listItemStyles =
         , hover
             [ backgroundColor (hex "#ddd")
             ]
+        ]
+
+
+draggableStyles point =
+    css
+        [ transform (translate2 (px point.x) (px point.y))
+        , width (px 20)
+        , height (px 20)
+        , backgroundColor (hex "#0f0")
+        ]
+
+
+sceneStyles =
+    css
+        [ bottom (px 0)
+        , left (px 170)
+        , padding (px 10)
+        , position absolute
+        , right (px 402)
+        , top (px 61)
+        , backgroundColor (hex "#f00")
+        ]
+
+
+toolbarStyles =
+    css
+        [ border3 (px 1) solid (rgb 0 0 0)
+        , left (px 0)
+        , padding (px 10)
+        , position absolute
+        , right (px 402)
+        , top (px 0)
+        ]
+
+
+treeStyles =
+    css
+        [ border3 (px 1) solid (rgb 0 0 0)
+        , bottom (px 0)
+        , left (px 0)
+        , padding (px 10)
+        , overflow scroll
+        , position absolute
+        , top (px 61)
+        , width (px 150)
+        ]
+
+
+treeDirectoryItemStyles depth =
+    css
+        [ padding2 (px 5) (px 10)
+        , paddingLeft (px (toFloat depth * 10))
+        ]
+
+
+treeFileItemStyles depth =
+    css
+        [ listItemStyles
+        , paddingLeft (px (toFloat depth * 10))
+        ]
+
+
+treeFileItemSelectedStyles depth =
+    css
+        [ backgroundColor (hex "#ddd")
+        , listItemStyles
+        , paddingLeft (px (toFloat depth * 10))
+        ]
+
+
+entityManagerStyles =
+    css
+        [ border3 (px 1) solid (rgb 0 0 0)
+        , bottom (px 0)
+        , displayFlex
+        , flexDirection column
+        , position absolute
+        , right (px 0)
+        , top (px 0)
+        , width (px 150)
         ]
 
 
@@ -54,28 +111,28 @@ entityListItemStyles =
 
 entityListItemSelectedStyles =
     css
-        [ listItemStyles
-        , backgroundColor (hex "#ddd")
+        [ backgroundColor (hex "#ddd")
+        , listItemStyles
         ]
 
 
 selectedEntityStyles =
     css
-        [ flexShrink (num 0)
-        , borderTop3 (px 1) solid (rgb 0 0 0)
+        [ borderTop3 (px 1) solid (rgb 0 0 0)
+        , flexShrink (num 0)
         ]
 
 
 componentManagerStyles =
     css
-        [ displayFlex
+        [ border3 (px 1) solid (rgb 0 0 0)
+        , displayFlex
         , flexDirection column
-        , border3 (px 1) solid (rgb 0 0 0)
         , height (pct 100)
         , position absolute
-        , right (px 226)
+        , right (px 151)
         , top (px 0)
-        , width (px 300)
+        , width (px 250)
         ]
 
 
@@ -87,8 +144,8 @@ componentListItemStyles =
 
 componentListItemSelectedStyles =
     css
-        [ listItemStyles
-        , backgroundColor (hex "#ddd")
+        [ backgroundColor (hex "#ddd")
+        , listItemStyles
         ]
 
 

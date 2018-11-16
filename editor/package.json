@@ -12,6 +12,7 @@
   "author": "Faris Mustafa <farismmk@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "directory-tree": "^2.1.0",
     "electron": "2.0.7",
     "normalize.css": "^8.0.1",
     "reset-css": "^4.0.1"

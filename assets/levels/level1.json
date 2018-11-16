@@ -1,6 +1,6 @@
 {
   "id": 1,
-  "name": "level one",
+  "name": "level o",
   "entities": {
     "1": {
       "id": 1,
@@ -12,6 +12,91 @@
           "y": 10
         }
       }
+    },
+    "2": {
+      "id": 2,
+      "label": "",
+      "components": {}
+    },
+    "3": {
+      "id": 3,
+      "label": "",
+      "components": {}
+    },
+    "4": {
+      "id": 4,
+      "label": "",
+      "components": {}
+    },
+    "5": {
+      "id": 5,
+      "label": "",
+      "components": {}
+    },
+    "6": {
+      "id": 6,
+      "label": "",
+      "components": {}
+    },
+    "7": {
+      "id": 7,
+      "label": "",
+      "components": {}
+    },
+    "8": {
+      "id": 8,
+      "label": "",
+      "components": {}
+    },
+    "9": {
+      "id": 9,
+      "label": "",
+      "components": {}
+    },
+    "10": {
+      "id": 10,
+      "label": "",
+      "components": {}
+    },
+    "11": {
+      "id": 11,
+      "label": "",
+      "components": {}
+    },
+    "12": {
+      "id": 12,
+      "label": "",
+      "components": {}
+    },
+    "13": {
+      "id": 13,
+      "label": "",
+      "components": {}
+    },
+    "14": {
+      "id": 14,
+      "label": "",
+      "components": {}
+    },
+    "15": {
+      "id": 15,
+      "label": "",
+      "components": {}
+    },
+    "16": {
+      "id": 16,
+      "label": "",
+      "components": {}
+    },
+    "17": {
+      "id": 17,
+      "label": "",
+      "components": {}
+    },
+    "18": {
+      "id": 18,
+      "label": "",
+      "components": {}
     }
   }
 }
