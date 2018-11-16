@@ -14,7 +14,7 @@ type alias Model =
     { tree : Maybe TreeNode
     , selectedDirectory : String
     , selectedFile : String
-    , queuedComponent : Maybe Component
+    , queuedComponent : Maybe String
     , selectedComponent : Maybe String
     , selectedEntity : Maybe Entity
     , levelParseError : Maybe String
@@ -29,6 +29,12 @@ type alias Model =
     }
 
 
+type Param
+    = IntParam Int
+    | FloatParam Float
+    | StringParam String
+
+
 type Msg
     = NoOp
     | SelectProjectOut
@@ -40,12 +46,12 @@ type Msg
     | SetLevelName String
     | AddEntity
     | RemoveEntity
-    | AddComponent Component
-    | RemoveComponent String
     | SelectEntity Entity
-    | SelectComponent Component
-    | QueueComponent Component
-    | UpdateComponent Component
+    | SelectComponent String
+    | AddComponent ( String, Dict String Param )
+    | RemoveComponent String
+    | UpdateComponent ( String, Dict String Param )
+    | QueueComponent String
     | DragMsg (Draggable.Msg ())
     | OnDragBy Draggable.Delta
 

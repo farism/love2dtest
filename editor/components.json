@@ -1,0 +1,41 @@
+{
+  "Ability": {},
+  "Aggression": {
+    "x": "int",
+    "y": "int",
+    "width": "int",
+    "height": "int",
+    "duration": "int"
+  },
+  "Animation": {},
+  "Attack": {},
+  "Checkpoint": { "index": "int" },
+  "Container": {},
+  "Damage": { "hitpoints": "int" },
+  "Fixture": { "x": "int", "y": "int" },
+  "Health": { "hitpoints": "int", "armor": "int" },
+  "Input": {},
+  "Movement": {},
+  "Platform": { "fall": "int", "initialX": "int", "initialY": "int" },
+  "Player": {
+    "alias": "string",
+    "money": "int",
+    "lives": "int",
+    "documents": "int",
+    "checkpoint": "int"
+  },
+  "Position": { "x": "int", "y": "int" },
+  "Projectile": {},
+  "Snare": {},
+  "Sound": {},
+  "Sprite": { "asset": "string" },
+  "Trigger": {},
+  "Wave": {
+    "type_": "string",
+    "x": "int",
+    "y": "int",
+    "amplitude": "float",
+    "frequency": "float"
+  },
+  "Waypoint": { "speed": "int", "waypoints": "list point" }
+}
