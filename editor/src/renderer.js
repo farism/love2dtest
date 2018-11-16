@@ -21,12 +21,14 @@ app.ports.openLevelOut.subscribe(() => {
     {
       defaultPath: resolve(process.cwd(), '../assets/levels'),
     },
-    ([file]) => {
-      app.ports.openLevelIn.send(fs.readFileSync(file, 'utf8'))
+    ([name]) => {
+      fs.readFile(name, 'utf8', (err, contents) => {
+        app.ports.openLevelIn.send(contents)
+      })
     }
   )
 })
 
-app.ports.saveLevelOut.subscribe(level => {
-  console.log(JSON.parse(level))
+app.ports.saveLevelOut.subscribe(({ name, contents }) => {
+  console.log(name, contents)
 })

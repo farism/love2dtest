@@ -2,10 +2,13 @@ port module App exposing (..)
 
 import Maybe
 import Browser
+import Json.Encode as JE
+import Json.Decode as JD
 import Dict exposing (Dict)
-import Html.Styled.Events exposing (onClick, onInput)
+import Html.Styled.Events exposing (onClick, onInput, onBlur, on, targetValue)
 import Html.Styled.Attributes exposing (disabled, placeholder, value)
 import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
+import Numeral
 import Types exposing (..)
 import Serializers exposing (..)
 import Styles exposing (..)
@@ -17,11 +20,11 @@ port openLevelIn : (String -> msg) -> Sub msg
 port openLevelOut : () -> Cmd msg
 
 
-port saveLevelOut : String -> Cmd msg
+port saveLevelOut : FileOut -> Cmd msg
 
 
-getComponentsList : List Component
-getComponentsList =
+availableComponents : List Component
+availableComponents =
     [ Ability {}
     , Aggression { x = 0, y = 0, width = 0, height = 0, duration = 0 }
     , Animation {}
@@ -41,7 +44,7 @@ getComponentsList =
     , Sound {}
     , Sprite { asset = "" }
     , Trigger {}
-    , Wave { type_ = "circular", x = 0, y = 0, amplitude = 1, frequency = 1 }
+    , Wave { type_ = "circular", x = 0, y = 0, amplitude = 1, frequency = 0.5 }
     , Waypoint { speed = 1, waypoints = [] }
     ]
 
@@ -133,10 +136,13 @@ init flags =
 initialModel : Model
 initialModel =
     { nextId = 0
-    , entities = Dict.empty
     , selectedEntity = Nothing
     , selectedComponent = Nothing
     , queuedComponent = Nothing
+    , file = ""
+    , id = 0
+    , name = ""
+    , entities = Dict.empty
     }
 
 
@@ -158,11 +164,27 @@ update msg model =
             ( model, openLevelOut () )
 
         SaveLevel ->
+            ( model
+            , saveLevelOut
+                { name = model.file
+                , contents = encodeLevel model.id model.name model.entities
+                }
+            )
+
+        SetId id ->
             let
-                level =
-                    encodeLevel 0 "level1" model.entities
+                newId =
+                    case String.toInt id of
+                        Nothing ->
+                            model.id
+
+                        Just int ->
+                            int
             in
-                ( model, saveLevelOut (level) )
+                ( { model | id = newId }, Cmd.none )
+
+        SetName name ->
+            ( { model | name = name }, Cmd.none )
 
         AddEntity ->
             let
@@ -243,15 +265,15 @@ update msg model =
                 , Cmd.none
                 )
 
-        OpenFileIn value ->
+        OpenLevelIn file ->
             let
                 level =
-                    decodeLevel value
+                    decodeLevel file
 
                 log =
                     Debug.log "opened" level
             in
-                ( { model | entities = level.entities }, Cmd.none )
+                ( model, Cmd.none )
 
         SelectEntity entity ->
             let
@@ -303,7 +325,7 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ openLevelIn OpenFileIn
+        [ openLevelIn OpenLevelIn
         ]
 
 
@@ -324,6 +346,23 @@ selectedEntityView model =
                         ]
                     ]
         ]
+
+
+sortEntityList : List Entity -> List Entity
+sortEntityList list =
+    List.sortWith
+        (\a b ->
+            case compare a.id b.id of
+                LT ->
+                    GT
+
+                EQ ->
+                    EQ
+
+                GT ->
+                    LT
+        )
+        list
 
 
 entityListView : Model -> Html Msg
@@ -351,7 +390,7 @@ entityListView model =
                             [ style, onClick (SelectEntity entity) ]
                             [ text <| String.fromInt entity.id ]
                 )
-                (Dict.values model.entities)
+                (model.entities |> Dict.values |> sortEntityList)
             )
 
 
@@ -415,7 +454,7 @@ availableComponentsView model =
         available =
             case model.selectedEntity of
                 Nothing ->
-                    getComponentsList
+                    availableComponents
 
                 Just entity ->
                     let
@@ -424,7 +463,7 @@ availableComponentsView model =
                     in
                         List.filter
                             (\component -> List.member (getComponentId component) used == False)
-                            getComponentsList
+                            availableComponents
     in
         div []
             [ componentsListView QueueComponent available (Just queuedComponentId)
@@ -447,7 +486,7 @@ toInt default value =
 toFloat : Float -> String -> Float
 toFloat default value =
     if value == "" then
-        0
+        0.0
     else
         case String.toFloat value of
             Nothing ->
@@ -465,9 +504,10 @@ paramInput label_ param converter updater =
             ]
         , input
             [ paramInputStyle
-            , onInput
-                (\value ->
-                    UpdateComponent (updater <| converter value)
+            , on "blur"
+                (JD.map
+                    (\value -> UpdateComponent (value |> converter |> updater))
+                    targetValue
                 )
             , value param
             ]
@@ -502,7 +542,7 @@ paramInputInt label param updater =
 
 paramInputFloat : String -> Float -> (Float -> Component) -> Html Msg
 paramInputFloat label param updater =
-    paramInput label (String.fromFloat param) (toFloat param) updater
+    paramInput label (Numeral.format "0.00" param) (toFloat param) updater
 
 
 abilityParams : {} -> Html Msg
@@ -604,14 +644,6 @@ waveParams p =
             , paramInputFloat "amplitude" p.amplitude (\val -> Wave { p | amplitude = val })
             , paramInputFloat "frequency" p.frequency (\val -> Wave { p | frequency = val })
             ]
-
-
-
--- spriteParams : { asset : String } -> Html Msg
--- spriteParams sprite =
---     div []
---         [ paramInputString sprite.asset (\val -> Sprite { sprite | asset = val })
---         ]
 
 
 selectedComponentsView : Entity -> Model -> Html Msg
@@ -730,8 +762,21 @@ componentManagerView model =
 toolbarView : Model -> Html Msg
 toolbarView model =
     div [ toolbarStyles ]
-        [ button [ onClick OpenLevel ] [ text "open level" ]
-        , button [ onClick SaveLevel ] [ text "save level" ]
+        [ div
+            []
+            [ text <| "File: " ++ model.file ]
+        , input
+            [ onInput SetId, value (String.fromInt model.id) ]
+            []
+        , input
+            [ onInput SetName, value model.name ]
+            []
+        , button
+            [ onClick OpenLevel ]
+            [ text "open level" ]
+        , button
+            [ onClick SaveLevel ]
+            [ text "save level" ]
         ]
 
 

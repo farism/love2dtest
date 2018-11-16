@@ -1,6 +1,7 @@
 module Types exposing (..)
 
 import Dict exposing (Dict)
+import Json.Encode as JE
 
 
 type alias Flags =
@@ -8,19 +9,16 @@ type alias Flags =
     }
 
 
-type Msg
-    = NoOp
-    | OpenLevel
-    | SaveLevel
-    | AddEntity
-    | RemoveEntity
-    | AddComponent Component
-    | RemoveComponent String
-    | OpenFileIn String
-    | SelectEntity Entity
-    | SelectComponent Component
-    | QueueComponent Component
-    | UpdateComponent Component
+type alias FileIn =
+    { name : String
+    , contents : String
+    }
+
+
+type alias FileOut =
+    { name : String
+    , contents : JE.Value
+    }
 
 
 type alias Model =
@@ -28,8 +26,29 @@ type alias Model =
     , queuedComponent : Maybe Component
     , selectedComponent : Maybe String
     , selectedEntity : Maybe Entity
+    , file : String
+    , id : Int
+    , name : String
     , entities : Dict String Entity
     }
+
+
+type Msg
+    = NoOp
+    | OpenLevel
+    | SaveLevel
+    | SetId String
+    | SetName String
+    | AddEntity
+    | RemoveEntity
+    | AddComponent Component
+    | RemoveComponent String
+    | OpenLevelIn String
+      -- | OpenLevelIn FileIn
+    | SelectEntity Entity
+    | SelectComponent Component
+    | QueueComponent Component
+    | UpdateComponent Component
 
 
 type alias Level =
@@ -43,6 +62,12 @@ type alias Entity =
     { id : Int
     , label : String
     , components : Dict String Component
+    }
+
+
+type alias Entity2 =
+    { id : Int
+    , label : String
     }
 
 
