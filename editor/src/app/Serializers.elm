@@ -3,7 +3,6 @@ module Serializers exposing (decodeLevel, encodeLevel)
 import Dict exposing (Dict)
 import Json.Encode as JE
 import Json.Decode as JD
-import Json.Decode.Pipeline as JDP exposing (hardcoded, optional, required)
 import Types exposing (..)
 
 
@@ -31,136 +30,146 @@ encodeLevel id name entities =
 
 
 -- DECODERS
--- toComponent : (a -> Component) -> (JD.Decoder a -> JD.Decoder Component)
--- toComponent msg =
---     (\p -> JD.succeed (msg p))
 
 
 levelDecoder : JD.Decoder Level
 levelDecoder =
-    JD.succeed Level
-        |> required "id" JD.int
-        |> required "name" JD.string
-        |> required "entities" (JD.dict entityDecoder)
+    JD.map3 Level
+        (JD.field "id" JD.int)
+        (JD.field "name" JD.string)
+        (JD.field "entities" (JD.dict entityDecoder))
 
 
 entityDecoder : JD.Decoder Entity
 entityDecoder =
-    JD.succeed Entity
-        |> required "id" JD.int
-        |> required "label" JD.string
-        |> required "components"
+    JD.map3 Entity
+        (JD.field "id" JD.int)
+        (JD.field "label" JD.string)
+        (JD.field "components"
             (JD.dict
                 ((JD.field "id" JD.string) |> JD.andThen componentDecoder)
             )
+        )
 
 
 componentDecoder : String -> JD.Decoder Component
 componentDecoder id =
     (case id of
-        -- "ability" ->
-        --     JD.succeed AbilityParams
-        --         |> toComponent Ability
-        -- "aggression" ->
-        --     JD.succeed AggressionParams
-        --         |> required "x" JD.int
-        --         |> required "y" JD.int
-        --         |> required "width" JD.int
-        --         |> required "height" JD.int
-        --         |> required "duration" JD.int
-        --         |> toComponent Aggression
-        -- "animation" ->
-        --     JD.succeed AnimationParams
-        --         |> toComponent Animation
-        -- "attack" ->
-        --     JD.succeed AttackParams
-        --         |> toComponent Attack
-        -- "checkpoint" ->
-        --     JD.succeed CheckpointParams
-        --         |> required "index" JD.int
-        --         |> toComponent Checkpoint
-        -- "container" ->
-        --     JD.succeed ContainerParams
-        --         |> toComponent Container
-        -- "damage" ->
-        --     JD.succeed DamageParams
-        --         |> required "hitpoints" JD.int
-        --         |> toComponent Damage
-        -- "fixture" ->
-        --     JD.succeed FixtureParams
-        --         |> required "x" JD.int
-        --         |> required "y" JD.int
-        --         |> toComponent Fixture
-        -- "health" ->
-        --     JD.succeed HealthParams
-        --         |> required "hitpoints" JD.int
-        --         |> required "armor" JD.int
-        --         |> toComponent Health
-        -- "input" ->
-        --     JD.succeed InputParams
-        --         |> toComponent Input
-        -- "movement" ->
-        --     JD.succeed MovementParams
-        --         |> toComponent Movement
-        -- "platform" ->
-        --     JD.succeed PlatformParams
-        --         |> required "fall" JD.int
-        --         |> required "initialX" JD.int
-        --         |> required "intitialY" JD.int
-        --         |> toComponent Platform
-        -- "player" ->
-        --     JD.succeed PlayerParams
-        --         |> required "alias" JD.string
-        --         |> required "money" JD.int
-        --         |> required "lives" JD.int
-        --         |> required "documents" JD.int
-        --         |> required "checkpoint" JD.int
-        --         |> toComponent Player
-        -- "position" ->
-        --     JD.succeed PositionParams
-        --         |> required "x" JD.int
-        --         |> required "y" JD.int
-        --         |> toComponent Position
-        -- "projectile" ->
-        --     JD.succeed ProjectileParams
-        --         |> toComponent Projectile
-        -- "snare" ->
-        --     JD.succeed SnareParams
-        --         |> toComponent Snare
-        -- "sound" ->
-        --     JD.succeed SoundParams
-        --         |> toComponent Sound
-        -- "sprite" ->
-        --     JD.succeed SpriteParams
-        --         |> required "asset" JD.string
-        --         |> toComponent Sprite
-        -- "trigger" ->
-        --     JD.succeed TriggerParams
-        --         |> toComponent Trigger
-        -- "wave" ->
-        --     JD.succeed WaveParams
-        --         |> required "type_" JD.string
-        --         |> required "x" JD.int
-        --         |> required "y" JD.int
-        --         |> required "amplitude" JD.float
-        --         |> required "frequency" JD.float
-        --         |> toComponent Wave
-        -- "waypoint" ->
-        --     JD.succeed WaypointParams
-        --         |> required "speed" JD.int
-        --         |> required "waypoints"
-        --             (JD.list
-        --                 (JD.succeed Vector2
-        --                     |> required "x" JD.int
-        --                     |> required "y" JD.int
-        --                 )
-        --             )
-        --         |> toComponent Waypoint
+        "ability" ->
+            JD.succeed (Ability {})
+
+        "aggression" ->
+            JD.map Aggression <|
+                JD.map5 AggressionParams
+                    (JD.field "x" JD.int)
+                    (JD.field "y" JD.int)
+                    (JD.field "width" JD.int)
+                    (JD.field "height" JD.int)
+                    (JD.field "duration" JD.int)
+
+        "animation" ->
+            JD.succeed (Animation {})
+
+        "attack" ->
+            JD.succeed (Attack {})
+
+        "checkpoint" ->
+            JD.map Checkpoint <|
+                JD.map CheckpointParams
+                    (JD.field "index" JD.int)
+
+        "container" ->
+            JD.succeed (Container {})
+
+        "damage" ->
+            JD.map Damage <|
+                JD.map DamageParams
+                    (JD.field "hitpoints" JD.int)
+
+        "fixture" ->
+            JD.map Fixture <|
+                JD.map2 FixtureParams
+                    (JD.field "x" JD.int)
+                    (JD.field "y" JD.int)
+
+        "health" ->
+            JD.map Health <|
+                JD.map2 HealthParams
+                    (JD.field "hitpoints" JD.int)
+                    (JD.field "armor" JD.int)
+
+        "input" ->
+            JD.succeed (Input {})
+
+        "movement" ->
+            JD.succeed (Movement {})
+
+        "platform" ->
+            JD.map Platform <|
+                JD.map3 PlatformParams
+                    (JD.field "fall" JD.int)
+                    (JD.field "initialX" JD.int)
+                    (JD.field "intitialY" JD.int)
+
+        "player" ->
+            JD.map Player <|
+                JD.map5 PlayerParams
+                    (JD.field "alias" JD.string)
+                    (JD.field "money" JD.int)
+                    (JD.field "lives" JD.int)
+                    (JD.field "documents" JD.int)
+                    (JD.field "checkpoint" JD.int)
+
+        "position" ->
+            JD.map Position <|
+                JD.map2 PositionParams
+                    (JD.field "x" JD.int)
+                    (JD.field "y" JD.int)
+
+        "projectile" ->
+            JD.succeed (Projectile {})
+
+        "snare" ->
+            JD.succeed (Snare {})
+
+        "sound" ->
+            JD.succeed (Sound {})
+
+        "sprite" ->
+            JD.map Sprite <|
+                JD.map SpriteParams
+                    (JD.field "asset" JD.string)
+
+        "trigger" ->
+            JD.succeed (Trigger {})
+
+        "wave" ->
+            JD.map Wave <|
+                JD.map5 WaveParams
+                    (JD.field "type_" JD.string)
+                    (JD.field "x" JD.int)
+                    (JD.field "y" JD.int)
+                    (JD.field "amplitude" JD.float)
+                    (JD.field "frequency" JD.float)
+
+        "waypoint" ->
+            JD.map Waypoint <|
+                JD.map2 WaypointParams
+                    (JD.field "speed" JD.int)
+                    (JD.field "waypoints"
+                        (JD.list
+                            (JD.map2 Vector2
+                                (JD.field "x" JD.int)
+                                (JD.field "y" JD.int)
+                            )
+                        )
+                    )
+
         _ ->
-            JD.succeed PositionParams
-                |> required "x" JD.int
-                |> required "y" JD.int
-                |> (\params -> JD.succeed (Position params))
+            JD.map Position <|
+                JD.map2 PositionParams
+                    (JD.field "x" JD.int)
+                    (JD.field "y" JD.int)
     )
 
 
