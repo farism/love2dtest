@@ -184,9 +184,6 @@ update msg model =
 
                 nextId =
                     lastId (Dict.keys level.entities)
-
-                log =
-                    Debug.log "opened" file
             in
                 ( { model
                     | file = file
@@ -209,12 +206,7 @@ update msg model =
         SetId id ->
             let
                 newId =
-                    case String.toInt id of
-                        Nothing ->
-                            model.id
-
-                        Just int ->
-                            int
+                    toInt model.id id
             in
                 ( { model | id = newId }, Cmd.none )
 
@@ -245,6 +237,16 @@ update msg model =
                             ( Nothing, Dict.remove (String.fromInt entity.id) model.entities )
             in
                 ( { model | selectedEntity = selectedEntity, entities = entities }, Cmd.none )
+
+        SelectEntity entity ->
+            ( { model | selectedEntity = Just entity, selectedComponent = Nothing }, Cmd.none )
+
+        SelectComponent component ->
+            let
+                componentId =
+                    toComponentId component
+            in
+                ( { model | queuedComponent = Nothing, selectedComponent = Just componentId }, Cmd.none )
 
         AddComponent component ->
             let
@@ -300,30 +302,6 @@ update msg model =
                 , Cmd.none
                 )
 
-        SelectEntity entity ->
-            let
-                foo =
-                    Debug.log "selected entity" entity
-            in
-                ( { model | selectedEntity = Just entity, selectedComponent = Nothing }, Cmd.none )
-
-        SelectComponent component ->
-            let
-                componentId =
-                    toComponentId component
-
-                foo =
-                    Debug.log "selected component" component
-            in
-                ( { model | queuedComponent = Nothing, selectedComponent = Just componentId }, Cmd.none )
-
-        QueueComponent component ->
-            let
-                foo =
-                    Debug.log "queued component" component
-            in
-                ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
-
         UpdateComponent component ->
             let
                 ( selectedEntity, newEntities ) =
@@ -345,6 +323,9 @@ update msg model =
                                 ( Just newEntity, Dict.insert (String.fromInt newEntity.id) newEntity model.entities )
             in
                 ( { model | entities = newEntities, selectedEntity = selectedEntity }, Cmd.none )
+
+        QueueComponent component ->
+            ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
