@@ -158,7 +158,7 @@ componentDecoder id =
                     (JD.field "speed" JD.int)
                     (JD.field "waypoints"
                         (JD.list
-                            (JD.map2 Vector2
+                            (JD.map2 Point
                                 (JD.field "x" JD.int)
                                 (JD.field "y" JD.int)
                             )

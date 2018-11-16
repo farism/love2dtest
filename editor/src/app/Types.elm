@@ -9,18 +9,6 @@ type alias Flags =
     }
 
 
-type alias FileIn =
-    { name : String
-    , contents : String
-    }
-
-
-type alias FileOut =
-    { name : String
-    , contents : JE.Value
-    }
-
-
 type alias Model =
     { nextId : Int
     , queuedComponent : Maybe Component
@@ -35,7 +23,8 @@ type alias Model =
 
 type Msg
     = NoOp
-    | OpenLevel
+    | LoadLevel
+    | LoadLevelIn ( String, String )
     | SaveLevel
     | SetId String
     | SetName String
@@ -43,8 +32,6 @@ type Msg
     | RemoveEntity
     | AddComponent Component
     | RemoveComponent String
-    | OpenLevelIn String
-      -- | OpenLevelIn FileIn
     | SelectEntity Entity
     | SelectComponent Component
     | QueueComponent Component
@@ -65,13 +52,7 @@ type alias Entity =
     }
 
 
-type alias Entity2 =
-    { id : Int
-    , label : String
-    }
-
-
-type alias Vector2 =
+type alias Point =
     { x : Int
     , y : Int
     }
@@ -186,7 +167,7 @@ type alias WaveParams =
 
 type alias WaypointParams =
     { speed : Int
-    , waypoints : List Vector2
+    , waypoints : List Point
     }
 
 

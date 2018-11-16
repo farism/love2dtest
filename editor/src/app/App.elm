@@ -14,13 +14,27 @@ import Serializers exposing (..)
 import Styles exposing (..)
 
 
-port openLevelIn : (String -> msg) -> Sub msg
+port loadLevelIn : (( String, String ) -> msg) -> Sub msg
 
 
-port openLevelOut : () -> Cmd msg
+port loadLevelOut : () -> Cmd msg
 
 
-port saveLevelOut : FileOut -> Cmd msg
+port saveLevelOut : ( String, JD.Value ) -> Cmd msg
+
+
+lastId : List String -> Int
+lastId ids =
+    let
+        last =
+            List.head <| List.sort <| ids
+    in
+        case last of
+            Nothing ->
+                0
+
+            Just id ->
+                toInt 0 id
 
 
 availableComponents : List Component
@@ -49,8 +63,8 @@ availableComponents =
     ]
 
 
-getComponentId : Component -> String
-getComponentId component =
+toComponentId : Component -> String
+toComponentId component =
     case component of
         Ability _ ->
             "ability"
@@ -160,15 +174,36 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        OpenLevel ->
-            ( model, openLevelOut () )
+        LoadLevel ->
+            ( model, loadLevelOut () )
+
+        LoadLevelIn ( file, contents ) ->
+            let
+                level =
+                    decodeLevel contents
+
+                nextId =
+                    lastId (Dict.keys level.entities)
+
+                log =
+                    Debug.log "opened" file
+            in
+                ( { model
+                    | file = file
+                    , id = level.id
+                    , name = level.name
+                    , entities = level.entities
+                    , nextId = nextId
+                  }
+                , Cmd.none
+                )
 
         SaveLevel ->
             ( model
             , saveLevelOut
-                { name = model.file
-                , contents = encodeLevel model.id model.name model.entities
-                }
+                ( model.file
+                , encodeLevel model.id model.name model.entities
+                )
             )
 
         SetId id ->
@@ -221,7 +256,7 @@ update msg model =
                         Just entity ->
                             let
                                 id =
-                                    getComponentId component
+                                    toComponentId component
 
                                 components =
                                     Dict.insert id component entity.components
@@ -233,7 +268,7 @@ update msg model =
             in
                 ( { model
                     | queuedComponent = Nothing
-                    , selectedComponent = Just <| getComponentId component
+                    , selectedComponent = Just <| toComponentId component
                     , selectedEntity = selectedEntity
                     , entities = entities
                   }
@@ -265,16 +300,6 @@ update msg model =
                 , Cmd.none
                 )
 
-        OpenLevelIn file ->
-            let
-                level =
-                    decodeLevel file
-
-                log =
-                    Debug.log "opened" level
-            in
-                ( model, Cmd.none )
-
         SelectEntity entity ->
             let
                 foo =
@@ -285,7 +310,7 @@ update msg model =
         SelectComponent component ->
             let
                 componentId =
-                    getComponentId component
+                    toComponentId component
 
                 foo =
                     Debug.log "selected component" component
@@ -309,7 +334,7 @@ update msg model =
                         Just entity ->
                             let
                                 componentId =
-                                    getComponentId component
+                                    toComponentId component
 
                                 components =
                                     Dict.insert componentId component entity.components
@@ -325,7 +350,7 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ openLevelIn OpenLevelIn
+        [ loadLevelIn LoadLevelIn
         ]
 
 
@@ -426,14 +451,14 @@ componentsListView msg components selected =
                     (\component ->
                         let
                             style =
-                                if selectedId == (getComponentId component) then
+                                if selectedId == (toComponentId component) then
                                     componentListItemSelectedStyles
                                 else
                                     componentListItemStyles
                         in
                             li
                                 [ style, onClick (msg component) ]
-                                [ text <| getComponentId component ]
+                                [ text <| toComponentId component ]
                     )
                     components
                 )
@@ -449,7 +474,7 @@ availableComponentsView model =
                     ""
 
                 Just component ->
-                    getComponentId component
+                    toComponentId component
 
         available =
             case model.selectedEntity of
@@ -462,7 +487,7 @@ availableComponentsView model =
                             Dict.keys entity.components
                     in
                         List.filter
-                            (\component -> List.member (getComponentId component) used == False)
+                            (\component -> List.member (toComponentId component) used == False)
                             availableComponents
     in
         div []
@@ -772,7 +797,7 @@ toolbarView model =
             [ onInput SetName, value model.name ]
             []
         , button
-            [ onClick OpenLevel ]
+            [ onClick LoadLevel ]
             [ text "open level" ]
         , button
             [ onClick SaveLevel ]

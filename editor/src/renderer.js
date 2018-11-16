@@ -15,20 +15,20 @@ const app = Elm.App.init({
   flags,
 })
 
-app.ports.openLevelOut.subscribe(() => {
+app.ports.loadLevelOut.subscribe(() => {
   remote.dialog.showOpenDialog(
     null,
     {
       defaultPath: resolve(process.cwd(), '../assets/levels'),
     },
-    ([name]) => {
-      fs.readFile(name, 'utf8', (err, contents) => {
-        app.ports.openLevelIn.send(contents)
-      })
+    ([file]) => {
+      const contents = fs.readFileSync(file, 'utf8')
+
+      app.ports.loadLevelIn.send([file, contents])
     }
   )
 })
 
-app.ports.saveLevelOut.subscribe(({ name, contents }) => {
-  console.log(name, contents)
+app.ports.saveLevelOut.subscribe(([file, contents]) => {
+  fs.writeFileSync(file + '2', JSON.stringify(contents, null, 2))
 })
