@@ -261,11 +261,30 @@ update msg model =
             in
                 ( { model | selectedEntity = selectedEntity, entities = entities }, Cmd.none )
 
-        SelectComponent component ->
-            ( { model | selectedComponent = Just component }, Cmd.none )
+        SelectComponent ( key, component ) ->
+            ( { model | selectedComponent = Just ( key, component ) }, Cmd.none )
 
-        QueueComponent component ->
-            ( { model | queuedComponent = Just component }, Cmd.none )
+        AddComponent ( key, component ) ->
+            ( model, Cmd.none )
+
+        RemoveComponent key ->
+            ( model, Cmd.none )
+
+        UpdateComponent ( key, component ) ->
+            ( model, Cmd.none )
+
+        QueueComponent ( key, component ) ->
+            ( { model | queuedComponent = Just ( key, component ) }, Cmd.none )
+
+
+getComponents : Model -> Dict String (Dict String String)
+getComponents model =
+    case model.selectedEntity of
+        Nothing ->
+            Dict.empty
+
+        Just entity ->
+            entity.components
 
 
 subscriptions : Model -> Sub Msg
@@ -340,69 +359,56 @@ entityManagerView model =
         ]
 
 
-componentsListView : (Component -> Msg) -> List Component -> Maybe String -> Html Msg
-componentsListView msg components selected =
+componentsListView : (( String, Component2 ) -> Msg) -> Maybe ( String, Component2 ) -> Components -> Html Msg
+componentsListView msg selected components =
     let
         selectedId =
             case selected of
                 Nothing ->
                     ""
 
-                Just componentId ->
-                    componentId
+                Just ( key, component ) ->
+                    key
     in
         div []
             [ ul []
-                (List.map
-                    (\component ->
-                        li [] []
-                     -- let
-                     --     style =
-                     --         if selectedId == (toComponentId component) then
-                     --             componentListItemSelectedStyles
-                     --         else
-                     --             componentListItemStyles
-                     -- in
-                     --     li
-                     --         [ style, onClick (msg component) ]
-                     --         [ text <| toComponentId component ]
-                    )
-                    components
+                (components
+                    |> Dict.toList
+                    |> List.map
+                        (\( key, component ) ->
+                            li
+                                [ (componentListItemStyles (selectedId == key))
+                                , onClick (msg ( key, component ))
+                                ]
+                                [ text key ]
+                        )
                 )
             ]
 
 
 availableComponentsView : Model -> Html Msg
 availableComponentsView model =
-    let
-        queuedComponentId =
-            case model.queuedComponent of
-                Nothing ->
-                    ""
+    case model.selectedEntity of
+        Nothing ->
+            div [] []
 
-                Just component ->
-                    component
+        Just entity ->
+            let
+                used =
+                    Dict.keys entity.components
 
-        available =
-            case model.selectedEntity of
-                Nothing ->
+                available =
                     availableComponents
 
-                Just entity ->
-                    let
-                        used =
-                            Dict.keys entity.components
-                    in
-                        availableComponents
-                            |> Dict.toList
-                            |> List.filter
-                                (\( component, params ) -> List.member component used == False)
-    in
-        div []
-            [ componentsListView QueueComponent available (Just queuedComponentId)
-            ]
+                -- |> Dict.filter
+                --     (\( key, component ) -> List.member key used == False)
+            in
+                div []
+                    [ componentsListView QueueComponent model.queuedComponent available
+                    ]
 
 
+availableComponents : Components
 availableComponents =
     Dict.fromList
         [ ( "player"
@@ -515,8 +521,8 @@ addComponentButton model =
             Nothing ->
                 disabledBtn
 
-            Just ( component, params ) ->
-                button [ onClick (AddComponent ( component, params )) ]
+            Just component ->
+                button [ onClick (AddComponent component) ]
                     [ text "add" ]
 
 
@@ -626,18 +632,11 @@ nodeView model depth node =
 
             File file ->
                 if file.extension == ".json" then
-                    let
-                        style =
-                            if file.path == model.selectedFile then
-                                treeFileItemSelectedStyles depth
-                            else
-                                treeFileItemStyles depth
-                    in
-                        li
-                            [ style
-                            , onClick (LoadLevelOut file.path)
-                            ]
-                            [ text file.name ]
+                    li
+                        [ treeFileItemStyles (file.path == model.selectedFile) depth
+                        , onClick (LoadLevelOut file.path)
+                        ]
+                        [ text file.name ]
                 else
                     text ""
         ]

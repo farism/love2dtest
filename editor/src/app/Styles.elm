@@ -67,19 +67,18 @@ treeDirectoryItemStyles depth =
         ]
 
 
-treeFileItemStyles depth =
+treeFileItemStyles selected depth =
     css
-        [ listItemStyles
-        , paddingLeft (px (toFloat depth * 10))
-        ]
-
-
-treeFileItemSelectedStyles depth =
-    css
-        [ backgroundColor (hex "#ddd")
-        , listItemStyles
-        , paddingLeft (px (toFloat depth * 10))
-        ]
+        (if selected then
+            [ listItemStyles
+            , backgroundColor (hex "#ddd")
+            , paddingLeft (px (toFloat depth * 10))
+            ]
+         else
+            [ listItemStyles
+            , paddingLeft (px (toFloat depth * 10))
+            ]
+        )
 
 
 entityManagerStyles =
@@ -136,10 +135,13 @@ componentManagerStyles =
         ]
 
 
-componentListItemStyles =
+componentListItemStyles selected =
     css
-        [ listItemStyles
-        ]
+        (if selected then
+            [ listItemStyles, backgroundColor (hex "#ddd") ]
+         else
+            [ listItemStyles ]
+        )
 
 
 componentListItemSelectedStyles =
