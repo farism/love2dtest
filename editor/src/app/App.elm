@@ -9,7 +9,7 @@ import Dict exposing (Dict)
 import Draggable exposing (Delta)
 import Draggable.Events exposing (onDragBy, onMouseDown)
 import Html.Styled.Events exposing (keyCode, on, onClick, onInput, targetValue)
-import Html.Styled.Attributes exposing (disabled, fromUnstyled, placeholder, value)
+import Html.Styled.Attributes exposing (disabled, fromUnstyled, placeholder, selected, value)
 import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
 import Numeral
 import Types exposing (..)
@@ -30,6 +30,31 @@ port loadLevelIn : (( String, String ) -> msg) -> Sub msg
 
 
 port saveLevelOut : ( String, JD.Value ) -> Cmd msg
+
+
+availableComponents : List Component
+availableComponents =
+    [ { id = "player"
+      , params =
+            Dict.fromList
+                [ ( "alias", { paramType = String, order = 0, value = "" } )
+                , ( "money", { paramType = Int, order = 1, value = "0" } )
+                , ( "lives", { paramType = Int, order = 2, value = "0" } )
+                , ( "documents", { paramType = Int, order = 3, value = "0" } )
+                , ( "checkpoint", { paramType = Int, order = 4, value = "0" } )
+                ]
+      }
+    , { id = "wave"
+      , params =
+            Dict.fromList
+                [ ( "waveType", { paramType = Options [ "circular", "vertical", "horizontal" ], order = 0, value = "circular" } )
+                , ( "x", { paramType = Int, order = 1, value = "0" } )
+                , ( "y", { paramType = Int, order = 2, value = "0" } )
+                , ( "amplitude", { paramType = Float, order = 3, value = "0" } )
+                , ( "frequency", { paramType = Float, order = 4, value = "0" } )
+                ]
+      }
+    ]
 
 
 lastId : List Entity -> Int
@@ -59,27 +84,34 @@ sortEntityList list =
         list
 
 
-toInt : Int -> String -> Int
-toInt default value =
+sortParamList : List ( String, Param ) -> List ( String, Param )
+sortParamList list =
+    List.sortWith
+        (\( _, a ) ( _, b ) -> compare a.order b.order)
+        list
+
+
+toInt : String -> Int
+toInt value =
     if value == "" then
         0
     else
         case String.toInt value of
             Nothing ->
-                default
+                0
 
             Just int ->
                 int
 
 
-toFloat : Float -> String -> Float
-toFloat default value =
+toFloat : String -> Float
+toFloat value =
     if value == "" then
         0.0
     else
         case String.toFloat value of
             Nothing ->
-                default
+                0.0
 
             Just int ->
                 int
@@ -224,11 +256,7 @@ update msg model =
             )
 
         SetLevelId id ->
-            let
-                newId =
-                    toInt model.levelId id
-            in
-                ( { model | levelId = newId }, Cmd.none )
+            ( { model | levelId = toInt id }, Cmd.none )
 
         SetLevelName name ->
             ( { model | levelName = name }, Cmd.none )
@@ -259,40 +287,93 @@ update msg model =
                         Just entity ->
                             ( Nothing, Dict.remove (String.fromInt entity.id) model.entities )
             in
-                ( { model | selectedEntity = selectedEntity, entities = entities }, Cmd.none )
+                ( { model
+                    | selectedEntity = selectedEntity
+                    , entities = entities
+                  }
+                , Cmd.none
+                )
 
-        SelectComponent ( key, component ) ->
-            ( { model | selectedComponent = Just ( key, component ) }, Cmd.none )
+        SelectComponent component ->
+            ( { model | selectedComponent = Just component.id }, Cmd.none )
 
-        AddComponent ( key, component ) ->
-            ( model, Cmd.none )
+        AddComponent component ->
+            let
+                newModel =
+                    updateComponents
+                        (\components -> Dict.insert component.id component components)
+                        model
+            in
+                ( { newModel | queuedComponent = Nothing, selectedComponent = Just component.id }, Cmd.none )
 
-        RemoveComponent key ->
-            ( model, Cmd.none )
+        RemoveComponent id ->
+            let
+                newModel =
+                    updateComponents
+                        (\components -> Dict.remove id components)
+                        model
+            in
+                ( newModel, Cmd.none )
 
-        UpdateComponent ( key, component ) ->
-            ( model, Cmd.none )
+        UpdateComponent id key param value ->
+            let
+                newModel =
+                    updateComponents (updateComponent id key param value) model
+            in
+                ( newModel, Cmd.none )
 
-        QueueComponent ( key, component ) ->
-            ( { model | queuedComponent = Just ( key, component ) }, Cmd.none )
+        QueueComponent component ->
+            ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
 
 
-getComponents : Model -> Dict String (Dict String String)
-getComponents model =
-    case model.selectedEntity of
+updateComponents : (Dict String Component -> Dict String Component) -> Model -> Model
+updateComponents fn model =
+    let
+        ( selected, entities ) =
+            (case model.selectedEntity of
+                Nothing ->
+                    ( Nothing, model.entities )
+
+                Just entity ->
+                    let
+                        newEntity =
+                            { entity | components = fn entity.components }
+
+                        newEntities =
+                            Dict.insert (String.fromInt entity.id) newEntity model.entities
+                    in
+                        ( Just newEntity, newEntities )
+            )
+    in
+        { model | selectedEntity = selected, entities = entities }
+
+
+updateComponent : String -> String -> Param -> String -> Dict String Component -> Dict String Component
+updateComponent id key param value components =
+    case Dict.get id components of
         Nothing ->
-            Dict.empty
+            components
 
-        Just entity ->
-            entity.components
+        Just component ->
+            let
+                newValue =
+                    { param | value = validate param value }
+
+                params =
+                    Dict.insert key newValue component.params
+
+                newComponent =
+                    { component | params = params }
+            in
+                Dict.insert id newComponent components
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ selectProjectIn SelectProjectIn
+        [ Draggable.subscriptions DragMsg model.drag
+        , selectProjectIn SelectProjectIn
         , loadLevelIn LoadLevelIn
-        , Draggable.subscriptions DragMsg model.drag
         ]
 
 
@@ -359,31 +440,21 @@ entityManagerView model =
         ]
 
 
-componentsListView : (( String, Component2 ) -> Msg) -> Maybe ( String, Component2 ) -> Components -> Html Msg
-componentsListView msg selected components =
-    let
-        selectedId =
-            case selected of
-                Nothing ->
-                    ""
-
-                Just ( key, component ) ->
-                    key
-    in
-        div []
-            [ ul []
-                (components
-                    |> Dict.toList
-                    |> List.map
-                        (\( key, component ) ->
-                            li
-                                [ (componentListItemStyles (selectedId == key))
-                                , onClick (msg ( key, component ))
-                                ]
-                                [ text key ]
-                        )
-                )
-            ]
+componentsListView : (Component -> Msg) -> List Component -> Html Msg
+componentsListView msg components =
+    div []
+        [ ul []
+            (components
+                |> List.map
+                    (\component ->
+                        li
+                            [ (componentListItemStyles False)
+                            , onClick (msg component)
+                            ]
+                            [ text component.id ]
+                    )
+            )
+        ]
 
 
 availableComponentsView : Model -> Html Msg
@@ -398,116 +469,79 @@ availableComponentsView model =
                     Dict.keys entity.components
 
                 available =
-                    availableComponents
-
-                -- |> Dict.filter
-                --     (\( key, component ) -> List.member key used == False)
+                    List.filter
+                        (\component -> List.member component.id used == False)
+                        availableComponents
             in
                 div []
-                    [ componentsListView QueueComponent model.queuedComponent available
+                    [ componentsListView QueueComponent available
                     ]
 
 
-availableComponents : Components
-availableComponents =
-    Dict.fromList
-        [ ( "player"
-          , Dict.fromList
-                [ ( "alias", StringParam "" )
-                , ( "money", IntParam 0 )
-                , ( "lives", IntParam 0 )
-                , ( "documents", IntParam 0 )
-                , ( "checkpoint", IntParam 0 )
-                ]
-          )
-        , ( "position"
-          , Dict.fromList
-                [ ( "x", IntParam 0 )
-                , ( "y", IntParam 0 )
-                ]
-          )
-        ]
+validate : Param -> String -> String
+validate param value =
+    case param.paramType of
+        Int ->
+            case String.toInt value of
+                Nothing ->
+                    param.value
+
+                Just _ ->
+                    value
+
+        Float ->
+            case String.toFloat value of
+                Nothing ->
+                    param.value
+
+                Just _ ->
+                    value
+
+        _ ->
+            value
 
 
+formatParam : Param -> String
+formatParam param =
+    case param.paramType of
+        Float ->
+            Numeral.format "0.00" (toFloat param.value)
 
--- availableComponentsView : Model -> Html Msg
--- availableComponentsView model =
---     div []
---         (List.map
---             (\component ->
---                 div [] [ text component ]
---             )
---             (Dict.keys availableComponents)
---         )
+        Int ->
+            Numeral.format "0" (toFloat param.value)
+
+        _ ->
+            param.value
 
 
-paramInput : String -> String -> (String -> a) -> (a -> Component) -> Html Msg
-paramInput label_ param converter updater =
+paramInput : String -> String -> Param -> Html Msg
+paramInput component key param =
     label [ paramStyle ]
         [ div [ paramLabelStyle ]
-            [ text <| label_ ++ ": "
+            [ text (key ++ ": ")
             ]
         , input
             [ paramInputStyle
-              -- , onEnter (\value -> UpdateComponent (value |> converter |> updater))
-              -- , onBlur (\value -> UpdateComponent (value |> converter |> updater))
-            , value param
+            , onEnter (\value -> UpdateComponent component key param value)
+            , onBlur (\value -> UpdateComponent component key param value)
+            , value (formatParam param)
             ]
             []
         ]
 
 
-paramSelect : String -> List String -> String -> (String -> Component) -> Html Msg
-paramSelect label_ options param updater =
+paramSelect : String -> String -> List String -> Param -> Html Msg
+paramSelect component key options param =
     label [ paramStyle ]
         [ div [ paramLabelStyle ]
-            [ text <| label_ ++ ": "
+            [ text (key ++ ": ")
             ]
         , select
             [ paramInputStyle
-              -- , onInput (\value -> UpdateComponent (updater value))
-            , value param
+            , onInput (\value -> UpdateComponent component key param value)
+            , value param.value
             ]
-            (List.map (\opt -> option [] [ text opt ]) options)
-        ]
-
-
-paramInputString : String -> String -> (String -> Component) -> Html Msg
-paramInputString label param updater =
-    paramInput label param (\val -> val) updater
-
-
-paramInputInt : String -> Int -> (Int -> Component) -> Html Msg
-paramInputInt label param updater =
-    paramInput label (String.fromInt param) (toInt param) updater
-
-
-paramInputFloat : String -> Float -> (Float -> Component) -> Html Msg
-paramInputFloat label param updater =
-    paramInput label (Numeral.format "0.00" param) (toFloat param) updater
-
-
-abilityParams : {} -> Html Msg
-abilityParams p =
-    div []
-        []
-
-
-
--- selectedComponentsView : Entity -> Model -> Html Msg
--- selectedComponentsView entity model =
---     componentsListView SelectComponent (Dict.values entity.components) model.selectedComponent
-
-
-selectedComponentView : Entity -> Model -> Html Msg
-selectedComponentView entity model =
-    div []
-        [ case model.selectedComponent of
-            Nothing ->
-                text "Select a component"
-
-            Just componentId ->
-                text "selected"
+            (List.map (\opt -> option [ selected (opt == param.value) ] [ text opt ]) options)
         ]
 
 
@@ -536,9 +570,50 @@ removeComponentButton model =
             Nothing ->
                 disabledBtn
 
-            Just componentId ->
-                -- button [ onClick (RemoveComponent componentId) ] [ text "remove" ]
-                button [] [ text "remove" ]
+            Just id ->
+                button [ onClick (RemoveComponent id) ] [ text "remove" ]
+
+
+paramsView : String -> Dict String Param -> Html Msg
+paramsView id params =
+    ul []
+        (params
+            |> Dict.toList
+            |> sortParamList
+            |> List.map
+                (\( key, param ) ->
+                    li []
+                        [ case param of
+                            _ ->
+                                label []
+                                    [ (case param.paramType of
+                                        Options options ->
+                                            paramSelect id key options param
+
+                                        _ ->
+                                            paramInput id key param
+                                      )
+                                    ]
+                        ]
+                )
+        )
+
+
+selectedComponentView : Entity -> Model -> Html Msg
+selectedComponentView entity model =
+    div []
+        [ case model.selectedComponent of
+            Nothing ->
+                text "Select a component"
+
+            Just id ->
+                case Dict.get id entity.components of
+                    Nothing ->
+                        text "Entity does not contain component"
+
+                    Just component ->
+                        paramsView id component.params
+        ]
 
 
 componentManagerView : Model -> Html Msg
@@ -550,23 +625,36 @@ componentManagerView model =
                     [ text "Select an entity" ]
 
                 Just entity ->
-                    [ div [ availableComponentsStyles ]
-                        [ div [ availableComponentsListStyles ]
-                            [ availableComponentsView model
+                    let
+                        keys =
+                            Dict.keys entity.components
+
+                        selected =
+                            Dict.values entity.components
+
+                        available =
+                            List.filter
+                                (\component -> List.member component.id keys == False)
+                                availableComponents
+                    in
+                        [ div [ availableComponentsStyles ]
+                            [ div [ availableComponentsListStyles ]
+                                [ componentsListView QueueComponent available
+                                ]
+                            ]
+                        , div [ selectedComponentsStyles ]
+                            [ div []
+                                [ addComponentButton model
+                                , removeComponentButton model
+                                ]
+                            , div [ selectedComponentsListStyles ]
+                                [ componentsListView SelectComponent selected
+                                ]
+                            , div [ selectedComponentStyles ]
+                                [ selectedComponentView entity model
+                                ]
                             ]
                         ]
-                    , div [ selectedComponentsStyles ]
-                        [ div []
-                            [ addComponentButton model
-                            , removeComponentButton model
-                            ]
-                        , div [ selectedComponentsListStyles ]
-                            [-- selectedComponentsView entity model
-                            ]
-                        , div [ selectedComponentStyles ]
-                            [ selectedComponentView entity model ]
-                        ]
-                    ]
     in
         div [ componentManagerStyles ] children
 

@@ -105,7 +105,7 @@ componentDecoder : JD.Decoder Component
 componentDecoder =
     JD.field "id" JD.string
         |> JD.andThen
-            (\x ->
+            (\_ ->
                 JD.succeed
                     { id = "position"
                     , params = Dict.empty
