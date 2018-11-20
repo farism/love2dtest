@@ -20,7 +20,7 @@ draggableStyles point =
         [ transform (translate2 (px point.x) (px point.y))
         , width (px 20)
         , height (px 20)
-        , backgroundColor (hex "#0f0")
+        , cursor move
         ]
 
 
@@ -32,7 +32,7 @@ sceneStyles =
         , position absolute
         , right (px 402)
         , top (px 61)
-        , backgroundColor (hex "#f00")
+        , backgroundColor (hex "#ccc")
         ]
 
 

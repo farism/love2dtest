@@ -3,6 +3,8 @@ module Serializers exposing (decodeTree, decodeLevel, encodeLevel, mouseOffsetDe
 import Dict exposing (Dict)
 import Json.Encode as JE
 import Json.Decode as JD
+import Json.Decode.Pipeline exposing (hardcoded, optional, required, resolve)
+import Draggable
 import Types exposing (..)
 
 
@@ -37,16 +39,16 @@ encodeLevel id name entities =
 
 mouseOffsetDecoder : JD.Decoder Point
 mouseOffsetDecoder =
-    JD.map2 Point
-        (JD.field "offsetX" JD.float)
-        (JD.field "offsetY" JD.float)
+    JD.succeed Point
+        |> required "offsetX" JD.float
+        |> required "offsetY" JD.float
 
 
 pointDecoder : JD.Decoder Point
 pointDecoder =
-    JD.map2 Point
-        (JD.field "x" JD.float)
-        (JD.field "y" JD.float)
+    JD.succeed Point
+        |> required "x" JD.float
+        |> required "y" JD.float
 
 
 treeDecoder : String -> JD.Decoder TreeNode
@@ -65,47 +67,47 @@ treeDecoder type_ =
 directoryDecoder : JD.Decoder TreeNode
 directoryDecoder =
     JD.map Directory <|
-        JD.map3 DirectoryFields
-            (JD.field "path" JD.string)
-            (JD.field "name" JD.string)
-            (JD.field "children"
-                (JD.list
-                    ((JD.field "type" JD.string) |> JD.andThen treeDecoder)
-                )
-            )
+        (JD.succeed DirectoryFields
+            |> required "path" JD.string
+            |> required "name" JD.string
+            |> required "children"
+                (JD.list (JD.field "type" JD.string |> JD.andThen treeDecoder))
+        )
 
 
 fileDecoder : JD.Decoder TreeNode
 fileDecoder =
-    JD.map File <|
-        JD.map3 FileFields
-            (JD.field "path" JD.string)
-            (JD.field "name" JD.string)
-            (JD.field "extension" JD.string)
+    JD.map File
+        (JD.succeed FileFields
+            |> required "path" JD.string
+            |> required "name" JD.string
+            |> required "extension" JD.string
+        )
 
 
 levelDecoder : JD.Decoder Level
 levelDecoder =
-    JD.map3 Level
-        (JD.field "id" JD.int)
-        (JD.field "name" JD.string)
-        (JD.field "entities" (JD.dict entityDecoder))
+    JD.succeed Level
+        |> required "id" JD.int
+        |> required "name" JD.string
+        |> required "entities" (JD.dict entityDecoder)
 
 
 entityDecoder : JD.Decoder Entity
 entityDecoder =
-    JD.map4 Entity
-        (JD.field "id" JD.int)
-        (JD.field "label" JD.string)
-        (JD.field "position" pointDecoder)
-        (JD.field "components" (JD.dict componentDecoder))
+    JD.succeed Entity
+        |> required "id" JD.int
+        |> required "label" JD.string
+        |> required "components" (JD.dict componentDecoder)
+        |> required "dragpoint" pointDecoder
+        |> hardcoded Draggable.init
 
 
 componentDecoder : JD.Decoder Component
 componentDecoder =
-    JD.map2 Component
-        (JD.field "id" JD.string)
-        (JD.field "params"
+    JD.succeed Component
+        |> required "id" JD.string
+        |> required "params"
             (JD.dict
                 (JD.oneOf
                     [ paramDecoder String JD.string
@@ -115,16 +117,18 @@ componentDecoder =
                     ]
                 )
             )
-        )
 
 
 paramDecoder : ParamType -> JD.Decoder a -> JD.Decoder Param
 paramDecoder paramType decoder =
-    JD.map4 Param
-        (JD.field "order" JD.int)
-        (JD.succeed paramType)
-        (JD.maybe (JD.list JD.string))
-        (JD.field "value" decoder |> JD.andThen (\x -> JD.succeed (Debug.toString x)))
+    JD.succeed Param
+        |> required "order" JD.int
+        |> hardcoded paramType
+        |> optional "options" (JD.maybe (JD.list JD.string)) Nothing
+        |> required "value"
+            (decoder
+                |> JD.andThen (\x -> JD.succeed (Debug.toString x))
+            )
 
 
 
@@ -160,8 +164,8 @@ entityEncoder entity =
     JE.object
         [ ( "id", JE.int entity.id )
         , ( "label", JE.string entity.label )
-        , ( "position", pointEncoder entity.position )
         , ( "components", dictEncoder componentEncoder entity.components )
+        , ( "dragpoint", pointEncoder entity.dragpoint )
         ]
 
 

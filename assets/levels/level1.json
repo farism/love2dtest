@@ -5,6 +5,10 @@
     "1": {
       "id": 1,
       "label": "player",
+      "dragpoint": {
+        "x": 5,
+        "y": 10
+      },
       "components": {
         "position": {
           "id": "position",

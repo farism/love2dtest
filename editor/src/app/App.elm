@@ -7,8 +7,8 @@ import Json.Encode as JE
 import Json.Decode as JD
 import Dict exposing (Dict)
 import Draggable exposing (Delta)
-import Draggable.Events exposing (onDragBy, onMouseDown)
-import Html.Styled.Events exposing (keyCode, on, onClick, onInput, targetValue)
+import Draggable.Events exposing (onDragBy)
+import Html.Styled.Events exposing (keyCode, on, onClick, onInput, onMouseDown, targetValue)
 import Html.Styled.Attributes exposing (disabled, fromUnstyled, placeholder, selected, value)
 import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
 import Numeral
@@ -63,34 +63,68 @@ initialModel =
     , levelName = ""
     , entities = Dict.empty
     , nextId = 0
-    , drag = Draggable.init
-    , position = { x = 50, y = 50 }
     }
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Draggable.subscriptions DragMsg model.drag
-        , selectProjectIn SelectProjectIn
-        , loadLevelIn LoadLevelIn
-        ]
+    let
+        draggableSubscription =
+            case selectedEntity model of
+                Nothing ->
+                    []
+
+                Just entity ->
+                    [ Draggable.subscriptions (DragMsg entity) entity.drag
+                    ]
+    in
+        Sub.batch
+            (draggableSubscription
+                ++ [ selectProjectIn SelectProjectIn
+                   , loadLevelIn LoadLevelIn
+                   ]
+            )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        DragMsg dragMsg ->
-            Draggable.update dragConfig dragMsg model
+        DragMsg entity dragMsg ->
+            let
+                newModel =
+                    { model | selectedEntity = Just entity.id }
+            in
+                case selectedEntity newModel of
+                    Nothing ->
+                        ( newModel, Cmd.none )
+
+                    Just e ->
+                        let
+                            ( newEntity, cmds ) =
+                                Draggable.update dragConfig dragMsg e
+
+                            entities =
+                                Dict.insert (String.fromInt entity.id) newEntity newModel.entities
+                        in
+                            ( { newModel | entities = entities }, cmds )
 
         OnDragBy ( dx, dy ) ->
-            let
-                position =
-                    Debug.log "pt" (Point (model.position.x + dx) (model.position.y + dy))
-            in
-                ( { model | position = position }
-                , Cmd.none
-                )
+            case selectedEntity model of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just entity ->
+                    let
+                        dragpoint =
+                            Point (entity.dragpoint.x + dx) (entity.dragpoint.y + dy)
+
+                        newEntity =
+                            { entity | dragpoint = dragpoint }
+
+                        entities =
+                            Dict.insert (String.fromInt entity.id) newEntity model.entities
+                    in
+                        ( { model | entities = entities }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
@@ -160,7 +194,7 @@ update msg model =
                     model.nextId + 1
 
                 entity =
-                    Entity nextId "" { x = 0, y = 0 } Dict.empty
+                    Entity nextId "" Dict.empty { x = 0, y = 0 } Draggable.init
 
                 entities =
                     Dict.insert (String.fromInt entity.id) entity model.entities
@@ -758,8 +792,8 @@ sceneView model =
             (List.map
                 (\entity ->
                     div
-                        [ draggableStyles model.position
-                        , fromUnstyled (Draggable.mouseTrigger () DragMsg)
+                        [ draggableStyles entity.dragpoint
+                        , fromUnstyled (Draggable.mouseTrigger () (DragMsg entity))
                         ]
                         [ text "foo" ]
                 )

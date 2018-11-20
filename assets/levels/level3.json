@@ -10,15 +10,6 @@
         "y": 0
       },
       "components": {
-        "player": {
-          "id": "player",
-          "params": {
-            "alias": {
-              "order": 0,
-              "value": "foo"
-            }
-          }
-        },
         "position": {
           "id": "position",
           "params": {

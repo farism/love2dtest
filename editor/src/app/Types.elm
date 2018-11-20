@@ -21,11 +21,7 @@ type alias Model =
     , levelId : Int
     , levelName : String
     , entities : Dict String Entity
-    , nextId :
-        Int
-        --
-    , drag : Draggable.State ()
-    , position : Point
+    , nextId : Int
     }
 
 
@@ -46,7 +42,7 @@ type Msg
     | RemoveComponent String
     | UpdateComponent String String Param String
     | QueueComponent Component
-    | DragMsg (Draggable.Msg ())
+    | DragMsg Entity (Draggable.Msg ())
     | OnDragBy Draggable.Delta
 
 
@@ -79,8 +75,9 @@ type alias Level =
 type alias Entity =
     { id : Int
     , label : String
-    , position : Point
     , components : Dict String Component
+    , dragpoint : Point
+    , drag : Draggable.State ()
     }
 
 
