@@ -103,14 +103,27 @@ entityDecoder =
 
 componentDecoder : JD.Decoder Component
 componentDecoder =
-    JD.field "id" JD.string
-        |> JD.andThen
-            (\_ ->
-                JD.succeed
-                    { id = "position"
-                    , params = Dict.empty
-                    }
-            )
+    JD.map2 Component
+        (JD.field "id" JD.string)
+        (JD.field "params" (JD.dict paramDecoder))
+
+
+paramDecoder : JD.Decoder Param
+paramDecoder =
+    JD.oneOf
+        [ JD.map3 Param
+            (JD.succeed String)
+            (JD.field "order" JD.int)
+            (JD.field "value" JD.string)
+        , JD.map3 Param
+            (JD.succeed Int)
+            (JD.field "order" JD.int)
+            (JD.field "value" JD.int |> JD.andThen (JD.succeed << Debug.toString))
+        , JD.map3 Param
+            (JD.succeed Float)
+            (JD.field "order" JD.int)
+            (JD.field "value" JD.float |> JD.andThen (JD.succeed << Debug.toString))
+        ]
 
 
 
@@ -128,7 +141,7 @@ pointEncoder : Point -> JE.Value
 pointEncoder point =
     JE.object
         [ ( "x", JE.float point.x )
-        , ( "x", JE.float point.y )
+        , ( "y", JE.float point.y )
         ]
 
 
@@ -147,11 +160,89 @@ entityEncoder entity =
         [ ( "id", JE.int entity.id )
         , ( "label", JE.string entity.label )
         , ( "position", pointEncoder entity.position )
-          -- , ( "components", dictEncoder componentEncoder entity.components )
+        , ( "components", dictEncoder componentEncoder entity.components )
         ]
 
 
+componentEncoder : Component -> JE.Value
+componentEncoder component =
+    JE.object
+        [ ( "id", JE.string component.id )
+        , ( "params", dictEncoder paramEncoder component.params )
+        ]
 
--- componentEncoder : String -> JE.Value
--- componentEncoder component =
---     case component of
+
+paramEncoder : Param -> JE.Value
+paramEncoder param =
+    JE.object
+        [ ( "order", JE.int param.order )
+        , ( "type", paramTypeEncoder param )
+        , ( "value", paramValueEncoder param )
+        ]
+
+
+paramTypeEncoder : Param -> JE.Value
+paramTypeEncoder param =
+    JE.string
+        (case param.paramType of
+            Options options ->
+                "options"
+
+            String ->
+                "string"
+
+            Int ->
+                "int"
+
+            Float ->
+                "float"
+
+            Bool ->
+                "bool"
+        )
+
+
+toInt : String -> Int
+toInt value =
+    if value == "" then
+        0
+    else
+        case String.toInt value of
+            Nothing ->
+                0
+
+            Just int ->
+                int
+
+
+toFloat : String -> Float
+toFloat value =
+    if value == "" then
+        0.0
+    else
+        case String.toFloat value of
+            Nothing ->
+                0.0
+
+            Just int ->
+                int
+
+
+paramValueEncoder : Param -> JE.Value
+paramValueEncoder param =
+    (case param.paramType of
+        Options options ->
+            JE.string param.value
+
+        String ->
+            JE.string param.value
+
+        Int ->
+            JE.int (toInt param.value)
+
+        Float ->
+            JE.float (toFloat param.value)
+
+        _ ->
+            JE.string ""
+    )
