@@ -105,25 +105,26 @@ componentDecoder : JD.Decoder Component
 componentDecoder =
     JD.map2 Component
         (JD.field "id" JD.string)
-        (JD.field "params" (JD.dict paramDecoder))
+        (JD.field "params"
+            (JD.dict
+                (JD.oneOf
+                    [ paramDecoder String JD.string
+                    , paramDecoder Int JD.int
+                    , paramDecoder Float JD.float
+                    , paramDecoder Bool JD.bool
+                    ]
+                )
+            )
+        )
 
 
-paramDecoder : JD.Decoder Param
-paramDecoder =
-    JD.oneOf
-        [ JD.map3 Param
-            (JD.succeed String)
-            (JD.field "order" JD.int)
-            (JD.field "value" JD.string)
-        , JD.map3 Param
-            (JD.succeed Int)
-            (JD.field "order" JD.int)
-            (JD.field "value" JD.int |> JD.andThen (JD.succeed << Debug.toString))
-        , JD.map3 Param
-            (JD.succeed Float)
-            (JD.field "order" JD.int)
-            (JD.field "value" JD.float |> JD.andThen (JD.succeed << Debug.toString))
-        ]
+paramDecoder : ParamType -> JD.Decoder a -> JD.Decoder Param
+paramDecoder paramType decoder =
+    JD.map4 Param
+        (JD.field "order" JD.int)
+        (JD.succeed paramType)
+        (JD.maybe (JD.list JD.string))
+        (JD.field "value" decoder |> JD.andThen (\x -> JD.succeed (Debug.toString x)))
 
 
 
@@ -185,9 +186,6 @@ paramTypeEncoder : Param -> JE.Value
 paramTypeEncoder param =
     JE.string
         (case param.paramType of
-            Options options ->
-                "options"
-
             String ->
                 "string"
 
@@ -231,9 +229,6 @@ toFloat value =
 paramValueEncoder : Param -> JE.Value
 paramValueEncoder param =
     (case param.paramType of
-        Options options ->
-            JE.string param.value
-
         String ->
             JE.string param.value
 

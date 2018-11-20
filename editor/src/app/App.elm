@@ -33,6 +33,256 @@ port loadLevelIn : (( String, String ) -> msg) -> Sub msg
 port saveLevelOut : ( String, JD.Value ) -> Cmd msg
 
 
+main : Program Flags Model Msg
+main =
+    Browser.element
+        { init = init
+        , subscriptions = subscriptions
+        , view = view >> toUnstyled
+        , update = update
+        }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( initialModel
+    , Cmd.none
+    )
+
+
+initialModel : Model
+initialModel =
+    { tree = Nothing
+    , selectedDirectory = ""
+    , selectedFile = ""
+    , selectedEntity = Nothing
+    , selectedComponent = Nothing
+    , queuedComponent = Nothing
+    , levelParseError = Nothing
+    , levelId = 0
+    , levelName = ""
+    , entities = Dict.empty
+    , nextId = 0
+    , drag = Draggable.init
+    , position = { x = 50, y = 50 }
+    }
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Draggable.subscriptions DragMsg model.drag
+        , selectProjectIn SelectProjectIn
+        , loadLevelIn LoadLevelIn
+        ]
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        DragMsg dragMsg ->
+            Draggable.update dragConfig dragMsg model
+
+        OnDragBy ( dx, dy ) ->
+            let
+                position =
+                    Debug.log "pt" (Point (model.position.x + dx) (model.position.y + dy))
+            in
+                ( { model | position = position }
+                , Cmd.none
+                )
+
+        NoOp ->
+            ( model, Cmd.none )
+
+        SelectProjectOut ->
+            ( model, selectProjectOut () )
+
+        SelectProjectIn json ->
+            case decodeTree json of
+                Err err ->
+                    ( model, Cmd.none )
+
+                Ok tree ->
+                    ( { model | tree = Just tree }, Cmd.none )
+
+        LoadLevelOut file ->
+            ( model, loadLevelOut (file) )
+
+        LoadLevelIn ( file, json ) ->
+            case decodeLevel json of
+                Err err ->
+                    ( { model
+                        | levelParseError = Just "Invalid file format"
+                      }
+                    , Cmd.none
+                    )
+
+                Ok level ->
+                    let
+                        nextId =
+                            lastId (Dict.values level.entities)
+
+                        foo =
+                            Debug.log "level" level
+                    in
+                        ( { model
+                            | selectedFile = file
+                            , levelParseError = Nothing
+                            , levelId = level.id
+                            , levelName = level.name
+                            , entities = level.entities
+                            , nextId = nextId
+                          }
+                        , Cmd.none
+                        )
+
+        SaveLevel ->
+            ( model
+            , saveLevelOut
+                ( model.selectedFile
+                , encodeLevel model.levelId model.levelName model.entities
+                )
+            )
+
+        SetLevelId id ->
+            ( { model | levelId = toInt id }, Cmd.none )
+
+        SetLevelName name ->
+            ( { model | levelName = name }, Cmd.none )
+
+        SelectEntity entity ->
+            ( { model | selectedEntity = Just entity.id, selectedComponent = Nothing }, Cmd.none )
+
+        AddEntity ->
+            let
+                nextId =
+                    model.nextId + 1
+
+                entity =
+                    Entity nextId "" { x = 0, y = 0 } Dict.empty
+
+                entities =
+                    Dict.insert (String.fromInt entity.id) entity model.entities
+            in
+                ( { model | nextId = nextId, entities = entities, selectedEntity = Just entity.id }, Cmd.none )
+
+        RemoveEntity ->
+            let
+                entities =
+                    case selectedEntity model of
+                        Nothing ->
+                            model.entities
+
+                        Just entity ->
+                            Dict.remove (String.fromInt entity.id) model.entities
+            in
+                ( { model | selectedEntity = Nothing, entities = entities }, Cmd.none )
+
+        SelectComponent component ->
+            ( { model | selectedComponent = Just component.id }, Cmd.none )
+
+        AddComponent component ->
+            let
+                newModel =
+                    updateComponents
+                        (\components -> Dict.insert component.id component components)
+                        model
+            in
+                ( { newModel | queuedComponent = Nothing, selectedComponent = Just component.id }, Cmd.none )
+
+        RemoveComponent id ->
+            let
+                newModel =
+                    updateComponents
+                        (\components -> Dict.remove id components)
+                        model
+            in
+                ( newModel, Cmd.none )
+
+        UpdateComponent id key param value ->
+            let
+                newModel =
+                    updateComponents (updateComponent id key param value) model
+            in
+                ( newModel, Cmd.none )
+
+        QueueComponent component ->
+            ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
+
+
+selectedEntity : Model -> Maybe Entity
+selectedEntity model =
+    case model.selectedEntity of
+        Nothing ->
+            Nothing
+
+        Just id ->
+            case Dict.get (String.fromInt id) model.entities of
+                Nothing ->
+                    Nothing
+
+                Just entity ->
+                    Just entity
+
+
+selectedComponents : Model -> Dict String Component
+selectedComponents model =
+    case model.selectedEntity of
+        Nothing ->
+            Dict.empty
+
+        Just id ->
+            case Dict.get (String.fromInt id) model.entities of
+                Nothing ->
+                    Dict.empty
+
+                Just entity ->
+                    entity.components
+
+
+updateComponents : (Dict String Component -> Dict String Component) -> Model -> Model
+updateComponents fn model =
+    let
+        entities =
+            (case selectedEntity model of
+                Nothing ->
+                    model.entities
+
+                Just entity ->
+                    let
+                        newEntity =
+                            { entity | components = fn entity.components }
+
+                        newEntities =
+                            Dict.insert (String.fromInt entity.id) newEntity model.entities
+                    in
+                        newEntities
+            )
+    in
+        { model | entities = entities }
+
+
+updateComponent : String -> String -> Param -> String -> Dict String Component -> Dict String Component
+updateComponent id key param value components =
+    case Dict.get id components of
+        Nothing ->
+            components
+
+        Just component ->
+            let
+                newValue =
+                    { param | value = validate param value }
+
+                params =
+                    Dict.insert key newValue component.params
+
+                newComponent =
+                    { component | params = params }
+            in
+                Dict.insert id newComponent components
+
+
 lastId : List Entity -> Int
 lastId entities =
     case List.maximum <| List.map (\e -> e.id) entities of
@@ -122,257 +372,27 @@ dragConfig =
     Draggable.basicConfig OnDragBy
 
 
-main : Program Flags Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view >> toUnstyled
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
-init : Flags -> ( Model, Cmd Msg )
-init flags =
-    ( initialModel
-    , Cmd.none
-    )
-
-
-initialModel : Model
-initialModel =
-    { tree = Nothing
-    , selectedDirectory = ""
-    , selectedFile = ""
-    , selectedEntity = Nothing
-    , selectedComponent = Nothing
-    , queuedComponent = Nothing
-    , levelParseError = Nothing
-    , levelId = 0
-    , levelName = ""
-    , entities = Dict.empty
-    , nextId = 0
-    , drag = Draggable.init
-    , position = { x = 50, y = 50 }
-    }
-
-
-createEntity : Int -> String -> Entity
-createEntity id label =
-    { id = id
-    , label = label
-    , position = { x = 0, y = 0 }
-    , components = Dict.empty
-    }
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        DragMsg dragMsg ->
-            Draggable.update dragConfig dragMsg model
-
-        OnDragBy ( dx, dy ) ->
-            let
-                position =
-                    Debug.log "pt" (Point (model.position.x + dx) (model.position.y + dy))
-            in
-                ( { model | position = position }
-                , Cmd.none
-                )
-
-        NoOp ->
-            ( model, Cmd.none )
-
-        SelectProjectOut ->
-            ( model, selectProjectOut () )
-
-        SelectProjectIn json ->
-            case decodeTree json of
-                Err err ->
-                    ( model, Cmd.none )
-
-                Ok tree ->
-                    ( { model | tree = Just tree }, Cmd.none )
-
-        LoadLevelOut file ->
-            ( model, loadLevelOut (file) )
-
-        LoadLevelIn ( file, json ) ->
-            case decodeLevel json of
-                Err err ->
-                    ( { model
-                        | levelParseError = Just "Invalid file format"
-                      }
-                    , Cmd.none
-                    )
-
-                Ok level ->
-                    let
-                        nextId =
-                            lastId (Dict.values level.entities)
-
-                        foo =
-                            Debug.log "level" level
-                    in
-                        ( { model
-                            | selectedFile = file
-                            , levelParseError = Nothing
-                            , levelId = level.id
-                            , levelName = level.name
-                            , entities = level.entities
-                            , nextId = nextId
-                          }
-                        , Cmd.none
-                        )
-
-        SaveLevel ->
-            ( model
-            , saveLevelOut
-                ( model.selectedFile
-                , encodeLevel model.levelId model.levelName model.entities
-                )
-            )
-
-        SetLevelId id ->
-            ( { model | levelId = toInt id }, Cmd.none )
-
-        SetLevelName name ->
-            ( { model | levelName = name }, Cmd.none )
-
-        SelectEntity entity ->
-            ( { model | selectedEntity = Just entity, selectedComponent = Nothing }, Cmd.none )
-
-        AddEntity ->
-            let
-                nextId =
-                    model.nextId + 1
-
-                entity =
-                    createEntity nextId ""
-
-                entities =
-                    Dict.insert (String.fromInt entity.id) entity model.entities
-            in
-                ( { model | nextId = nextId, entities = entities, selectedEntity = Just entity }, Cmd.none )
-
-        RemoveEntity ->
-            let
-                ( selectedEntity, entities ) =
-                    case model.selectedEntity of
-                        Nothing ->
-                            ( model.selectedEntity, model.entities )
-
-                        Just entity ->
-                            ( Nothing, Dict.remove (String.fromInt entity.id) model.entities )
-            in
-                ( { model
-                    | selectedEntity = selectedEntity
-                    , entities = entities
-                  }
-                , Cmd.none
-                )
-
-        SelectComponent component ->
-            ( { model | selectedComponent = Just component.id }, Cmd.none )
-
-        AddComponent component ->
-            let
-                newModel =
-                    updateComponents
-                        (\components -> Dict.insert component.id component components)
-                        model
-            in
-                ( { newModel | queuedComponent = Nothing, selectedComponent = Just component.id }, Cmd.none )
-
-        RemoveComponent id ->
-            let
-                newModel =
-                    updateComponents
-                        (\components -> Dict.remove id components)
-                        model
-            in
-                ( newModel, Cmd.none )
-
-        UpdateComponent id key param value ->
-            let
-                newModel =
-                    updateComponents (updateComponent id key param value) model
-            in
-                ( newModel, Cmd.none )
-
-        QueueComponent component ->
-            ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
-
-
-updateComponents : (Dict String Component -> Dict String Component) -> Model -> Model
-updateComponents fn model =
-    let
-        ( selected, entities ) =
-            (case model.selectedEntity of
-                Nothing ->
-                    ( Nothing, model.entities )
-
-                Just entity ->
-                    let
-                        newEntity =
-                            { entity | components = fn entity.components }
-
-                        newEntities =
-                            Dict.insert (String.fromInt entity.id) newEntity model.entities
-                    in
-                        ( Just newEntity, newEntities )
-            )
-    in
-        { model | selectedEntity = selected, entities = entities }
-
-
-updateComponent : String -> String -> Param -> String -> Dict String Component -> Dict String Component
-updateComponent id key param value components =
-    case Dict.get id components of
-        Nothing ->
-            components
-
-        Just component ->
-            let
-                newValue =
-                    { param | value = validate param value }
-
-                params =
-                    Dict.insert key newValue component.params
-
-                newComponent =
-                    { component | params = params }
-            in
-                Dict.insert id newComponent components
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Draggable.subscriptions DragMsg model.drag
-        , selectProjectIn SelectProjectIn
-        , loadLevelIn LoadLevelIn
-        ]
-
-
 selectedEntityView : Model -> Html Msg
 selectedEntityView model =
-    div []
-        [ case model.selectedEntity of
-            Nothing ->
-                text "Select an entity"
+    let
+        entity =
+            selectedEntity model
+    in
+        div []
+            [ case entity of
+                Nothing ->
+                    text "Select an entity"
 
-            Just entity ->
-                div []
-                    [ div []
-                        [ text <| "id: " ++ (String.fromInt entity.id)
+                Just e ->
+                    div []
+                        [ div []
+                            [ text <| "id: " ++ (String.fromInt e.id)
+                            ]
+                        , div []
+                            [ input [ value e.label, placeholder "label" ] []
+                            ]
                         ]
-                    , div []
-                        [ input [ value entity.label, placeholder "label" ] []
-                        ]
-                    ]
-        ]
+            ]
 
 
 entityListView : Model -> Html Msg
@@ -383,8 +403,8 @@ entityListView model =
                 Nothing ->
                     -1
 
-                Just entity ->
-                    entity.id
+                Just id ->
+                    id
     in
         ul []
             (List.map
@@ -442,10 +462,13 @@ availableComponentsView model =
         Nothing ->
             div [] []
 
-        Just entity ->
+        Just id ->
             let
+                components =
+                    selectedComponents model
+
                 used =
-                    Dict.keys entity.components
+                    Dict.keys components
 
                 available =
                     List.filter
@@ -562,36 +585,40 @@ paramsView id params =
             |> List.map
                 (\( key, param ) ->
                     li []
-                        [ case param of
-                            _ ->
-                                label []
-                                    [ (case param.paramType of
-                                        Options options ->
-                                            paramSelect id key options param
+                        [ label []
+                            [ case param.options of
+                                Nothing ->
+                                    paramInput id key param
 
-                                        _ ->
-                                            paramInput id key param
-                                      )
-                                    ]
+                                Just opts ->
+                                    paramSelect id key opts param
+                            ]
                         ]
                 )
         )
 
 
-selectedComponentView : Entity -> Model -> Html Msg
-selectedComponentView entity model =
+selectedComponentView : Model -> Html Msg
+selectedComponentView model =
     div []
         [ case model.selectedComponent of
             Nothing ->
                 text "Select a component"
 
             Just id ->
-                case Dict.get id entity.components of
-                    Nothing ->
-                        text "Entity does not contain component"
+                let
+                    components =
+                        selectedComponents model
 
-                    Just component ->
-                        paramsView id component.params
+                    component =
+                        Dict.get id components
+                in
+                    case component of
+                        Nothing ->
+                            text "Entity does not contain component"
+
+                        Just c ->
+                            paramsView id c.params
         ]
 
 
@@ -603,13 +630,16 @@ componentManagerView model =
                 Nothing ->
                     [ text "Select an entity" ]
 
-                Just entity ->
+                Just _ ->
                     let
+                        components =
+                            selectedComponents model
+
                         keys =
-                            Dict.keys entity.components
+                            Dict.keys components
 
                         selected =
-                            Dict.values entity.components
+                            Dict.values components
 
                         available =
                             List.filter
@@ -630,7 +660,7 @@ componentManagerView model =
                                 [ componentsListView SelectComponent selected
                                 ]
                             , div [ selectedComponentStyles ]
-                                [ selectedComponentView entity model
+                                [ selectedComponentView model
                                 ]
                             ]
                         ]

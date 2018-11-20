@@ -16,7 +16,7 @@ type alias Model =
     , selectedFile : String
     , queuedComponent : Maybe Component
     , selectedComponent : Maybe String
-    , selectedEntity : Maybe Entity
+    , selectedEntity : Maybe Int
     , levelParseError : Maybe String
     , levelId : Int
     , levelName : String
@@ -91,16 +91,16 @@ type alias Point =
 
 
 type ParamType
-    = Options (List String)
-    | String
+    = String
     | Int
     | Float
     | Bool
 
 
 type alias Param =
-    { paramType : ParamType
-    , order : Int
+    { order : Int
+    , paramType : ParamType
+    , options : Maybe (List String)
     , value : String
     }
 

@@ -9,21 +9,21 @@ availableComponents =
     [ { id = "player"
       , params =
             Dict.fromList
-                [ ( "alias", { paramType = String, order = 0, value = "" } )
-                , ( "money", { paramType = Int, order = 1, value = "0" } )
-                , ( "lives", { paramType = Int, order = 2, value = "0" } )
-                , ( "documents", { paramType = Int, order = 3, value = "0" } )
-                , ( "checkpoint", { paramType = Int, order = 4, value = "0" } )
+                [ ( "alias", Param 0 String Nothing "" )
+                , ( "money", Param 1 Int Nothing "0" )
+                , ( "lives", Param 2 Int Nothing "0" )
+                , ( "documents", Param 3 Int Nothing "0" )
+                , ( "checkpoint", Param 4 Int Nothing "0" )
                 ]
       }
     , { id = "wave"
       , params =
             Dict.fromList
-                [ ( "waveType", { paramType = Options [ "circular", "vertical", "horizontal" ], order = 0, value = "circular" } )
-                , ( "x", { paramType = Int, order = 1, value = "0" } )
-                , ( "y", { paramType = Int, order = 2, value = "0" } )
-                , ( "amplitude", { paramType = Float, order = 3, value = "0" } )
-                , ( "frequency", { paramType = Float, order = 4, value = "0" } )
+                [ ( "waveType", Param 0 String (Just [ "circular", "vertical", "horizontal" ]) "circular" )
+                , ( "x", Param 1 Int Nothing "0" )
+                , ( "y", Param 2 Int Nothing "0" )
+                , ( "amplitude", Param 3 Float Nothing "0" )
+                , ( "frequency", Param 4 Float Nothing "0" )
                 ]
       }
     ]
