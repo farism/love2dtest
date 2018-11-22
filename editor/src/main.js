@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require('electron')
 const minimist = require('minimist')
 const args = minimist(process.argv.slice(2))
 
+require('electron-context-menu')({})
+
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true
 
 let win

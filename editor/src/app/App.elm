@@ -3,19 +3,20 @@ port module App exposing (..)
 import Maybe
 import Browser
 import Browser.Dom
-import Json.Encode as JE
-import Json.Decode as JD
 import Dict exposing (Dict)
 import Draggable exposing (Delta)
 import Draggable.Events exposing (onDragBy)
 import Html.Styled.Events exposing (keyCode, on, onClick, onInput, onMouseDown, targetValue)
 import Html.Styled.Attributes exposing (disabled, fromUnstyled, placeholder, selected, value)
 import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
+import Json.Decode as JD
 import Numeral
-import Types exposing (..)
+import UndoList exposing (UndoList)
 import Components exposing (..)
+import Helpers exposing (..)
 import Serializers exposing (..)
 import Styles exposing (..)
+import Types exposing (..)
 
 
 port selectProjectOut : () -> Cmd msg
@@ -33,44 +34,42 @@ port loadLevelIn : (( String, String ) -> msg) -> Sub msg
 port saveLevelOut : ( String, JD.Value ) -> Cmd msg
 
 
-main : Program Flags Model Msg
+main : Program Flags UndoModel Msg
 main =
     Browser.element
         { init = init
         , subscriptions = subscriptions
-        , view = view >> toUnstyled
-        , update = update
+        , view = toUnstyled << (UndoList.view view)
+        , update = updateWithUndo
         }
 
 
-init : Flags -> ( Model, Cmd Msg )
+init : Flags -> ( UndoModel, Cmd Msg )
 init flags =
-    ( initialModel
-    , Cmd.none
-    )
+    ( initialModel, Cmd.none )
 
 
-initialModel : Model
+initialModel : UndoModel
 initialModel =
-    { tree = Nothing
-    , selectedDirectory = ""
-    , selectedFile = ""
-    , selectedEntity = Nothing
-    , selectedComponent = Nothing
-    , queuedComponent = Nothing
-    , levelParseError = Nothing
-    , levelId = 0
-    , levelName = ""
-    , entities = Dict.empty
-    , nextId = 0
-    }
+    UndoList.fresh
+        { tree = Nothing
+        , selectedFile = ""
+        , selectedEntity = Nothing
+        , selectedComponent = Nothing
+        , queuedComponent = Nothing
+        , levelParseError = Nothing
+        , levelId = 0
+        , levelName = ""
+        , entities = Dict.empty
+        , nextId = 0
+        }
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : UndoModel -> Sub Msg
 subscriptions model =
     let
         draggableSubscription =
-            case selectedEntity model of
+            case selectedEntity model.present of
                 Nothing ->
                     []
 
@@ -84,6 +83,23 @@ subscriptions model =
                    , loadLevelIn LoadLevelIn
                    ]
             )
+
+
+updateWithUndo : Msg -> UndoModel -> ( UndoModel, Cmd Msg )
+updateWithUndo msg model =
+    case msg of
+        Undo ->
+            ( UndoList.undo model, Cmd.none )
+
+        Redo ->
+            ( UndoList.redo model, Cmd.none )
+
+        _ ->
+            let
+                ( newModel, cmds ) =
+                    update msg model.present
+            in
+                ( UndoList.new newModel model, cmds )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -116,7 +132,7 @@ update msg model =
                 Just entity ->
                     let
                         dragpoint =
-                            Point (entity.dragpoint.x + dx) (entity.dragpoint.y + dy)
+                            Vertex (entity.dragpoint.x + dx) (entity.dragpoint.y + dy)
 
                         newEntity =
                             { entity | dragpoint = dragpoint }
@@ -125,9 +141,6 @@ update msg model =
                             Dict.insert (String.fromInt entity.id) newEntity model.entities
                     in
                         ( { model | entities = entities }, Cmd.none )
-
-        NoOp ->
-            ( model, Cmd.none )
 
         SelectProjectOut ->
             ( model, selectProjectOut () )
@@ -146,19 +159,12 @@ update msg model =
         LoadLevelIn ( file, json ) ->
             case decodeLevel json of
                 Err err ->
-                    ( { model
-                        | levelParseError = Just "Invalid file format"
-                      }
-                    , Cmd.none
-                    )
+                    ( { model | levelParseError = Just "Invalid file format" }, Cmd.none )
 
                 Ok level ->
                     let
                         nextId =
                             lastId (Dict.values level.entities)
-
-                        foo =
-                            Debug.log "level" level
                     in
                         ( { model
                             | selectedFile = file
@@ -180,7 +186,7 @@ update msg model =
             )
 
         SetLevelId id ->
-            ( { model | levelId = toInt id }, Cmd.none )
+            ( { model | levelId = strToInt id }, Cmd.none )
 
         SetLevelName name ->
             ( { model | levelName = name }, Cmd.none )
@@ -234,15 +240,34 @@ update msg model =
             in
                 ( newModel, Cmd.none )
 
-        UpdateComponent id key param value ->
+        UpdateParam component key param value ->
             let
                 newModel =
-                    updateComponents (updateComponent id key param value) model
+                    updateComponents
+                        (\components ->
+                            (Dict.map
+                                (\k v ->
+                                    let
+                                        newParam =
+                                            { param | value = validateParam param value }
+                                    in
+                                        if k == component then
+                                            { v | params = Dict.insert key newParam v.params }
+                                        else
+                                            v
+                                )
+                                components
+                            )
+                        )
+                        model
             in
                 ( newModel, Cmd.none )
 
         QueueComponent component ->
             ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
 
 
 selectedEntity : Model -> Maybe Entity
@@ -275,6 +300,16 @@ selectedComponents model =
                     entity.components
 
 
+selectedComponent : Model -> Maybe Component
+selectedComponent model =
+    case model.selectedComponent of
+        Nothing ->
+            Nothing
+
+        Just id ->
+            Dict.get id (selectedComponents model)
+
+
 updateComponents : (Dict String Component -> Dict String Component) -> Model -> Model
 updateComponents fn model =
     let
@@ -297,24 +332,23 @@ updateComponents fn model =
         { model | entities = entities }
 
 
-updateComponent : String -> String -> Param -> String -> Dict String Component -> Dict String Component
-updateComponent id key param value components =
-    case Dict.get id components of
-        Nothing ->
-            components
 
-        Just component ->
-            let
-                newValue =
-                    { param | value = validate param value }
+-- let
+--   case path of
+--     head::tail
+--     newValue =
+--         { param | value = validateParam param value }
+--     params =
+--         Dict.insert path newValue component.params
+--     newComponent =
+--         { component | params = params }
+-- in
+--     Dict.insert id newComponent components
 
-                params =
-                    Dict.insert key newValue component.params
 
-                newComponent =
-                    { component | params = params }
-            in
-                Dict.insert id newComponent components
+dragConfig : Draggable.Config () Msg
+dragConfig =
+    Draggable.basicConfig OnDragBy
 
 
 lastId : List Entity -> Int
@@ -351,39 +385,13 @@ sortParamList list =
         list
 
 
-toInt : String -> Int
-toInt value =
-    if value == "" then
-        0
-    else
-        case String.toInt value of
-            Nothing ->
-                0
-
-            Just int ->
-                int
-
-
-toFloat : String -> Float
-toFloat value =
-    if value == "" then
-        0.0
-    else
-        case String.toFloat value of
-            Nothing ->
-                0.0
-
-            Just int ->
-                int
-
-
 onBlur : (String -> Msg) -> Html.Styled.Attribute Msg
 onBlur handler =
     on "blur" (JD.map handler targetValue)
 
 
 onEnter : (String -> msg) -> Html.Styled.Attribute msg
-onEnter tagger =
+onEnter msg =
     let
         isEnter code =
             if code == 13 then
@@ -396,37 +404,172 @@ onEnter tagger =
     in
         on "keydown" <|
             JD.map2
-                (\_ value -> tagger value)
+                (\_ value -> msg value)
                 decodeEnter
                 targetValue
 
 
-dragConfig : Draggable.Config () Msg
-dragConfig =
-    Draggable.basicConfig OnDragBy
+hasJson : TreeNode -> Bool
+hasJson node =
+    case node of
+        Directory directory ->
+            List.any hasJson directory.children
+
+        File file ->
+            file.extension == ".json"
 
 
-selectedEntityView : Model -> Html Msg
-selectedEntityView model =
-    let
-        entity =
-            selectedEntity model
-    in
-        div []
-            [ case entity of
-                Nothing ->
-                    text "Select an entity"
+formatParam : Param -> String
+formatParam param =
+    case param.value of
+        StringValue value ->
+            value
 
-                Just e ->
-                    div []
-                        [ div []
-                            [ text <| "id: " ++ (String.fromInt e.id)
-                            ]
-                        , div []
-                            [ input [ value e.label, placeholder "label" ] []
+        IntValue value ->
+            Numeral.format "0" (toFloat value)
+
+        FloatValue value ->
+            Numeral.format "0.00" value
+
+        _ ->
+            Debug.toString param.value
+
+
+validateParam : Param -> String -> ParamValue
+validateParam param newValue =
+    case param.value of
+        IntValue oldValue ->
+            if newValue == "" then
+                IntValue 0
+            else
+                case String.toInt newValue of
+                    Nothing ->
+                        IntValue oldValue
+
+                    Just value ->
+                        IntValue value
+
+        FloatValue oldValue ->
+            if newValue == "" then
+                FloatValue 0
+            else
+                case String.toFloat newValue of
+                    Nothing ->
+                        FloatValue oldValue
+
+                    Just value ->
+                        FloatValue value
+
+        _ ->
+            StringValue newValue
+
+
+inputView : String -> String -> (String -> Msg) -> Html Msg
+inputView key val fn =
+    label [ paramStyle ]
+        [ div [ paramLabelStyle ] [ text (key ++ ": ") ]
+        , input [ paramInputStyle, onEnter fn, onBlur fn, value val ] []
+        ]
+
+
+selectView : String -> String -> List String -> (String -> Msg) -> Html Msg
+selectView key val options fn =
+    label [ paramStyle ]
+        [ div [ paramLabelStyle ] [ text (key ++ ": ") ]
+        , select
+            [ paramInputStyle
+            , onInput fn
+            , value val
+            ]
+            (List.map
+                (\opt -> option [ selected (opt == val) ] [ text opt ])
+                options
+            )
+        ]
+
+
+bodyView : Body -> Html Msg
+bodyView body =
+    div []
+        [ div [] [ text "body" ]
+        , selectView
+            "type"
+            (fromBodyType body.bodyType)
+            bodyTypes
+            (\value -> UpdateBody { body | bodyType = toBodyType value })
+        , inputView
+            "x"
+            (Debug.toString body.x)
+            (\value -> UpdateBody { body | x = (strToFloat value) })
+        , inputView
+            "y"
+            (Debug.toString body.y)
+            (\value -> UpdateBody { body | y = (strToFloat value) })
+        ]
+
+
+shapeView : Shape -> Html Msg
+shapeView shape =
+    div []
+        (case shape of
+            Rectangle rectangle ->
+                []
+
+            Circle circle ->
+                []
+
+            _ ->
+                []
+        )
+
+
+paramFieldView : String -> String -> Param -> Html Msg
+paramFieldView component key param =
+    case param.options of
+        Nothing ->
+            case param.value of
+                StringValue str ->
+                    inputView key str (UpdateParam component key param)
+
+                IntValue int ->
+                    inputView key (Debug.toString int) (UpdateParam component key param)
+
+                FloatValue float ->
+                    inputView key (Debug.toString float) (UpdateParam component key param)
+
+                BodyValue body ->
+                    bodyView body
+
+                ShapeValue shape ->
+                    shapeView shape
+
+                _ ->
+                    text ""
+
+        Just opts ->
+            case param.value of
+                StringValue value ->
+                    selectView key value opts (UpdateParam component key param)
+
+                _ ->
+                    text ""
+
+
+paramsView : String -> Dict String Param -> Html Msg
+paramsView component params =
+    ul []
+        (params
+            |> Dict.toList
+            |> sortParamList
+            |> List.map
+                (\( key, param ) ->
+                    li []
+                        [ label []
+                            [ paramFieldView component key param
                             ]
                         ]
-            ]
+                )
+        )
 
 
 entityListView : Model -> Html Msg
@@ -458,6 +601,29 @@ entityListView model =
             )
 
 
+selectedEntityView : Model -> Html Msg
+selectedEntityView model =
+    let
+        entity =
+            selectedEntity model
+    in
+        div []
+            [ case entity of
+                Nothing ->
+                    text "Select an entity"
+
+                Just e ->
+                    div []
+                        [ div []
+                            [ text <| "id: " ++ (String.fromInt e.id)
+                            ]
+                        , div []
+                            [ input [ value e.label, placeholder "label" ] []
+                            ]
+                        ]
+            ]
+
+
 entityManagerView : Model -> Html Msg
 entityManagerView model =
     div [ entityManagerStyles ]
@@ -473,163 +639,25 @@ entityManagerView model =
         ]
 
 
-componentsListView : (Component -> Msg) -> List Component -> Html Msg
-componentsListView msg components =
-    div []
-        [ ul []
-            (components
-                |> List.map
-                    (\component ->
-                        li
-                            [ (componentListItemStyles False)
-                            , onClick (msg component)
-                            ]
-                            [ text component.id ]
-                    )
-            )
-        ]
-
-
-availableComponentsView : Model -> Html Msg
-availableComponentsView model =
-    case model.selectedEntity of
-        Nothing ->
-            div [] []
-
-        Just id ->
-            let
-                components =
-                    selectedComponents model
-
-                used =
-                    Dict.keys components
-
-                available =
-                    List.filter
-                        (\component -> List.member component.id used == False)
-                        availableComponents
-            in
-                div []
-                    [ componentsListView QueueComponent available
-                    ]
-
-
-validate : Param -> String -> String
-validate param value =
-    case param.paramType of
-        Int ->
-            case String.toInt value of
-                Nothing ->
-                    param.value
-
-                Just _ ->
-                    value
-
-        Float ->
-            case String.toFloat value of
-                Nothing ->
-                    param.value
-
-                Just _ ->
-                    value
-
-        _ ->
-            value
-
-
-formatParam : Param -> String
-formatParam param =
-    case param.paramType of
-        Float ->
-            Numeral.format "0.00" (toFloat param.value)
-
-        Int ->
-            Numeral.format "0" (toFloat param.value)
-
-        _ ->
-            param.value
-
-
-paramInput : String -> String -> Param -> Html Msg
-paramInput component key param =
-    label [ paramStyle ]
-        [ div [ paramLabelStyle ]
-            [ text (key ++ ": ")
-            ]
-        , input
-            [ paramInputStyle
-            , onEnter (\value -> UpdateComponent component key param value)
-            , onBlur (\value -> UpdateComponent component key param value)
-            , value (formatParam param)
-            ]
-            []
-        ]
-
-
-paramSelect : String -> String -> List String -> Param -> Html Msg
-paramSelect component key options param =
-    label [ paramStyle ]
-        [ div [ paramLabelStyle ]
-            [ text (key ++ ": ")
-            ]
-        , select
-            [ paramInputStyle
-            , onInput (\value -> UpdateComponent component key param value)
-            , value param.value
-            ]
-            (List.map (\opt -> option [ selected (opt == param.value) ] [ text opt ]) options)
-        ]
-
-
 addComponentButton : Model -> Html Msg
 addComponentButton model =
-    let
-        disabledBtn =
+    case model.queuedComponent of
+        Nothing ->
             button [ disabled True ] [ text "add" ]
-    in
-        case model.queuedComponent of
-            Nothing ->
-                disabledBtn
 
-            Just component ->
-                button [ onClick (AddComponent component) ]
-                    [ text "add" ]
+        Just component ->
+            button [ onClick (AddComponent component) ]
+                [ text "add" ]
 
 
 removeComponentButton : Model -> Html Msg
 removeComponentButton model =
-    let
-        disabledBtn =
+    case model.selectedComponent of
+        Nothing ->
             button [ disabled True ] [ text "remove" ]
-    in
-        case model.selectedComponent of
-            Nothing ->
-                disabledBtn
 
-            Just id ->
-                button [ onClick (RemoveComponent id) ] [ text "remove" ]
-
-
-paramsView : String -> Dict String Param -> Html Msg
-paramsView id params =
-    ul []
-        (params
-            |> Dict.toList
-            |> sortParamList
-            |> List.map
-                (\( key, param ) ->
-                    li []
-                        [ label []
-                            [ case param.options of
-                                Nothing ->
-                                    paramInput id key param
-
-                                Just opts ->
-                                    paramSelect id key opts param
-                            ]
-                        ]
-                )
-        )
+        Just id ->
+            button [ onClick (RemoveComponent id) ] [ text "remove" ]
 
 
 selectedComponentView : Model -> Html Msg
@@ -656,6 +684,24 @@ selectedComponentView model =
         ]
 
 
+componentsListView : (Component -> Msg) -> String -> List Component -> Html Msg
+componentsListView msg selected components =
+    div []
+        [ ul []
+            (components
+                |> List.sortBy .id
+                |> List.map
+                    (\component ->
+                        li
+                            [ componentListItemStyles (selected == component.id)
+                            , onClick (msg component)
+                            ]
+                            [ text component.id ]
+                    )
+            )
+        ]
+
+
 componentManagerView : Model -> Html Msg
 componentManagerView model =
     let
@@ -679,10 +725,26 @@ componentManagerView model =
                             List.filter
                                 (\component -> List.member component.id keys == False)
                                 availableComponents
+
+                        queuedId =
+                            case model.queuedComponent of
+                                Nothing ->
+                                    ""
+
+                                Just component ->
+                                    component.id
+
+                        selectedId =
+                            case model.selectedComponent of
+                                Nothing ->
+                                    ""
+
+                                Just id ->
+                                    id
                     in
                         [ div [ availableComponentsStyles ]
                             [ div [ availableComponentsListStyles ]
-                                [ componentsListView QueueComponent available
+                                [ componentsListView QueueComponent queuedId available
                                 ]
                             ]
                         , div [ selectedComponentsStyles ]
@@ -691,7 +753,7 @@ componentManagerView model =
                                 , removeComponentButton model
                                 ]
                             , div [ selectedComponentsListStyles ]
-                                [ componentsListView SelectComponent selected
+                                [ componentsListView SelectComponent selectedId selected
                                 ]
                             , div [ selectedComponentStyles ]
                                 [ selectedComponentView model
@@ -702,48 +764,27 @@ componentManagerView model =
         div [ componentManagerStyles ] children
 
 
+parseErrorView : Model -> String
+parseErrorView model =
+    case model.levelParseError of
+        Nothing ->
+            model.selectedFile
+
+        Just err ->
+            err
+
+
 toolbarView : Model -> Html Msg
 toolbarView model =
     div
         [ toolbarStyles ]
-        [ div
-            []
-            [ text
-                ("File: "
-                    ++ (case
-                            model.levelParseError
-                        of
-                            Nothing ->
-                                model.selectedFile
-
-                            Just err ->
-                                err
-                       )
-                )
-            ]
-        , input
-            [ onInput SetLevelId, value (String.fromInt model.levelId) ]
-            []
-        , input
-            [ onInput SetLevelName, value model.levelName ]
-            []
-        , button
-            [ onClick SaveLevel ]
-            [ text "save level" ]
-        , button
-            [ onClick SelectProjectOut ]
-            [ text "select project" ]
+        [ button [ onClick SaveLevel ] [ text "save level" ]
+        , input [ onInput SetLevelId, value (String.fromInt model.levelId) ] []
+        , input [ onInput SetLevelName, value model.levelName ] []
+        , button [ onClick Undo ] [ text "undo" ]
+        , button [ onClick Redo ] [ text "redo" ]
+        , div [] [ text ("File: " ++ (parseErrorView model)) ]
         ]
-
-
-hasJson : TreeNode -> Bool
-hasJson node =
-    case node of
-        Directory directory ->
-            List.any hasJson directory.children
-
-        File file ->
-            file.extension == ".json"
 
 
 nodeView : Model -> Int -> TreeNode -> Html Msg
@@ -778,7 +819,7 @@ treeView model =
     div [ treeStyles ]
         [ case model.tree of
             Nothing ->
-                div [] []
+                text "Select a project"
 
             Just node ->
                 nodeView model 0 node
@@ -795,7 +836,7 @@ sceneView model =
                         [ draggableStyles entity.dragpoint
                         , fromUnstyled (Draggable.mouseTrigger () (DragMsg entity))
                         ]
-                        [ text "foo" ]
+                        []
                 )
                 (Dict.values model.entities)
             )
@@ -805,11 +846,18 @@ sceneView model =
 view : Model -> Html Msg
 view model =
     div []
-        [ div []
-            [ toolbarView model
-            , treeView model
-            , entityManagerView model
-            , componentManagerView model
-            , sceneView model
-            ]
-        ]
+        (case model.tree of
+            Nothing ->
+                [ button
+                    [ onClick SelectProjectOut ]
+                    [ text "select project" ]
+                ]
+
+            Just tree ->
+                [ toolbarView model
+                , treeView model
+                , entityManagerView model
+                , componentManagerView model
+                , sceneView model
+                ]
+        )

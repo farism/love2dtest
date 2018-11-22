@@ -38,7 +38,6 @@ app.ports.loadLevelOut.subscribe(file =>
   app.ports.loadLevelIn.send([file, fs.readFileSync(file, 'utf8')])
 )
 
-app.ports.saveLevelOut.subscribe(
-  ([file, contents]) => console.log({ file, contents })
-  // fs.writeFileSync(file, JSON.stringify(contents, null, 2))
+app.ports.saveLevelOut.subscribe(([file, contents]) =>
+  fs.writeFileSync(file, JSON.stringify(contents, null, 2))
 )

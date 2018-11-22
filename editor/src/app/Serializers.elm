@@ -1,10 +1,11 @@
-module Serializers exposing (decodeTree, decodeLevel, encodeLevel, mouseOffsetDecoder)
+module Serializers exposing (decodeTree, decodeLevel, encodeLevel)
 
 import Dict exposing (Dict)
 import Json.Encode as JE
 import Json.Decode as JD
 import Json.Decode.Pipeline exposing (hardcoded, optional, required, resolve)
 import Draggable
+import Helpers exposing (..)
 import Types exposing (..)
 
 
@@ -37,16 +38,9 @@ encodeLevel id name entities =
 -- DECODERS
 
 
-mouseOffsetDecoder : JD.Decoder Point
-mouseOffsetDecoder =
-    JD.succeed Point
-        |> required "offsetX" JD.float
-        |> required "offsetY" JD.float
-
-
-pointDecoder : JD.Decoder Point
-pointDecoder =
-    JD.succeed Point
+vertexDecoder : JD.Decoder Vertex
+vertexDecoder =
+    JD.succeed Vertex
         |> required "x" JD.float
         |> required "y" JD.float
 
@@ -66,7 +60,7 @@ treeDecoder type_ =
 
 directoryDecoder : JD.Decoder TreeNode
 directoryDecoder =
-    JD.map Directory <|
+    JD.map Directory
         (JD.succeed DirectoryFields
             |> required "path" JD.string
             |> required "name" JD.string
@@ -99,7 +93,7 @@ entityDecoder =
         |> required "id" JD.int
         |> required "label" JD.string
         |> required "components" (JD.dict componentDecoder)
-        |> required "dragpoint" pointDecoder
+        |> required "dragpoint" vertexDecoder
         |> hardcoded Draggable.init
 
 
@@ -107,31 +101,47 @@ componentDecoder : JD.Decoder Component
 componentDecoder =
     JD.succeed Component
         |> required "id" JD.string
-        |> required "params"
-            (JD.dict
-                (JD.oneOf
-                    [ paramDecoder String JD.string
-                    , paramDecoder Int JD.int
-                    , paramDecoder Float JD.float
-                    , paramDecoder Bool JD.bool
-                    ]
-                )
-            )
+        |> required "params" (JD.dict paramDecoder)
 
 
-paramDecoder : ParamType -> JD.Decoder a -> JD.Decoder Param
-paramDecoder paramType decoder =
+paramDecoder : JD.Decoder Param
+paramDecoder =
     JD.succeed Param
         |> required "order" JD.int
-        |> hardcoded paramType
         |> optional "options" (JD.maybe (JD.list JD.string)) Nothing
-        |> required "value"
-            (decoder
-                |> JD.andThen (\x -> JD.succeed (Debug.toString x))
-            )
+        |> required "value" paramValueDecoder
+
+
+paramValueDecoder : JD.Decoder ParamValue
+paramValueDecoder =
+    JD.oneOf
+        [ JD.string |> JD.andThen (JD.succeed << StringValue)
+        , JD.int |> JD.andThen (JD.succeed << IntValue)
+        , JD.float |> JD.andThen (JD.succeed << FloatValue)
+        , JD.bool |> JD.andThen (JD.succeed << BoolValue)
+        ]
 
 
 
+-- bodyDecoder : JD.Decoder Body
+-- bodyDecoder =
+--     JD.succeed Body
+--         |> required "bodyType" bodyTypeDecoder
+--         |> required "vertex" vertexDecoder
+--         |> required "category" (JD.list JD.int)
+--         |> required "mask" (JD.list JD.int)
+-- bodyTypeDecoder : JD.Decoder BodyType
+-- bodyTypeDecoder =
+--     (JD.string
+--         |> JD.andThen
+--             (\x ->
+--                 JD.succeed
+--                     (case x of
+--                         _ ->
+--                             Static
+--                     )
+--             )
+--     )
 -- ENCODERS
 
 
@@ -142,11 +152,11 @@ dictEncoder encoder dict =
         |> JE.object
 
 
-pointEncoder : Point -> JE.Value
-pointEncoder point =
+vertexEncoder : Vertex -> JE.Value
+vertexEncoder { x, y } =
     JE.object
-        [ ( "x", JE.float point.x )
-        , ( "y", JE.float point.y )
+        [ ( "x", JE.float x )
+        , ( "y", JE.float y )
         ]
 
 
@@ -160,88 +170,40 @@ levelEncoder id name entities =
 
 
 entityEncoder : Entity -> JE.Value
-entityEncoder entity =
+entityEncoder { id, label, components, dragpoint } =
     JE.object
-        [ ( "id", JE.int entity.id )
-        , ( "label", JE.string entity.label )
-        , ( "components", dictEncoder componentEncoder entity.components )
-        , ( "dragpoint", pointEncoder entity.dragpoint )
+        [ ( "id", JE.int id )
+        , ( "label", JE.string label )
+        , ( "components", dictEncoder componentEncoder components )
+        , ( "dragpoint", vertexEncoder dragpoint )
         ]
 
 
 componentEncoder : Component -> JE.Value
-componentEncoder component =
+componentEncoder { id, params } =
     JE.object
-        [ ( "id", JE.string component.id )
-        , ( "params", dictEncoder paramEncoder component.params )
+        [ ( "id", JE.string id )
+        , ( "params", dictEncoder paramEncoder params )
         ]
 
 
 paramEncoder : Param -> JE.Value
-paramEncoder param =
+paramEncoder { order, value } =
     JE.object
-        [ ( "order", JE.int param.order )
-        , ( "type", paramTypeEncoder param )
-        , ( "value", paramValueEncoder param )
+        [ ( "order", JE.int order )
+        , ( "value"
+          , (case value of
+                StringValue newValue ->
+                    JE.string newValue
+
+                IntValue newValue ->
+                    JE.int newValue
+
+                FloatValue newValue ->
+                    JE.float newValue
+
+                _ ->
+                    JE.string ""
+            )
+          )
         ]
-
-
-paramTypeEncoder : Param -> JE.Value
-paramTypeEncoder param =
-    JE.string
-        (case param.paramType of
-            String ->
-                "string"
-
-            Int ->
-                "int"
-
-            Float ->
-                "float"
-
-            Bool ->
-                "bool"
-        )
-
-
-toInt : String -> Int
-toInt value =
-    if value == "" then
-        0
-    else
-        case String.toInt value of
-            Nothing ->
-                0
-
-            Just int ->
-                int
-
-
-toFloat : String -> Float
-toFloat value =
-    if value == "" then
-        0.0
-    else
-        case String.toFloat value of
-            Nothing ->
-                0.0
-
-            Just int ->
-                int
-
-
-paramValueEncoder : Param -> JE.Value
-paramValueEncoder param =
-    (case param.paramType of
-        String ->
-            JE.string param.value
-
-        Int ->
-            JE.int (toInt param.value)
-
-        Float ->
-            JE.float (toFloat param.value)
-
-        _ ->
-            JE.string ""
-    )
