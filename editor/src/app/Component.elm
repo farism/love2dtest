@@ -1,7 +1,12 @@
 module Component exposing (..)
 
 import Dict exposing (Dict)
-import Vertex exposing (..)
+import Json.Decode.Pipeline as JDE
+import Json.Decode as JD
+import Json.Encode as JE
+import Fixture exposing (Fixture)
+import Helpers exposing (dictEncoder)
+import Vertex exposing (Vertex)
 
 
 type alias Component =
@@ -26,56 +31,63 @@ type alias Param =
     }
 
 
-type alias Fixture =
-    { body : Body
-    , shape : Shape
-    , density : Float
-    , friction : Float
-    }
+decoder : JD.Decoder Component
+decoder =
+    JD.succeed Component
+        |> JDE.required "id" JD.string
+        |> JDE.optional "fixture" fixtureDecoder Nothing
+        |> JDE.required "params" (JD.dict paramDecoder)
 
 
-type BodyType
-    = Static
-    | Dynamic
-    | Kinematic
+fixtureDecoder : JD.Decoder (Maybe Fixture)
+fixtureDecoder =
+    Fixture.decoder
+        |> JD.andThen (\fixture -> JD.succeed (Just fixture))
 
 
-type alias Body =
-    { bodyType : BodyType
-    , category : List Int
-    , mask : List Int
-    , x : Float
-    , y : Float
-    }
+paramDecoder : JD.Decoder Param
+paramDecoder =
+    JD.succeed Param
+        |> JDE.required "order" JD.int
+        |> JDE.optional "options" (JD.maybe (JD.list JD.string)) Nothing
+        |> JDE.required "value" paramValueDecoder
 
 
-type Shape
-    = Chain { loop : Bool, vertices : List Vertex }
-    | Circle { radius : Int }
-    | Edge { vertex1 : Vertex, vertex2 : Vertex }
-    | Polygon { vertices : List Vertex }
-    | Rectangle { width : Int, height : Int }
+paramValueDecoder : JD.Decoder ParamValue
+paramValueDecoder =
+    JD.oneOf
+        [ JD.string |> JD.andThen (JD.succeed << String)
+        , JD.int |> JD.andThen (JD.succeed << Int)
+        , JD.float |> JD.andThen (JD.succeed << Float)
+        , JD.bool |> JD.andThen (JD.succeed << Bool)
+        ]
 
 
-type alias BasicJointFields a =
-    { a
-        | body1 : Body
-        , body2 : Body
-        , vertex1 : Vertex
-        , vertex2 : Vertex
-        , collide : Bool
-    }
+encoder : Component -> JE.Value
+encoder { id, params } =
+    JE.object
+        [ ( "id", JE.string id )
+        , ( "params", dictEncoder paramEncoder params )
+        ]
 
 
-type Joint
-    = Distance (BasicJointFields {})
-    | Friction (BasicJointFields {})
-    | Gear { joint1 : Joint, joint2 : Joint, ratio : Float }
-    | Motor { body1 : Body, body2 : Body, correctionFactor : Float }
-    | Mouse { body : Body, vertex : Vertex }
-    | Prismatic (BasicJointFields { axis : Vertex })
-    | Pulley (BasicJointFields { ground1 : Vertex, ground2 : Vertex, ratio : Float })
-    | Revolute (BasicJointFields { referenceAngle : Float })
-    | Rope (BasicJointFields { maxLength : Int })
-    | Weld (BasicJointFields { axis : Vertex })
-    | Wheel (BasicJointFields {})
+paramEncoder : Param -> JE.Value
+paramEncoder { order, value } =
+    JE.object
+        [ ( "order", JE.int order )
+        , ( "value"
+          , (case value of
+                String newValue ->
+                    JE.string newValue
+
+                Int newValue ->
+                    JE.int newValue
+
+                Float newValue ->
+                    JE.float newValue
+
+                _ ->
+                    JE.string ""
+            )
+          )
+        ]

@@ -5,27 +5,88 @@ import Css exposing (..)
 import Vertex exposing (..)
 
 
-tabStyles selected =
-    css
-        [ if selected then
-            backgroundColor (hex "ccc")
-          else
-            empty []
-        , cursor pointer
-        , padding2 (px 5) (px 10)
-        , hover
-            [ backgroundColor (hex "#ddd")
-            ]
+grey1 =
+    hex "#1e1e1e"
+
+
+grey2 =
+    hex "#252525"
+
+
+grey3 =
+    hex "#2d2d2d"
+
+
+grey4 =
+    hex "#373737"
+
+
+grey10 =
+    hex "#ccc"
+
+
+panelStyles =
+    batch
+        [ position absolute
+        , backgroundColor grey2
+        , color grey10
         ]
 
 
-listItemStyles =
+listItemStyles selected =
     batch
         [ cursor pointer
         , padding2 (px 5) (px 10)
-        , hover
-            [ backgroundColor (hex "#ddd")
-            ]
+        , if selected then
+            backgroundColor grey3
+          else
+            hover
+                [ backgroundColor grey3
+                ]
+        ]
+
+
+treeFileItemStyles selected depth =
+    css
+        [ listItemStyles selected
+        , paddingLeft (px (toFloat depth * 10))
+        ]
+
+
+entityListItemStyles selected =
+    css
+        [ listItemStyles selected
+        ]
+
+
+componentListItemStyles selected =
+    css
+        [ listItemStyles selected ]
+
+
+tabsListStyles =
+    css
+        [ panelStyles
+        , backgroundColor grey3
+        , height (px 40)
+        , left (px 175)
+        , position absolute
+        , right (px 150)
+        , top zero
+        ]
+
+
+tabStyles selected =
+    css
+        [ cursor pointer
+        , display inlineBlock
+        , height (px 40)
+        , lineHeight (px 40)
+        , padding2 zero (px 15)
+        , if selected then
+            backgroundColor grey1
+          else
+            empty []
         ]
 
 
@@ -40,7 +101,7 @@ draggableStyles point =
 
 sceneStyles =
     css
-        [ bottom (px 0)
+        [ bottom zero
         , left (px 170)
         , padding (px 10)
         , position absolute
@@ -52,58 +113,43 @@ sceneStyles =
 
 toolbarStyles =
     css
-        [ border3 (px 1) solid (rgb 0 0 0)
-        , left (px 0)
+        [ left zero
         , padding (px 10)
         , position absolute
         , right (px 402)
-        , top (px 0)
+        , top zero
         ]
 
 
 treeStyles =
     css
-        [ border3 (px 1) solid (rgb 0 0 0)
-        , bottom (px 0)
-        , left (px 0)
-        , padding (px 10)
-        , overflow scroll
+        [ panelStyles
+        , bottom zero
+        , left zero
+        , overflowY auto
+        , padding2 (px 10) zero
         , position absolute
-        , top (px 61)
-        , width (px 150)
+        , top zero
+        , width (px 175)
         ]
 
 
 treeDirectoryItemStyles depth =
     css
         [ padding2 (px 5) (px 10)
-        , paddingLeft (px (toFloat depth * 10))
+        , paddingLeft (px (toFloat (depth + 1) * 10))
+        , cursor default
         ]
-
-
-treeFileItemStyles selected depth =
-    css
-        (if selected then
-            [ listItemStyles
-            , backgroundColor (hex "#ddd")
-            , paddingLeft (px (toFloat depth * 10))
-            ]
-         else
-            [ listItemStyles
-            , paddingLeft (px (toFloat depth * 10))
-            ]
-        )
 
 
 entityManagerStyles =
     css
-        [ border3 (px 1) solid (rgb 0 0 0)
-        , bottom (px 0)
+        [ panelStyles
+        , bottom zero
         , displayFlex
         , flexDirection column
-        , position absolute
-        , right (px 0)
-        , top (px 0)
+        , right zero
+        , top zero
         , width (px 150)
         ]
 
@@ -112,20 +158,7 @@ entityListStyles =
     css
         [ borderTop3 (px 1) solid (rgb 0 0 0)
         , flexGrow (num 1)
-        , overflowY scroll
-        ]
-
-
-entityListItemStyles =
-    css
-        [ listItemStyles
-        ]
-
-
-entityListItemSelectedStyles =
-    css
-        [ backgroundColor (hex "#ddd")
-        , listItemStyles
+        , overflowY auto
         ]
 
 
@@ -138,30 +171,13 @@ selectedEntityStyles =
 
 componentManagerStyles =
     css
-        [ border3 (px 1) solid (rgb 0 0 0)
-        , displayFlex
+        [ displayFlex
         , flexDirection column
         , height (pct 100)
         , position absolute
         , right (px 151)
-        , top (px 0)
+        , top zero
         , width (px 250)
-        ]
-
-
-componentListItemStyles selected =
-    css
-        (if selected then
-            [ listItemStyles, backgroundColor (hex "#ddd") ]
-         else
-            [ listItemStyles ]
-        )
-
-
-componentListItemSelectedStyles =
-    css
-        [ backgroundColor (hex "#ddd")
-        , listItemStyles
         ]
 
 

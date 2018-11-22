@@ -10,7 +10,7 @@ import Html.Styled.Events exposing (keyCode, on, onClick, onInput, onMouseDown, 
 import Html.Styled.Attributes exposing (disabled, fromUnstyled, placeholder, selected, value)
 import Html.Styled exposing (Html, button, div, input, label, li, option, select, text, ul, toUnstyled)
 import Json.Decode as JD
-import List.Extra as LE
+import List.Extra
 import Numeral
 import Model exposing (..)
 import Msg exposing (..)
@@ -19,21 +19,20 @@ import Tree exposing (TreeNode(..))
 import Components exposing (..)
 import Component exposing (Component, Param)
 import Helpers exposing (..)
-import Scene exposing (..)
-import Serializers exposing (..)
+import Scene exposing (Scene, SceneMsg(..))
 import Styles exposing (..)
-
-
-port selectProjectPathOut : () -> Cmd msg
 
 
 port selectProjectPathIn : (String -> msg) -> Sub msg
 
 
-port loadFileOut : String -> Cmd msg
+port selectProjectPathOut : () -> Cmd msg
 
 
 port loadFileIn : (( String, String ) -> msg) -> Sub msg
+
+
+port loadFileOut : String -> Cmd msg
 
 
 port saveFileOut : ( String, JD.Value ) -> Cmd msg
@@ -55,19 +54,12 @@ main =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( initialModel, Cmd.none )
+    ( Model.init, Cmd.none )
 
 
-initialModel : Model
-initialModel =
-    { sceneParseError = Nothing
-    , scenes = []
-    , queuedComponent = Nothing
-    , selectedComponent = Nothing
-    , selectedEntity = Nothing
-    , selectedSceneIndex = Nothing
-    , tree = Nothing
-    }
+dragConfig : Draggable.Config () Msg
+dragConfig =
+    Draggable.basicConfig OnDragBy
 
 
 subscriptions : Model -> Sub Msg
@@ -94,6 +86,9 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        DragMsg entity dragMsg ->
+            ( model, Cmd.none )
+
         -- DragMsg entity dragMsg ->
         --     let
         --         newModel =
@@ -124,36 +119,21 @@ update msg model =
         --                     Dict.insert (String.fromInt entity.id) newEntity model.entities
         --             in
         --                 ( { model | entities = entities }, Cmd.none )
-        SelectProjectPathOut ->
-            ( model, selectProjectPathOut () )
-
-        SelectProjectPathIn json ->
-            case decodeTree json of
-                Err err ->
-                    ( model, Cmd.none )
-
-                Ok tree ->
-                    ( { model | tree = Just tree }, Cmd.none )
-
-        LoadFileOut file ->
-            -- case LE.findIndex (\scene -> scene.file == file) model.scenes of
-            --     Nothing ->
-            ( model, loadFileOut (file) )
-
-        -- Just index ->
-        --     ( { model | selectedScene = Just index }, Cmd.none )
         LoadFileIn ( file, json ) ->
-            case decodeScene file json of
+            case Scene.decode file json of
                 Err err ->
                     ( { model | sceneParseError = Just "Invalid file format" }, Cmd.none )
 
                 Ok scene ->
                     let
                         nextId =
-                            lastId (Dict.values scene.entities)
+                            Scene.lastId (Dict.values scene.entities)
+
+                        newScene =
+                            { scene | file = Just file, selectedEntity = Just nextId, nextId = nextId }
 
                         scenes =
-                            model.scenes ++ [ { scene | nextId = nextId } ]
+                            (model.scenes ++ [ newScene ])
                     in
                         ( { model
                             | sceneParseError = Nothing
@@ -163,87 +143,124 @@ update msg model =
                         , Cmd.none
                         )
 
+        LoadFileOut file ->
+            case List.Extra.findIndex (\scene -> scene.file == Just file) model.scenes of
+                Nothing ->
+                    ( model, loadFileOut (file) )
+
+                Just index ->
+                    ( { model | selectedSceneIndex = Just index }, Cmd.none )
+
+        OnDragBy ( dx, dy ) ->
+            ( model, Cmd.none )
+
         SaveFileOut ->
-            case getSelectedScene model of
+            case selectedScene model of
                 Nothing ->
                     ( model, Cmd.none )
 
                 Just scene ->
-                    ( model, saveFileOut ( "", encodeScene scene ) )
+                    ( model, saveFileOut ( "", Scene.encode scene ) )
+
+        SceneMsg sceneMsg ->
+            case List.Extra.getAt (selectedSceneIndex model) model.scenes of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just scene ->
+                    let
+                        ( newScene, cmds ) =
+                            Scene.update sceneMsg scene
+
+                        scenes =
+                            List.Extra.setAt (selectedSceneIndex model) newScene model.scenes
+                    in
+                        ( { model | scenes = scenes }, Cmd.map SceneMsg cmds )
+
+        SelectProjectPathIn json ->
+            case Tree.decode json of
+                Err err ->
+                    ( model, Cmd.none )
+
+                Ok tree ->
+                    ( { model | tree = Just tree }, Cmd.none )
+
+        SelectProjectPathOut ->
+            ( model, selectProjectPathOut () )
 
         SelectSceneIndex index ->
             ( { model | selectedSceneIndex = Just index }, Cmd.none )
 
-        -- SelectEntity entity ->
-        --     ( { model | selectedEntity = Just entity.id, selectedComponent = Nothing }, Cmd.none )
-        -- AddEntity ->
-        --     let
-        --         nextId =
-        --             model.nextId + 1
-        --         entity =
-        --             Entity nextId "" Dict.empty { x = 0, y = 0 } Draggable.init
-        --         entities =
-        --             Dict.insert (String.fromInt entity.id) entity model.entities
-        --     in
-        --         ( { model | nextId = nextId, entities = entities, selectedEntity = Just entity.id }, Cmd.none )
-        -- RemoveEntity ->
-        --     let
-        --         entities =
-        --             case selectedEntity model of
-        --                 Nothing ->
-        --                     model.entities
-        --                 Just entity ->
-        --                     Dict.remove (String.fromInt entity.id) model.entities
-        --     in
-        --         ( { model | selectedEntity = Nothing, entities = entities }, Cmd.none )
-        -- SelectComponent component ->
-        --     ( { model | selectedComponent = Just component.id }, Cmd.none )
-        -- AddComponent component ->
-        --     let
-        --         newModel =
-        --             updateComponents
-        --                 (\components -> Dict.insert component.id component components)
-        --                 model
-        --     in
-        --         ( { newModel | queuedComponent = Nothing, selectedComponent = Just component.id }, Cmd.none )
-        -- RemoveComponent id ->
-        --     let
-        --         newModel =
-        --             updateComponents
-        --                 (\components -> Dict.remove id components)
-        --                 model
-        --     in
-        --         ( newModel, Cmd.none )
-        -- UpdateParam key param value ->
-        --     let
-        --         componentId =
-        --             selectedComponentId model
-        --         newParam =
-        --             { param | value = validateParam param value }
-        --         newModel =
-        --             updateComponents
-        --                 (\components ->
-        --                     (Dict.map
-        --                         (\k component ->
-        --                             if k == componentId then
-        --                                 { component | params = Dict.insert key newParam component.params }
-        --                             else
-        --                                 component
-        --                         )
-        --                         components
-        --                     )
-        --                 )
-        --                 model
-        --     in
-        --         ( newModel, Cmd.none )
-        -- QueueComponent component ->
-        --     ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
-        _ ->
-            ( model, Cmd.none )
 
 
-getSelectedSceneIndex : Model -> Int
-getSelectedSceneIndex model =
+-- SelectEntity entity ->
+--     ( { model | selectedEntity = Just entity.id, selectedComponent = Nothing }, Cmd.none )
+-- AddEntity ->
+--     let
+--         nextId =
+--             model.nextId + 1
+--         entity =
+--             Entity nextId "" Dict.empty { x = 0, y = 0 } Draggable.init
+--         entities =
+--             Dict.insert (String.fromInt entity.id) entity model.entities
+--     in
+--         ( { model | nextId = nextId, entities = entities, selectedEntity = Just entity.id }, Cmd.none )
+-- RemoveEntity ->
+--     let
+--         entities =
+--             case selectedEntity model of
+--                 Nothing ->
+--                     model.entities
+--                 Just entity ->
+--                     Dict.remove (String.fromInt entity.id) model.entities
+--     in
+--         ( { model | selectedEntity = Nothing, entities = entities }, Cmd.none )
+-- SelectComponent component ->
+--     ( { model | selectedComponent = Just component.id }, Cmd.none )
+-- AddComponent component ->
+--     let
+--         newModel =
+--             updateComponents
+--                 (\components -> Dict.insert component.id component components)
+--                 model
+--     in
+--         ( { newModel | queuedComponent = Nothing, selectedComponent = Just component.id }, Cmd.none )
+-- RemoveComponent id ->
+--     let
+--         newModel =
+--             updateComponents
+--                 (\components -> Dict.remove id components)
+--                 model
+--     in
+--         ( newModel, Cmd.none )
+-- UpdateParam key param value ->
+--     let
+--         componentId =
+--             selectedComponentId model
+--         newParam =
+--             { param | value = validateParam param value }
+--         newModel =
+--             updateComponents
+--                 (\components ->
+--                     (Dict.map
+--                         (\k component ->
+--                             if k == componentId then
+--                                 { component | params = Dict.insert key newParam component.params }
+--                             else
+--                                 component
+--                         )
+--                         components
+--                     )
+--                 )
+--                 model
+--     in
+--         ( newModel, Cmd.none )
+-- QueueComponent component ->
+--     ( { model | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
+
+
+selectedSceneIndex : Model -> Int
+selectedSceneIndex model =
     case model.selectedSceneIndex of
         Nothing ->
             -1
@@ -252,56 +269,26 @@ getSelectedSceneIndex model =
             index
 
 
-getSelectedScene : Model -> Maybe Scene
-getSelectedScene model =
-    LE.getAt (getSelectedSceneIndex model) model.scenes
+selectedScene : Model -> Maybe Scene
+selectedScene model =
+    List.Extra.getAt (selectedSceneIndex model) model.scenes
 
 
-getSelectedEntityId : Model -> String
-getSelectedEntityId model =
-    case model.selectedEntity of
-        Nothing ->
-            ""
+sortEntities : List Entity -> List Entity
+sortEntities list =
+    List.sortWith
+        (\a b ->
+            case compare a.id b.id of
+                LT ->
+                    GT
 
-        Just id ->
-            String.fromInt id
+                EQ ->
+                    EQ
 
-
-
--- selectedEntity : Model -> Maybe Entity
--- selectedEntity model =
---     Dict.get (getSelectedEntityId model) model.entities
--- selectedComponents : Model -> Dict String Component
--- selectedComponents model =
---     case model.selectedEntity of
---         Nothing ->
---             Dict.empty
---         Just id ->
---             case Dict.get (String.fromInt id) model.entities of
---                 Nothing ->
---                     Dict.empty
---                 Just entity ->
---                     entity.components
-
-
-queuedComponentId : Model -> String
-queuedComponentId model =
-    case model.queuedComponent of
-        Nothing ->
-            ""
-
-        Just { id } ->
-            id
-
-
-selectedComponentId : Model -> String
-selectedComponentId model =
-    case model.selectedComponent of
-        Nothing ->
-            ""
-
-        Just id ->
-            id
+                GT ->
+                    LT
+        )
+        list
 
 
 
@@ -326,35 +313,6 @@ selectedComponentId model =
 --             )
 --     in
 --         { model | entities = entities }
--- dragConfig : Draggable.Config () Msg
--- dragConfig =
---     Draggable.basicConfig OnDragBy
-
-
-lastId : List Entity -> Int
-lastId entities =
-    case List.maximum <| List.map (\e -> e.id) entities of
-        Nothing ->
-            0
-
-        Just id ->
-            id
-
-
-
--- sortEntityList : List Entity -> List Entity
--- sortEntityList list =
---     List.sortWith
---         (\a b ->
---             case compare a.id b.id of
---                 LT ->
---                     GT
---                 EQ ->
---                     EQ
---                 GT ->
---                     LT
---         )
---         list
 -- sortParamList : List ( String, Param ) -> List ( String, Param )
 -- sortParamList list =
 --     List.sortWith
@@ -526,65 +484,72 @@ hasJson node =
 --                     ]
 --                 ]
 --         )
--- entityListView : Model -> Html Msg
--- entityListView model =
---     let
---         selectedId =
---             case model.selectedEntity of
---                 Nothing ->
---                     -1
---                 Just id ->
---                     id
---     in
---         ul []
---             (List.map
---                 (\entity ->
---                     let
---                         style =
---                             if selectedId == entity.id then
---                                 entityListItemSelectedStyles
---                             else
---                                 entityListItemStyles
---                     in
---                         li
---                             [ style, onClick (SelectEntity entity) ]
---                             [ text <| String.fromInt entity.id ]
---                 )
---                 (model.entities |> Dict.values |> sortEntityList)
---             )
--- selectedEntityView : Model -> Html Msg
--- selectedEntityView model =
---     let
---         entity =
---             selectedEntity model
---     in
---         div []
---             [ case entity of
---                 Nothing ->
---                     text "Select an entity"
---                 Just e ->
---                     div []
---                         [ div []
---                             [ text <| "id: " ++ (String.fromInt e.id)
---                             ]
---                         , div []
---                             [ input [ value e.label, placeholder "label" ] []
---                             ]
---                         ]
---             ]
--- entityManagerView : Model -> Html Msg
--- entityManagerView model =
---     div [ entityManagerStyles ]
---         [ div []
---             [ button [ onClick AddEntity ] [ text "add entity" ]
---             ]
---         , div [ entityListStyles ]
---             [ entityListView model
---             ]
---         , div [ selectedEntityStyles ]
---             [ selectedEntityView model
---             ]
---         ]
+
+
+entityListView : Scene -> Html Msg
+entityListView scene =
+    let
+        selectedId =
+            Scene.selectedEntityId scene
+    in
+        ul []
+            (List.map
+                (\{ id } ->
+                    li
+                        [ entityListItemStyles (selectedId == id)
+                        , onClick (SceneMsg (SelectEntity id))
+                        ]
+                        [ text <| String.fromInt id ]
+                )
+                (scene.entities |> Dict.values |> sortEntities)
+            )
+
+
+selectedEntityView : Scene -> Html Msg
+selectedEntityView scene =
+    let
+        entity =
+            Scene.selectedEntity scene
+    in
+        div []
+            [ case entity of
+                Nothing ->
+                    text "Select an entity"
+
+                Just e ->
+                    div []
+                        [ div []
+                            [ text <| "id: " ++ (String.fromInt e.id)
+                            ]
+                        , div []
+                            [ input [ value e.label, placeholder "label" ] []
+                            ]
+                        ]
+            ]
+
+
+entityManagerView : Model -> Html Msg
+entityManagerView model =
+    div [ entityManagerStyles ]
+        (case selectedScene model of
+            Nothing ->
+                [ div [] [ text "Select a scene" ] ]
+
+            Just scene ->
+                [ div []
+                    [ button [ onClick (SceneMsg AddEntity) ] [ text "add entity" ]
+                    ]
+                , div [ entityListStyles ]
+                    [ entityListView scene
+                    ]
+                , div [ selectedEntityStyles ]
+                    [ selectedEntityView scene
+                    ]
+                ]
+        )
+
+
+
 -- addComponentButton : Maybe Component -> Html Msg
 -- addComponentButton queued =
 --     case queued of
@@ -761,38 +726,34 @@ treeView model =
 --         ]
 
 
-filename : String -> String
-filename file =
-    case file |> String.split "/" |> LE.last of
+filename : Scene -> String
+filename scene =
+    case scene.file of
         Nothing ->
-            ""
+            "Untitled"
 
         Just f ->
-            f
-
-
-tabsView : Model -> Html Msg
-tabsView model =
-    let
-        selectedScene =
-            case model.selectedSceneIndex of
+            case f |> String.split "/" |> List.Extra.last of
                 Nothing ->
-                    -1
+                    ""
 
-                Just index ->
-                    index
-    in
-        ul []
-            (List.indexedMap
-                (\index scene ->
-                    li
-                        [ tabStyles (selectedScene == index)
-                        , onClick (SelectSceneIndex index)
-                        ]
-                        [ text (filename scene.file) ]
-                )
-                model.scenes
+                Just name ->
+                    name
+
+
+tabsListView : Model -> Html Msg
+tabsListView model =
+    ul [ tabsListStyles ]
+        (List.indexedMap
+            (\index scene ->
+                li
+                    [ tabStyles (index == (selectedSceneIndex model))
+                    , onClick (SelectSceneIndex index)
+                    ]
+                    [ text (filename scene) ]
             )
+            model.scenes
+        )
 
 
 view : Model -> Html Msg
@@ -807,9 +768,9 @@ view model =
 
             Just tree ->
                 [ --   toolbarView model
-                  tabsView model
+                  tabsListView model
                 , treeView model
-                  -- , entityManagerView model
+                , entityManagerView model
                   -- , componentManagerView model
                   -- , sceneView model
                 ]

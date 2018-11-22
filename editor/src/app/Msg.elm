@@ -1,21 +1,20 @@
-module Msg exposing (..)
+module Msg exposing (Msg(..))
 
 import Draggable
-import Entity exposing (..)
-import Component exposing (..)
+import Entity exposing (Entity)
+import Scene exposing (SceneMsg)
 
 
 type Msg
-    = LoadFileIn ( String, String )
+    = DragMsg Entity (Draggable.Msg ())
+    | LoadFileIn ( String, String )
     | LoadFileOut String
-    | QueueComponent Component
-    | RemoveComponent String
+    | OnDragBy Draggable.Delta
     | SaveFileOut
-    | SelectComponent String
-    | SelectEntity Int
     | SelectProjectPathIn String
     | SelectProjectPathOut
     | SelectSceneIndex Int
+    | SceneMsg SceneMsg
 
 
 

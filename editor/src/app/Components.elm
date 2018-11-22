@@ -2,7 +2,8 @@ module Components exposing (availableComponents)
 
 import Dict exposing (Dict)
 import Helpers exposing (..)
-import Component exposing (..)
+import Component exposing (Component, Param, ParamValue(..))
+import Fixture exposing (Fixture)
 
 
 availableComponents : List Component
@@ -49,7 +50,7 @@ availableComponents =
                 ]
       }
     , { id = "fixture"
-      , fixture = Just defaultFixture
+      , fixture = Just Fixture.init
       , params =
             Dict.fromList
                 [ ( "density", Param 0 Nothing (Float 0) )

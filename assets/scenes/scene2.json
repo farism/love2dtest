@@ -1,39 +1,50 @@
 {
-  "id": 1,
-  "name": "level one",
+  "id": 2,
+  "name": "level two",
   "width": 800,
-  "height": 480,
+  "height": 600,
   "entities": {
     "1": {
       "id": 1,
       "label": "player",
-      "dragVertex": {
-        "x": 0,
-        "y": 0
-      },
       "components": {
-        "player": {
-          "id": "player",
-          "params": {
-            "alias": {
-              "order": 0,
-              "value": "foo"
-            }
-          }
-        },
         "position": {
           "id": "position",
           "params": {
             "x": {
               "order": 0,
+              "type": "int",
               "value": 5
             },
             "y": {
               "order": 1,
+              "type": "int",
               "value": 10
             }
           }
         }
+      },
+      "dragVertex": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "2": {
+      "id": 2,
+      "label": "",
+      "components": {},
+      "dragVertex": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "3": {
+      "id": 3,
+      "label": "",
+      "components": {},
+      "dragVertex": {
+        "x": 0,
+        "y": 0
       }
     }
   }

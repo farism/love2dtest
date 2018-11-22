@@ -7,6 +7,7 @@ import path from 'path'
 import dirTree from 'directory-tree'
 import chokidar from 'chokidar'
 
+import './renderer.css'
 import { Elm } from './app/App.elm'
 
 const PATH = resolve(process.cwd(), '..')
