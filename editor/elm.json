@@ -13,6 +13,7 @@
             "elm/html": "1.0.0",
             "elm/json": "1.0.0",
             "elm/svg": "1.0.1",
+            "elm-community/list-extra": "8.1.0",
             "elm-community/undo-redo": "3.0.0",
             "ggb/numeral-elm": "1.4.3",
             "ohanhi/keyboard": "1.0.0",

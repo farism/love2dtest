@@ -2,7 +2,9 @@ module Helpers exposing (..)
 
 import Dict
 import Draggable
-import Types exposing (..)
+import Component exposing (..)
+import Entity exposing (..)
+import Vertex exposing (..)
 
 
 -- constants
@@ -68,11 +70,11 @@ strToInt value =
 strToFloat : String -> Float
 strToFloat value =
     if value == "" then
-        0.0
+        0
     else
         case String.toFloat value of
             Nothing ->
-                0.0
+                0
 
             Just int ->
                 int
@@ -120,8 +122,17 @@ defaultEntity id =
     { id = id
     , label = ""
     , components = Dict.empty
-    , dragpoint = { x = 0, y = 0 }
+    , dragVertex = Vertex 0 0
     , drag = Draggable.init
+    }
+
+
+defaultFixture : Fixture
+defaultFixture =
+    { friction = 1
+    , density = 1
+    , body = defaultBody
+    , shape = defaultShape
     }
 
 

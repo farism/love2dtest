@@ -1,4 +1,4 @@
-module Serializers exposing (decodeTree, decodeLevel, encodeLevel)
+module Serializers exposing (decodeTree, decodeScene, encodeScene)
 
 import Dict exposing (Dict)
 import Json.Encode as JE
@@ -6,7 +6,11 @@ import Json.Decode as JD
 import Json.Decode.Pipeline exposing (hardcoded, optional, required, resolve)
 import Draggable
 import Helpers exposing (..)
-import Types exposing (..)
+import Component exposing (..)
+import Entity exposing (..)
+import Scene exposing (..)
+import Tree exposing (..)
+import Vertex exposing (..)
 
 
 decodeTree : String -> Result JD.Error TreeNode
@@ -19,9 +23,9 @@ decodeTree string =
             Ok tree
 
 
-decodeLevel : String -> Result JD.Error Level
-decodeLevel string =
-    case JD.decodeString levelDecoder string of
+decodeScene : String -> String -> Result JD.Error Scene
+decodeScene file string =
+    case JD.decodeString (levelDecoder file) string of
         Err err ->
             Err (Debug.log "decode level error" err)
 
@@ -29,9 +33,9 @@ decodeLevel string =
             Ok level
 
 
-encodeLevel : Int -> String -> Dict String Entity -> JE.Value
-encodeLevel id name entities =
-    levelEncoder id name entities
+encodeScene : Scene -> JE.Value
+encodeScene scene =
+    levelEncoder scene
 
 
 
@@ -79,12 +83,16 @@ fileDecoder =
         )
 
 
-levelDecoder : JD.Decoder Level
-levelDecoder =
-    JD.succeed Level
+levelDecoder : String -> JD.Decoder Scene
+levelDecoder file =
+    JD.succeed Scene
+        |> hardcoded file
         |> required "id" JD.int
         |> required "name" JD.string
+        |> required "width" JD.int
+        |> required "height" JD.int
         |> required "entities" (JD.dict entityDecoder)
+        |> hardcoded 0
 
 
 entityDecoder : JD.Decoder Entity
@@ -93,7 +101,7 @@ entityDecoder =
         |> required "id" JD.int
         |> required "label" JD.string
         |> required "components" (JD.dict componentDecoder)
-        |> required "dragpoint" vertexDecoder
+        |> required "dragVertex" vertexDecoder
         |> hardcoded Draggable.init
 
 
@@ -101,6 +109,7 @@ componentDecoder : JD.Decoder Component
 componentDecoder =
     JD.succeed Component
         |> required "id" JD.string
+        |> optional "fixture" fixtureDecoder Nothing
         |> required "params" (JD.dict paramDecoder)
 
 
@@ -115,33 +124,48 @@ paramDecoder =
 paramValueDecoder : JD.Decoder ParamValue
 paramValueDecoder =
     JD.oneOf
-        [ JD.string |> JD.andThen (JD.succeed << StringValue)
-        , JD.int |> JD.andThen (JD.succeed << IntValue)
-        , JD.float |> JD.andThen (JD.succeed << FloatValue)
-        , JD.bool |> JD.andThen (JD.succeed << BoolValue)
+        [ JD.string |> JD.andThen (JD.succeed << String)
+        , JD.int |> JD.andThen (JD.succeed << Int)
+        , JD.float |> JD.andThen (JD.succeed << Float)
+        , JD.bool |> JD.andThen (JD.succeed << Bool)
         ]
 
 
+fixtureDecoder : JD.Decoder (Maybe Fixture)
+fixtureDecoder =
+    (JD.map Just)
+        (JD.succeed Fixture
+            |> required "body" bodyDecoder
+            |> required "shape" shapeDecoder
+            |> required "density" JD.float
+            |> required "friction" JD.float
+        )
 
--- bodyDecoder : JD.Decoder Body
--- bodyDecoder =
---     JD.succeed Body
---         |> required "bodyType" bodyTypeDecoder
---         |> required "vertex" vertexDecoder
---         |> required "category" (JD.list JD.int)
---         |> required "mask" (JD.list JD.int)
--- bodyTypeDecoder : JD.Decoder BodyType
--- bodyTypeDecoder =
---     (JD.string
---         |> JD.andThen
---             (\x ->
---                 JD.succeed
---                     (case x of
---                         _ ->
---                             Static
---                     )
---             )
---     )
+
+bodyDecoder : JD.Decoder Body
+bodyDecoder =
+    JD.succeed Body
+        |> required "bodyType" bodyTypeDecoder
+        |> required "category" (JD.list JD.int)
+        |> required "mask" (JD.list JD.int)
+        |> required "x" JD.float
+        |> required "y" JD.float
+
+
+bodyTypeDecoder : JD.Decoder BodyType
+bodyTypeDecoder =
+    (JD.string |> JD.andThen (\bodyType -> JD.succeed (toBodyType bodyType)))
+
+
+shapeDecoder : JD.Decoder Shape
+shapeDecoder =
+    JD.succeed defaultShape
+
+
+
+-- shapeTypeDecoder : JD.Decoder ShapeType
+-- shapeTypeDecoder =
+--     (JD.string |> JD.andThen (\bodyType -> JD.succeed toBodyType bodyType))
 -- ENCODERS
 
 
@@ -160,8 +184,8 @@ vertexEncoder { x, y } =
         ]
 
 
-levelEncoder : Int -> String -> Dict String Entity -> JE.Value
-levelEncoder id name entities =
+levelEncoder : Scene -> JE.Value
+levelEncoder { id, name, entities } =
     JE.object
         [ ( "id", JE.int id )
         , ( "name", JE.string name )
@@ -170,12 +194,12 @@ levelEncoder id name entities =
 
 
 entityEncoder : Entity -> JE.Value
-entityEncoder { id, label, components, dragpoint } =
+entityEncoder { id, label, components, dragVertex } =
     JE.object
         [ ( "id", JE.int id )
         , ( "label", JE.string label )
         , ( "components", dictEncoder componentEncoder components )
-        , ( "dragpoint", vertexEncoder dragpoint )
+        , ( "dragVertex", vertexEncoder dragVertex )
         ]
 
 
@@ -193,13 +217,13 @@ paramEncoder { order, value } =
         [ ( "order", JE.int order )
         , ( "value"
           , (case value of
-                StringValue newValue ->
+                String newValue ->
                     JE.string newValue
 
-                IntValue newValue ->
+                Int newValue ->
                     JE.int newValue
 
-                FloatValue newValue ->
+                Float newValue ->
                     JE.float newValue
 
                 _ ->

@@ -2,7 +2,21 @@ module Styles exposing (..)
 
 import Html.Styled.Attributes exposing (css)
 import Css exposing (..)
-import Types exposing (..)
+import Vertex exposing (..)
+
+
+tabStyles selected =
+    css
+        [ if selected then
+            backgroundColor (hex "ccc")
+          else
+            empty []
+        , cursor pointer
+        , padding2 (px 5) (px 10)
+        , hover
+            [ backgroundColor (hex "#ddd")
+            ]
+        ]
 
 
 listItemStyles =

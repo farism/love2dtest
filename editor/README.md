@@ -2,12 +2,12 @@
 
 ## Background
 
-An entity component system level editor
+An entity component system scene editor
 
 ## Features
 
-- Open level from json
-- Save level to json
+- Open scene from json
+- Save scene to json
 - Define viewport
 - Add entity to stage
 - Add component to entity

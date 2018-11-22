@@ -2,130 +2,149 @@ module Components exposing (availableComponents)
 
 import Dict exposing (Dict)
 import Helpers exposing (..)
-import Types exposing (..)
+import Component exposing (..)
 
 
 availableComponents : List Component
 availableComponents =
     [ { id = "ability"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "aggression"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "x", Param 1 Nothing (IntValue 0) )
-                , ( "y", Param 2 Nothing (IntValue 0) )
-                , ( "width", Param 3 Nothing (IntValue 0) )
-                , ( "height", Param 4 Nothing (IntValue 0) )
-                , ( "duration", Param 5 Nothing (IntValue 0) )
+                [ ( "x", Param 1 Nothing (Int 0) )
+                , ( "y", Param 2 Nothing (Int 0) )
+                , ( "width", Param 3 Nothing (Int 0) )
+                , ( "height", Param 4 Nothing (Int 0) )
+                , ( "duration", Param 5 Nothing (Int 0) )
                 ]
       }
     , { id = "animation"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "attack"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "checkpoint"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "index", Param 0 Nothing (IntValue 0) )
+                [ ( "index", Param 0 Nothing (Int 0) )
                 ]
       }
     , { id = "container"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "damage"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "hitpoints", Param 0 Nothing (IntValue 0) )
+                [ ( "hitpoints", Param 0 Nothing (Int 0) )
                 ]
       }
     , { id = "fixture"
+      , fixture = Just defaultFixture
       , params =
             Dict.fromList
-                [ ( "density", Param 0 Nothing (FloatValue 0) )
-                , ( "friction", Param 1 Nothing (FloatValue 0) )
-                , ( "body", Param 2 Nothing (BodyValue defaultBody) )
-                , ( "shape", Param 3 Nothing (ShapeValue defaultShape) )
+                [ ( "density", Param 0 Nothing (Float 0) )
+                , ( "friction", Param 1 Nothing (Float 0) )
                 ]
       }
     , { id = "health"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "hitpoints", Param 0 Nothing (IntValue 0) )
-                , ( "armor", Param 0 Nothing (IntValue 0) )
+                [ ( "hitpoints", Param 0 Nothing (Int 0) )
+                , ( "armor", Param 0 Nothing (Int 0) )
                 ]
       }
     , { id = "input"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "movement"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "platform"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "fall", Param 0 Nothing (IntValue 0) )
-                , ( "initialX", Param 0 Nothing (IntValue 0) )
-                , ( "initialY", Param 0 Nothing (IntValue 0) )
+                [ ( "fall", Param 0 Nothing (Int 0) )
+                , ( "initialX", Param 0 Nothing (Int 0) )
+                , ( "initialY", Param 0 Nothing (Int 0) )
                 ]
       }
     , { id = "player"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "alias", Param 0 Nothing (StringValue "") )
-                , ( "money", Param 1 Nothing (IntValue 0) )
-                , ( "lives", Param 2 Nothing (IntValue 0) )
-                , ( "documents", Param 3 Nothing (IntValue 0) )
-                , ( "checkpoint", Param 4 Nothing (IntValue 0) )
+                [ ( "alias", Param 0 Nothing (String "") )
+                , ( "money", Param 1 Nothing (Int 0) )
+                , ( "lives", Param 2 Nothing (Int 0) )
+                , ( "documents", Param 3 Nothing (Int 0) )
+                , ( "checkpoint", Param 4 Nothing (Int 0) )
                 ]
       }
     , { id = "position"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "x", Param 0 Nothing (IntValue 0) )
-                , ( "y", Param 0 Nothing (IntValue 0) )
+                [ ( "x", Param 0 Nothing (Int 0) )
+                , ( "y", Param 0 Nothing (Int 0) )
                 ]
       }
     , { id = "projectile"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "snare"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "strength", Param 0 Nothing (FloatValue 0) )
+                [ ( "strength", Param 0 Nothing (Float 0) )
                 ]
       }
     , { id = "sound"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "asset", Param 0 Nothing (StringValue "") )
+                [ ( "asset", Param 0 Nothing (String "") )
                 ]
       }
     , { id = "sprite"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "asset", Param 0 Nothing (StringValue "") )
+                [ ( "asset", Param 0 Nothing (String "") )
                 ]
       }
     , { id = "trigger"
+      , fixture = Nothing
       , params = Dict.fromList []
       }
     , { id = "waypoint"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "speed", Param 0 Nothing (IntValue 0) )
+                [ ( "speed", Param 0 Nothing (Int 0) )
                 ]
       }
     , { id = "wave"
+      , fixture = Nothing
       , params =
             Dict.fromList
-                [ ( "waveType", Param 0 (Just waveTypes) (StringValue (strHead waveTypes)) )
-                , ( "x", Param 1 Nothing (IntValue 0) )
-                , ( "y", Param 2 Nothing (IntValue 0) )
-                , ( "amplitude", Param 3 Nothing (FloatValue 0) )
-                , ( "frequency", Param 4 Nothing (FloatValue 0) )
+                [ ( "waveType", Param 0 (Just waveTypes) (String (strHead waveTypes)) )
+                , ( "x", Param 1 Nothing (Int 0) )
+                , ( "y", Param 2 Nothing (Int 0) )
+                , ( "amplitude", Param 3 Nothing (Float 0) )
+                , ( "frequency", Param 4 Nothing (Float 0) )
                 ]
       }
     ]

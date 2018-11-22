@@ -1,11 +1,13 @@
 {
   "id": 1,
   "name": "level one",
+  "width": 800,
+  "height": 480,
   "entities": {
     "1": {
       "id": 1,
       "label": "player",
-      "dragpoint": {
+      "dragVertex": {
         "x": 0,
         "y": 0
       },
