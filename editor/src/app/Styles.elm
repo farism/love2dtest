@@ -71,7 +71,7 @@ tabsListStyles =
         , height (px 40)
         , left (px 175)
         , position absolute
-        , right (px 150)
+        , right (px 400)
         , top zero
         ]
 
@@ -171,11 +171,13 @@ selectedEntityStyles =
 
 componentManagerStyles =
     css
-        [ displayFlex
+        [ panelStyles
+        , borderRight3 (px 1) solid (rgb 0 0 0)
+        , displayFlex
         , flexDirection column
         , height (pct 100)
         , position absolute
-        , right (px 151)
+        , right (px 150)
         , top zero
         , width (px 250)
         ]
@@ -193,7 +195,7 @@ availableComponentsListStyles =
     css
         [ borderTop3 (px 1) solid (rgb 0 0 0)
         , flexGrow (num 1)
-        , overflowY scroll
+        , overflowY auto
         ]
 
 
@@ -210,7 +212,7 @@ selectedComponentsListStyles =
     css
         [ borderTop3 (px 1) solid (rgb 0 0 0)
         , flexGrow (num 1)
-        , overflowY scroll
+        , overflowY auto
         ]
 
 

@@ -2,13 +2,16 @@ module Scene
     exposing
         ( Scene
         , SceneMsg(..)
-        , init
-        , update
-        , selectedEntityId
-        , selectedEntity
-        , lastId
         , decode
         , encode
+        , init
+        , lastId
+        , queuedComponentId
+        , selectedComponentId
+        , selectedComponents
+        , selectedEntityId
+        , selectedEntity
+        , update
         )
 
 import Dict exposing (Dict)
@@ -39,7 +42,7 @@ type alias Scene =
 type SceneMsg
     = AddEntity
     | RemoveEntity Int
-    | QueueComponent String
+    | QueueComponent Component
     | SelectComponent String
     | SelectEntity Int
     | SetHeight String
@@ -115,19 +118,14 @@ lastId entities =
             id
 
 
-selectedId : (Scene -> Maybe a) -> (a -> a) -> a -> Scene -> a
-selectedId field transform default scene =
-    case field scene of
-        Nothing ->
-            default
-
-        Just value ->
-            transform value
-
-
 selectedEntityId : Scene -> Int
 selectedEntityId scene =
-    selectedId .selectedEntity identity 0 scene
+    case scene.selectedEntity of
+        Nothing ->
+            0
+
+        Just id ->
+            id
 
 
 selectedEntity : Scene -> Maybe Entity
@@ -135,26 +133,39 @@ selectedEntity scene =
     Dict.get (selectedEntityId scene) scene.entities
 
 
+queuedComponentId : Scene -> String
+queuedComponentId scene =
+    case scene.queuedComponent of
+        Nothing ->
+            ""
 
--- queuedComponentId : Scene -> String
--- queuedComponentId scene =
---     selectedId .queuedComponent .id "" scene
--- selectedComponents : Model -> Dict String Component
--- selectedComponents model =
---     case model.selectedEntity of
---         Nothing ->
---             Dict.empty
---         Just id ->
---             case Dict.get (String.fromInt id) model.entities of
---                 Nothing ->
---                     Dict.empty
---                 Just entity ->
---                     entity.components
+        Just c ->
+            c.id
 
 
 selectedComponentId : Scene -> String
 selectedComponentId scene =
-    selectedId .selectedComponent identity "" scene
+    case scene.selectedComponent of
+        Nothing ->
+            ""
+
+        Just id ->
+            id
+
+
+selectedComponents : Scene -> Dict String Component
+selectedComponents scene =
+    case selectedEntity scene of
+        Nothing ->
+            Dict.empty
+
+        Just entity ->
+            case Dict.get entity.id scene.entities of
+                Nothing ->
+                    Dict.empty
+
+                Just e ->
+                    e.components
 
 
 decode : String -> String -> Result JD.Error Scene

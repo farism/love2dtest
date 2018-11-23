@@ -549,21 +549,32 @@ entityManagerView model =
         )
 
 
+addComponentButton : Maybe Component -> Html Msg
+addComponentButton queued =
+    case queued of
+        Nothing ->
+            button [ disabled True ] [ text "add" ]
 
--- addComponentButton : Maybe Component -> Html Msg
--- addComponentButton queued =
---     case queued of
---         Nothing ->
---             button [ disabled True ] [ text "add" ]
---         Just component ->
---             button [ onClick (AddComponent component) ] [ text "add" ]
--- removeComponentButton : Maybe String -> Html Msg
--- removeComponentButton selected =
---     case selected of
---         Nothing ->
---             button [ disabled True ] [ text "remove" ]
---         Just id ->
---             button [ onClick (RemoveComponent id) ] [ text "remove" ]
+        Just component ->
+            div [] []
+
+
+
+-- button [ onClick (AddComponent component) ] [ text "add" ]
+
+
+removeComponentButton : Maybe String -> Html Msg
+removeComponentButton selected =
+    case selected of
+        Nothing ->
+            button [ disabled True ] [ text "remove" ]
+
+        Just id ->
+            div [] []
+
+
+
+-- button [ onClick (RemoveComponent id) ] [ text "remove" ]
 -- selectedComponentView : Model -> Html Msg
 -- selectedComponentView model =
 --     div []
@@ -583,72 +594,91 @@ entityManagerView model =
 --                             , paramsView params
 --                             ]
 --         )
--- componentsListView : (Component -> Msg) -> String -> List Component -> Html Msg
--- componentsListView msg selected components =
---     div []
---         [ ul []
---             (components
---                 |> List.sortBy .id
---                 |> List.map
---                     (\component ->
---                         li
---                             [ componentListItemStyles (selected == component.id)
---                             , onClick (msg component)
---                             ]
---                             [ text component.id ]
---                     )
---             )
---         ]
--- availableComponentsListView : Model -> Html Msg
--- availableComponentsListView model =
---     let
---         keys =
---             Dict.keys (selectedComponents model)
---         available =
---             List.filter
---                 (\component -> List.member component.id keys == False)
---                 availableComponents
---         queuedId =
---             queuedComponentId model
---     in
---         div [ availableComponentsStyles ]
---             [ div [ availableComponentsListStyles ]
---                 [ componentsListView QueueComponent queuedId available
---                 ]
---             ]
--- selectedComponentsListView : Model -> Html Msg
--- selectedComponentsListView model =
---     let
---         selected =
---             Dict.values (selectedComponents model)
---         selectedId =
---             selectedComponentId model
---     in
---         div [ selectedComponentsStyles ]
---             [ div []
---                 [ addComponentButton model.queuedComponent
---                 , removeComponentButton model.selectedComponent
---                 ]
---             , div [ selectedComponentsListStyles ]
---                 [ componentsListView SelectComponent selectedId selected
---                 ]
---             , div [ selectedComponentStyles ]
---                 [ selectedComponentView model
---                 ]
---             ]
--- componentManagerView : Model -> Html Msg
--- componentManagerView model =
---     let
---         children =
---             case model.selectedEntity of
---                 Nothing ->
---                     [ text "Select an entity" ]
---                 Just _ ->
---                     [ availableComponentsListView model
---                     , selectedComponentsListView model
---                     ]
---     in
---         div [ componentManagerStyles ] children
+
+
+componentsListView : (Component -> SceneMsg) -> String -> List Component -> Html Msg
+componentsListView msg selected components =
+    div []
+        [ ul []
+            (components
+                |> List.sortBy .id
+                |> List.map
+                    (\component ->
+                        li
+                            [ componentListItemStyles (selected == component.id)
+                            , onClick (SceneMsg (msg component))
+                            ]
+                            [ text component.id ]
+                    )
+            )
+        ]
+
+
+availableComponentsListView : Scene -> Html Msg
+availableComponentsListView scene =
+    let
+        keys =
+            Dict.keys (Scene.selectedComponents scene)
+
+        available =
+            List.filter
+                (\component -> List.member component.id keys == False)
+                availableComponents
+
+        queuedId =
+            Scene.queuedComponentId scene
+    in
+        div [ availableComponentsStyles ]
+            [ div [ availableComponentsListStyles ]
+                [ componentsListView QueueComponent queuedId available
+                ]
+            ]
+
+
+selectedComponentsListView : Scene -> Html Msg
+selectedComponentsListView scene =
+    let
+        selected =
+            Dict.values (Scene.selectedComponents scene)
+
+        selectedId =
+            Scene.selectedComponentId scene
+    in
+        div [ selectedComponentsStyles ]
+            [ div []
+                [ addComponentButton scene.queuedComponent
+                , removeComponentButton scene.selectedComponent
+                ]
+            , div [ selectedComponentsListStyles ]
+                [-- componentsListView SelectComponent selectedId selected
+                ]
+            , div [ selectedComponentStyles ]
+                [-- selectedComponentView scene
+                ]
+            ]
+
+
+componentManagerView : Model -> Html Msg
+componentManagerView model =
+    div [ componentManagerStyles ]
+        (case selectedScene model of
+            Nothing ->
+                []
+
+            Just scene ->
+                (case scene.selectedEntity of
+                    Nothing ->
+                        [ text "Select an entity" ]
+
+                    Just _ ->
+                        [ availableComponentsListView scene
+                        , selectedComponentsListView scene
+                        ]
+                )
+        )
+
+
+
 -- parseErrorView : Model -> String
 -- parseErrorView model =
 --     case model.sceneParseError of
@@ -771,7 +801,7 @@ view model =
                   tabsListView model
                 , treeView model
                 , entityManagerView model
-                  -- , componentManagerView model
+                , componentManagerView model
                   -- , sceneView model
                 ]
         )
