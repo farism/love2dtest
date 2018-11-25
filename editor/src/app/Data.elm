@@ -1,9 +1,14 @@
-module Components exposing (availableComponents)
+module Data exposing (availableComponents)
 
 import Dict exposing (Dict)
-import Helpers exposing (..)
 import Component exposing (Component, Param, ParamValue(..))
 import Fixture exposing (Fixture)
+import Helpers exposing (strHead)
+
+
+waveTypes : List String
+waveTypes =
+    [ "circular", "vertical", "horizontal" ]
 
 
 availableComponents : List Component

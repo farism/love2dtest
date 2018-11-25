@@ -1,4 +1,4 @@
-module Entity exposing (..)
+module Entity exposing (Entity, decoder, init, encoder)
 
 import Dict exposing (Dict)
 import Draggable

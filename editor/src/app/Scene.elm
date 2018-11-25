@@ -8,6 +8,7 @@ module Scene
         , lastId
         , queuedComponentId
         , selectedComponentId
+        , selectedComponent
         , selectedComponents
         , selectedEntityId
         , selectedEntity
@@ -40,9 +41,11 @@ type alias Scene =
 
 
 type SceneMsg
-    = AddEntity
-    | RemoveEntity Int
+    = AddComponent Component
+    | AddEntity
     | QueueComponent Component
+    | RemoveComponent String
+    | RemoveEntity Int
     | SelectComponent String
     | SelectEntity Int
     | SetHeight String
@@ -69,6 +72,27 @@ init =
 update : SceneMsg -> Scene -> ( Scene, Cmd SceneMsg )
 update msg scene =
     case msg of
+        AddComponent component ->
+            case selectedEntity scene of
+                Nothing ->
+                    ( scene, Cmd.none )
+
+                Just e ->
+                    let
+                        entity =
+                            { e | components = Dict.insert component.id component e.components }
+
+                        entities =
+                            Dict.insert entity.id entity scene.entities
+                    in
+                        ( { scene
+                            | entities = entities
+                            , selectedComponent = Just component.id
+                            , queuedComponent = Nothing
+                          }
+                        , Cmd.none
+                        )
+
         AddEntity ->
             let
                 nextId =
@@ -80,7 +104,33 @@ update msg scene =
                 entities =
                     Dict.insert entity.id entity scene.entities
             in
-                ( { scene | nextId = nextId, entities = entities, selectedEntity = Just entity.id }, Cmd.none )
+                ( { scene
+                    | nextId = nextId
+                    , entities = entities
+                    , selectedEntity = Just entity.id
+                  }
+                , Cmd.none
+                )
+
+        RemoveComponent id ->
+            case selectedEntity scene of
+                Nothing ->
+                    ( scene, Cmd.none )
+
+                Just e ->
+                    let
+                        entity =
+                            { e | components = Dict.remove id e.components }
+
+                        entities =
+                            Dict.insert entity.id entity scene.entities
+                    in
+                        ( { scene
+                            | entities = entities
+                            , selectedComponent = Nothing
+                          }
+                        , Cmd.none
+                        )
 
         RemoveEntity id ->
             let
@@ -89,8 +139,14 @@ update msg scene =
             in
                 ( { scene | entities = entities, selectedEntity = Nothing }, Cmd.none )
 
+        QueueComponent component ->
+            ( { scene | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
+
         SelectEntity id ->
             ( { scene | selectedEntity = Just id }, Cmd.none )
+
+        SelectComponent id ->
+            ( { scene | queuedComponent = Nothing, selectedComponent = Just id }, Cmd.none )
 
         SetHeight height ->
             ( { scene | height = strToInt scene.height height }, Cmd.none )
@@ -102,10 +158,7 @@ update msg scene =
             ( { scene | name = name }, Cmd.none )
 
         SetWidth width ->
-            ( { scene | height = strToInt scene.width width }, Cmd.none )
-
-        _ ->
-            ( scene, Cmd.none )
+            ( { scene | width = strToInt scene.width width }, Cmd.none )
 
 
 lastId : List Entity -> Int
@@ -151,6 +204,16 @@ selectedComponentId scene =
 
         Just id ->
             id
+
+
+selectedComponent : Scene -> Maybe Component
+selectedComponent scene =
+    case selectedEntity scene of
+        Nothing ->
+            Nothing
+
+        Just entity ->
+            Dict.get (selectedComponentId scene) entity.components
 
 
 selectedComponents : Scene -> Dict String Component

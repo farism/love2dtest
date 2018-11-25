@@ -1,5 +1,6 @@
 import 'normalize.css'
 import 'reset-css'
+import '@fortawesome/fontawesome-free/css/svg-with-js.min.css'
 import { resolve } from 'path'
 import { remote } from 'electron'
 import fs from 'fs'
@@ -7,7 +8,6 @@ import path from 'path'
 import dirTree from 'directory-tree'
 import chokidar from 'chokidar'
 
-import './renderer.css'
 import { Elm } from './app/App.elm'
 
 const PATH = resolve(process.cwd(), '..')

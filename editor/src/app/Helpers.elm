@@ -1,12 +1,10 @@
 module Helpers exposing (..)
 
 import Dict exposing (Dict)
+import Json.Decode as JD
 import Json.Encode as JE
-
-
-waveTypes : List String
-waveTypes =
-    [ "circular", "vertical", "horizontal" ]
+import Html.Styled
+import Html.Styled.Events exposing (keyCode, on, targetValue)
 
 
 is : a -> a -> Bool
@@ -55,3 +53,27 @@ dictEncoder encoder dict =
     Dict.toList dict
         |> List.map (\( k, v ) -> ( Debug.toString k, encoder v ))
         |> JE.object
+
+
+onBlur : (String -> msg) -> Html.Styled.Attribute msg
+onBlur handler =
+    on "blur" (JD.map handler targetValue)
+
+
+onEnter : (String -> msg) -> Html.Styled.Attribute msg
+onEnter msg =
+    let
+        isEnter code =
+            if code == 13 then
+                JD.succeed ""
+            else
+                JD.fail ""
+
+        decodeEnter =
+            JD.andThen isEnter keyCode
+    in
+        on "keydown" <|
+            JD.map2
+                (\_ value -> msg value)
+                decodeEnter
+                targetValue

@@ -1,4 +1,4 @@
-module Tree exposing (TreeNode(..), decode)
+module Tree exposing (TreeNode(..), hasJson, decode)
 
 import Json.Decode as JD
 import Json.Decode.Pipeline as JDE
@@ -31,6 +31,16 @@ decode string =
 
         Ok tree ->
             Ok tree
+
+
+hasJson : TreeNode -> Bool
+hasJson node =
+    case node of
+        Directory directory ->
+            List.any hasJson directory.children
+
+        File file ->
+            file.extension == ".json"
 
 
 treeDecoder : String -> JD.Decoder TreeNode

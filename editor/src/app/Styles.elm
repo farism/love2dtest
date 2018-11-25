@@ -2,34 +2,118 @@ module Styles exposing (..)
 
 import Html.Styled.Attributes exposing (css)
 import Css exposing (..)
+import Css.Global exposing (..)
 import Vertex exposing (..)
 
 
-grey1 =
-    hex "#1e1e1e"
+colors =
+    { grey0 = rgb 20 20 20
+    , grey1 = rgb 30 30 30
+    , grey2 = rgb 40 40 40
+    , grey3 = rgb 50 50 50
+    , grey4 = rgb 80 80 80
+    , grey5 = rgb 100 100 100
+    , grey6 = rgb 120 120 120
+    , grey7 = rgb 140 140 140
+    , grey8 = rgb 160 160 160
+    , grey9 = rgb 180 180 180
+    }
 
 
-grey2 =
-    hex "#252525"
+globalStyles =
+    global
+        [ each [ html, body ]
+            [ backgroundColor colors.grey1
+            , important (fontFamilies [ "Roboto", "sans-serif" ])
+            , height (pct 100)
+            , margin zero
+            , minHeight (pct 100)
+            , overflow hidden
+            , padding zero
+            ]
+        , everything
+            [ boxSizing borderBox
+            , outline none
+            ]
+        , typeSelector "::-webkit-scrollbar"
+            [ backgroundColor colors.grey3
+            , borderLeft3 (px 1) solid colors.grey1
+            , width (px 11)
+            ]
+        , typeSelector "::-webkit-scrollbar-thumb"
+            [ backgroundClip contentBox
+            , backgroundColor colors.grey5
+            , border3 (px 2) solid transparent
+            , borderLeftWidth (px 3)
+            ]
+        ]
 
 
-grey3 =
-    hex "#2d2d2d"
+buttonStyles =
+    batch
+        [ alignItems center
+        , backgroundColor colors.grey2
+        , border zero
+        , color colors.grey9
+        , cursor pointer
+        , disabled
+            [ cursor default
+            , opacity (num 0.3)
+            , hover
+                [ backgroundColor transparent
+                ]
+            ]
+        , display inlineFlex
+        , height (px 36)
+        , justifyContent center
+        , lineHeight (px 36)
+        , hover
+            [ backgroundColor colors.grey3 ]
+        , padding2 zero (px 15)
+        ]
 
 
-grey4 =
-    hex "#373737"
+hrStyles =
+    batch
+        [ borderTop3 (px 1) solid colors.grey1
+        ]
 
 
-grey10 =
-    hex "#ccc"
+inputStyles =
+    batch
+        [ backgroundColor colors.grey2
+        , border3 (px 1) solid colors.grey4
+        , color colors.grey9
+        , fontSize (px 13)
+        , focus
+            [ boxShadow4 (px 0) (px 0) (px 2) (hex "#e6faff")
+            , border3 (px 1) solid (hex "#66a3ff")
+            ]
+        , outline none
+        , height (px 24)
+        , lineHeight (px 24)
+        , padding2 zero (px 10)
+        ]
+
+
+inputNarrowStyles =
+    batch
+        [ width (px 60)
+        ]
+
+
+labelStyles =
+    batch
+        [ display inlineBlock
+        , padding (px 15)
+        ]
 
 
 panelStyles =
     batch
         [ position absolute
-        , backgroundColor grey2
-        , color grey10
+        , backgroundColor colors.grey2
+        , color colors.grey9
         ]
 
 
@@ -38,10 +122,10 @@ listItemStyles selected =
         [ cursor pointer
         , padding2 (px 5) (px 10)
         , if selected then
-            backgroundColor grey3
+            backgroundColor colors.grey3
           else
             hover
-                [ backgroundColor grey3
+                [ backgroundColor colors.grey3
                 ]
         ]
 
@@ -67,8 +151,8 @@ componentListItemStyles selected =
 tabsListStyles =
     css
         [ panelStyles
-        , backgroundColor grey3
-        , height (px 40)
+        , backgroundColor colors.grey3
+        , height (px 36)
         , left (px 175)
         , position absolute
         , right (px 400)
@@ -84,7 +168,7 @@ tabStyles selected =
         , lineHeight (px 40)
         , padding2 zero (px 15)
         , if selected then
-            backgroundColor grey1
+            backgroundColor colors.grey1
           else
             empty []
         ]
@@ -102,12 +186,23 @@ draggableStyles point =
 sceneStyles =
     css
         [ bottom zero
-        , left (px 170)
-        , padding (px 10)
+        , left (px 175)
         , position absolute
-        , right (px 402)
-        , top (px 61)
-        , backgroundColor (hex "#ccc")
+        , right (px 400)
+        , top (px 40)
+        ]
+
+
+sceneParamsStyles =
+    css
+        [ alignItems center
+        , backgroundColor colors.grey1
+        , color colors.grey9
+        , displayFlex
+        , height (px 40)
+        , left zero
+        , position absolute
+        , right zero
         ]
 
 
@@ -156,23 +251,28 @@ entityManagerStyles =
 
 entityListStyles =
     css
-        [ borderTop3 (px 1) solid (rgb 0 0 0)
-        , flexGrow (num 1)
+        [ flexGrow (num 1)
         , overflowY auto
         ]
 
 
 selectedEntityStyles =
     css
-        [ borderTop3 (px 1) solid (rgb 0 0 0)
-        , flexShrink (num 0)
+        [ flexShrink (num 0)
+        , padding (px 10)
+        ]
+
+
+entityInputStyles =
+    css
+        [ width (pct 100)
         ]
 
 
 componentManagerStyles =
     css
         [ panelStyles
-        , borderRight3 (px 1) solid (rgb 0 0 0)
+        , borderRight3 (px 1) solid colors.grey1
         , displayFlex
         , flexDirection column
         , height (pct 100)
@@ -193,33 +293,30 @@ availableComponentsStyles =
 
 availableComponentsListStyles =
     css
-        [ borderTop3 (px 1) solid (rgb 0 0 0)
-        , flexGrow (num 1)
+        [ flexGrow (num 1)
         , overflowY auto
         ]
 
 
 selectedComponentsStyles =
     css
-        [ borderTop3 (px 1) solid (rgb 0 0 0)
-        , displayFlex
+        [ displayFlex
         , flexDirection column
-        , flex (num 1)
+        , flex (num 2)
         ]
 
 
 selectedComponentsListStyles =
     css
-        [ borderTop3 (px 1) solid (rgb 0 0 0)
-        , flexGrow (num 1)
+        [ flexGrow (num 1)
         , overflowY auto
         ]
 
 
 selectedComponentStyles =
     css
-        [ borderTop3 (px 1) solid (rgb 0 0 0)
-        , flexShrink (num 0)
+        [ flexShrink (num 0)
+        , padding (px 10)
         ]
 
 
