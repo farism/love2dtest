@@ -1,7 +1,6 @@
 module Tree exposing (TreeNode(..), hasJson, decode)
 
 import Json.Decode as JD
-import Json.Decode.Pipeline as JDE
 
 
 type alias DirectoryFields =

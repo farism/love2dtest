@@ -17,6 +17,7 @@ colors =
     , grey7 = rgb 140 140 140
     , grey8 = rgb 160 160 160
     , grey9 = rgb 180 180 180
+    , white = rgb 255 255 255
     }
 
 
@@ -117,6 +118,13 @@ panelStyles =
         ]
 
 
+panelTitleStyles =
+    css
+        [ padding (px 10)
+        , fontWeight bold
+        ]
+
+
 listItemStyles selected =
     batch
         [ cursor pointer
@@ -157,20 +165,44 @@ tabsListStyles =
         , position absolute
         , right (px 400)
         , top zero
+        , property "user-select" "none"
         ]
 
 
 tabStyles selected =
     css
-        [ cursor pointer
-        , display inlineBlock
-        , height (px 40)
-        , lineHeight (px 40)
-        , padding2 zero (px 15)
+        [ alignItems center
         , if selected then
-            backgroundColor colors.grey1
+            batch
+                [ backgroundColor colors.grey1
+                , color colors.white
+                , descendants
+                    [ typeSelector "span"
+                        [ opacity (num 1)
+                        ]
+                    ]
+                ]
           else
             empty []
+        , cursor pointer
+        , descendants
+            [ typeSelector "span"
+                [ display inlineFlex
+                , marginLeft (px 8)
+                , opacity (num 0)
+                ]
+            ]
+        , display inlineFlex
+        , height (px 36)
+        , hover
+            [ descendants
+                [ typeSelector "span"
+                    [ opacity (num 1)
+                    ]
+                ]
+            ]
+        , lineHeight (px 36)
+        , padding2 zero (px 15)
         ]
 
 

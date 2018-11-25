@@ -7,6 +7,7 @@ import Dict exposing (Dict)
 import Draggable exposing (Delta)
 import Draggable.Events exposing (onDragBy)
 import FontAwesome.Solid as Icon
+import FontAwesome.Attributes as Icon
 import Html.Styled.Events exposing (onClick, onInput)
 import Html.Styled.Attributes exposing (css, disabled, placeholder, selected, title, value)
 import Html.Styled exposing (Attribute, Html, div, fromUnstyled, label, li, option, span, text, ul, toUnstyled)
@@ -43,7 +44,8 @@ type alias Flags =
 
 
 type Msg
-    = DragMsg Entity (Draggable.Msg ())
+    = CloseScene Int
+    | DragMsg Entity (Draggable.Msg ())
     | LoadFileIn ( String, String )
     | LoadFileOut String
     | OnDragBy Draggable.Delta
@@ -115,6 +117,13 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        CloseScene index ->
+            let
+                scenes =
+                    List.Extra.removeAt index model.scenes
+            in
+                ( ({ model | scenes = scenes }), Cmd.none )
+
         DragMsg entity dragMsg ->
             ( model, Cmd.none )
 
@@ -492,25 +501,29 @@ removeEntityButton selected =
 entityManagerView : Model -> Html Msg
 entityManagerView model =
     div [ entityManagerStyles ]
-        (case selectedScene model of
-            Nothing ->
-                [ div [] [ text "Select a scene" ] ]
+        [ div [ panelTitleStyles ] [ text "Entities" ]
+        , hr
+        , div []
+            (case selectedScene model of
+                Nothing ->
+                    [ div [] [ text "Select a scene" ] ]
 
-            Just scene ->
-                [ div []
-                    [ addEntityButton
-                    , removeEntityButton scene.selectedEntity
+                Just scene ->
+                    [ div []
+                        [ addEntityButton
+                        , removeEntityButton scene.selectedEntity
+                        , hr
+                        ]
+                    , div [ selectedEntityStyles ]
+                        [ selectedEntityView scene
+                        ]
                     , hr
+                    , div [ entityListStyles ]
+                        [ entityListView scene
+                        ]
                     ]
-                , div [ selectedEntityStyles ]
-                    [ selectedEntityView scene
-                    ]
-                , hr
-                , div [ entityListStyles ]
-                    [ entityListView scene
-                    ]
-                ]
-        )
+            )
+        ]
 
 
 addComponentButton : Maybe Component -> Html Msg
@@ -630,28 +643,32 @@ selectedComponentsListView scene =
 componentManagerView : Model -> Html Msg
 componentManagerView model =
     div [ componentManagerStyles ]
-        (case selectedScene model of
-            Nothing ->
-                []
-
-            Just scene ->
-                (case scene.selectedEntity of
+        ([ div [ panelTitleStyles ] [ text "Components" ]
+         , hr
+         ]
+            ++ (case selectedScene model of
                     Nothing ->
-                        [ div [ selectedEntityStyles ] [ text "Select an entity" ]
-                        , hr
-                        ]
+                        []
 
-                    Just _ ->
-                        [ availableComponentsListView scene
-                        , div []
-                            [ hr
-                            , addComponentButton scene.queuedComponent
-                            , removeComponentButton scene.selectedComponent
-                            , hr
-                            ]
-                        , selectedComponentsListView scene
-                        ]
-                )
+                    Just scene ->
+                        (case scene.selectedEntity of
+                            Nothing ->
+                                [ div [ selectedEntityStyles ] [ text "Select an entity" ]
+                                , hr
+                                ]
+
+                            Just _ ->
+                                [ availableComponentsListView scene
+                                , div []
+                                    [ hr
+                                    , addComponentButton scene.queuedComponent
+                                    , removeComponentButton scene.selectedComponent
+                                    , hr
+                                    ]
+                                , selectedComponentsListView scene
+                                ]
+                        )
+               )
         )
 
 
@@ -790,11 +807,21 @@ tabsListView model =
     ul [ tabsListStyles ]
         (List.indexedMap
             (\index scene ->
-                li
-                    [ tabStyles (index == (selectedSceneIndex model))
-                    , onClick (SelectSceneIndex index)
-                    ]
-                    [ text (filename scene) ]
+                let
+                    selected =
+                        index == (selectedSceneIndex model)
+                in
+                    li
+                        [ tabStyles selected
+                        , onClick (SelectSceneIndex index)
+                        ]
+                        [ text (filename scene)
+                        , span
+                            [ onClick (CloseScene index)
+                            ]
+                            [ fromUnstyled (Icon.times [ Icon.xs ])
+                            ]
+                        ]
             )
             model.scenes
         )
