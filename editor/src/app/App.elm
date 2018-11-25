@@ -135,7 +135,7 @@ update msg model =
                 Ok scene ->
                     let
                         nextId =
-                            Scene.lastId (Dict.values scene.entities)
+                            Scene.lastId (Dict.values scene.entities) + 1
 
                         newScene =
                             { scene | file = Just file, selectedEntity = Just nextId, nextId = nextId }
@@ -287,6 +287,13 @@ sortEntities list =
         list
 
 
+sortParams : List ( String, Param ) -> List ( String, Param )
+sortParams list =
+    List.sortWith
+        (\( _, a ) ( _, b ) -> compare a.order b.order)
+        list
+
+
 
 -- updateComponents : (Dict String Component -> Dict String Component) -> Model -> Model
 -- updateComponents fn model =
@@ -306,11 +313,6 @@ sortEntities list =
 --             )
 --     in
 --         { model | entities = entities }
--- sortParamList : List ( String, Param ) -> List ( String, Param )
--- sortParamList list =
---     List.sortWith
---         (\( _, a ) ( _, b ) -> compare a.order b.order)
---         list
 -- formatParam : Param -> String
 -- formatParam param =
 --     case param.value of
@@ -369,7 +371,7 @@ sortEntities list =
 
 componentParamsInputView : String -> Param -> String -> Html Msg
 componentParamsInputView key param value_ =
-    label [ componentParamsLabelStyles ]
+    label [ componentParamInputStyles ]
         [ span [ css [ labelStyles ] ] [ text key ]
         , input
             [ css [ inputNarrowStyles ]
@@ -409,13 +411,12 @@ paramsView params =
     ul []
         (params
             |> Dict.toList
-            -- |> sortParamList
-            |>
-                List.map
-                    (\( key, param ) ->
-                        li []
-                            [ paramFieldView key param ]
-                    )
+            |> sortParams
+            |> List.map
+                (\( key, param ) ->
+                    li []
+                        [ paramFieldView key param ]
+                )
         )
 
 
@@ -468,6 +469,18 @@ paramsView params =
 --         )
 
 
+entityLabel : Entity -> String
+entityLabel entity =
+    let
+        label =
+            if entity.label == "" then
+                ""
+            else
+                " - " ++ entity.label
+    in
+        String.fromInt entity.id ++ label
+
+
 entityListView : Scene -> Html Msg
 entityListView scene =
     let
@@ -476,12 +489,12 @@ entityListView scene =
     in
         ul []
             (List.map
-                (\{ id } ->
+                (\entity ->
                     li
-                        [ entityListItemStyles (selectedId == id)
-                        , onClick (SceneMsg (SelectEntity id))
+                        [ entityListItemStyles (selectedId == entity.id)
+                        , onClick (SceneMsg (SelectEntity entity.id))
                         ]
-                        [ text <| String.fromInt id ]
+                        [ text (entityLabel entity) ]
                 )
                 (scene.entities |> Dict.values |> sortEntities)
             )
@@ -493,8 +506,15 @@ selectedEntityView scene =
         Nothing ->
             text "Select an entity"
 
-        Just e ->
-            input [ entityInputStyles, value e.label, placeholder "Label" ] []
+        Just entity ->
+            input
+                [ entityInputStyles
+                , value entity.label
+                , placeholder "Label"
+                , onBlur (SceneMsg << SetLabel entity)
+                , onEnter (SceneMsg << SetLabel entity)
+                ]
+                []
 
 
 addEntityButton : Html Msg

@@ -48,6 +48,7 @@ type SceneMsg
     | RemoveEntity Int
     | SelectComponent String
     | SelectEntity Int
+    | SetLabel Entity String
     | SetHeight String
     | SetId String
     | SetName String
@@ -74,39 +75,29 @@ update : SceneMsg -> Scene -> ( Scene, Cmd SceneMsg )
 update msg scene =
     case msg of
         AddComponent component ->
-            case selectedEntity scene of
-                Nothing ->
-                    ( scene, Cmd.none )
-
-                Just e ->
-                    let
-                        entity =
-                            { e | components = Dict.insert component.id component e.components }
-
-                        entities =
-                            Dict.insert entity.id entity scene.entities
-                    in
-                        ( { scene
-                            | entities = entities
-                            , selectedComponent = Just component.id
-                            , queuedComponent = Nothing
-                          }
-                        , Cmd.none
-                        )
+            let
+                newScene =
+                    updateComponents
+                        (\components -> Dict.insert component.id component components)
+                        scene
+            in
+                ( { newScene
+                    | selectedComponent = Just component.id
+                    , queuedComponent = Nothing
+                  }
+                , Cmd.none
+                )
 
         AddEntity ->
             let
-                nextId =
-                    scene.nextId + 1
-
                 entity =
-                    Entity nextId "" Dict.empty { x = 0, y = 0 } Draggable.init
+                    Entity scene.nextId "" Dict.empty { x = 0, y = 0 } Draggable.init
 
                 entities =
                     Dict.insert entity.id entity scene.entities
             in
                 ( { scene
-                    | nextId = nextId
+                    | nextId = scene.nextId + 1
                     , entities = entities
                     , selectedEntity = Just entity.id
                   }
@@ -114,24 +105,17 @@ update msg scene =
                 )
 
         RemoveComponent id ->
-            case selectedEntity scene of
-                Nothing ->
-                    ( scene, Cmd.none )
-
-                Just e ->
-                    let
-                        entity =
-                            { e | components = Dict.remove id e.components }
-
-                        entities =
-                            Dict.insert entity.id entity scene.entities
-                    in
-                        ( { scene
-                            | entities = entities
-                            , selectedComponent = Nothing
-                          }
-                        , Cmd.none
-                        )
+            let
+                newScene =
+                    updateComponents
+                        (\components -> Dict.remove id components)
+                        scene
+            in
+                ( { newScene
+                    | selectedComponent = Nothing
+                  }
+                , Cmd.none
+                )
 
         RemoveEntity id ->
             let
@@ -149,6 +133,16 @@ update msg scene =
         SelectComponent id ->
             ( { scene | queuedComponent = Nothing, selectedComponent = Just id }, Cmd.none )
 
+        SetLabel entity label ->
+            let
+                newEntity =
+                    { entity | label = label }
+
+                entities =
+                    Dict.insert newEntity.id newEntity scene.entities
+            in
+                ( { scene | entities = entities }, Cmd.none )
+
         SetHeight height ->
             ( { scene | height = strToInt scene.height height }, Cmd.none )
 
@@ -162,7 +156,19 @@ update msg scene =
             ( { scene | width = strToInt scene.width width }, Cmd.none )
 
         UpdateParam key param value ->
-            ( scene, Cmd.none )
+            let
+                newScene =
+                    updateComponent
+                        (\component ->
+                            let
+                                newParam =
+                                    updateParam value param
+                            in
+                                { component | params = Dict.insert key newParam component.params }
+                        )
+                        scene
+            in
+                ( newScene, Cmd.none )
 
 
 lastId : List Entity -> Int
@@ -233,6 +239,54 @@ selectedComponents scene =
 
                 Just e ->
                     e.components
+
+
+updateParam : String -> Param -> Param
+updateParam newValue param =
+    case param.value of
+        Int value ->
+            { param | value = Int (strToInt value newValue) }
+
+        _ ->
+            param
+
+
+updateComponents : (Dict String Component -> Dict String Component) -> Scene -> Scene
+updateComponents updater scene =
+    case selectedEntity scene of
+        Nothing ->
+            scene
+
+        Just entity ->
+            let
+                newEntity =
+                    { entity | components = updater entity.components }
+
+                entities =
+                    Dict.insert newEntity.id newEntity scene.entities
+            in
+                { scene | entities = entities }
+
+
+updateComponent : (Component -> Component) -> Scene -> Scene
+updateComponent updater scene =
+    case selectedComponent scene of
+        Nothing ->
+            scene
+
+        Just component ->
+            updateComponents
+                (\components ->
+                    Dict.map
+                        (\_ c ->
+                            if c.id == component.id then
+                                updater c
+                            else
+                                c
+                        )
+                        components
+                )
+                scene
 
 
 decode : String -> String -> Result JD.Error Scene

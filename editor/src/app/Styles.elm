@@ -99,7 +99,7 @@ inputStyles =
 
 inputNarrowStyles =
     batch
-        [ width (px 60)
+        [ width (px 75)
         ]
 
 
@@ -352,27 +352,14 @@ selectedComponentStyles =
         ]
 
 
-componentParamsLabelStyles =
+componentParamInputStyles =
     css
-        [ displayFlex
-        ]
-
-
-paramStyle =
-    css
-        [ displayFlex
-        , padding (px 5)
-        ]
-
-
-paramLabelStyle =
-    css
-        [ width (px 150)
-        , flexShrink (num 0)
-        ]
-
-
-paramInputStyle =
-    css
-        [ width (pct 100)
+        [ alignItems center
+        , descendants
+            [ typeSelector "span"
+                [ flex (num 1)
+                ]
+            ]
+        , displayFlex
+        , marginTop (px 5)
         ]
