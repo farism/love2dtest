@@ -16,7 +16,7 @@ import List.Extra
 import Numeral
 import Data exposing (availableComponents)
 import Entity exposing (Entity)
-import Component exposing (Component, Param)
+import Component exposing (Component, Param, ParamValue(..))
 import Helpers exposing (..)
 import Scene exposing (Scene, SceneMsg(..))
 import Styles exposing (..)
@@ -365,40 +365,61 @@ sortEntities list =
 --                 options
 --             )
 --         ]
--- paramFieldView : String -> Param -> Html Msg
--- paramFieldView key param =
---     case param.options of
---         Nothing ->
---             case param.value of
---                 String str ->
---                     input key str (UpdateParam key param)
---                 Int int ->
---                     input key (Debug.toString int) (UpdateParam key param)
---                 Float float ->
---                     input key (Debug.toString float) (UpdateParam key param)
---                 _ ->
---                     text ""
---         Just opts ->
---             case param.value of
---                 String value ->
---                     selectView key value opts (UpdateParam key param)
---                 _ ->
---                     text ""
--- paramsView : Dict String Param -> Html Msg
--- paramsView params =
---     ul []
---         (params
---             |> Dict.toList
---             |> sortParamList
---             |> List.map
---                 (\( key, param ) ->
---                     li []
---                         [ label []
---                             [ paramFieldView key param
---                             ]
---                         ]
---                 )
---         )
+
+
+componentParamsInputView : String -> Param -> String -> Html Msg
+componentParamsInputView key param value_ =
+    label [ componentParamsLabelStyles ]
+        [ span [ css [ labelStyles ] ] [ text key ]
+        , input
+            [ css [ inputNarrowStyles ]
+            , value value_
+            , onBlur (SceneMsg << (UpdateParam key param))
+            , onEnter (SceneMsg << (UpdateParam key param))
+            ]
+            []
+        ]
+
+
+paramFieldView : String -> Param -> Html Msg
+paramFieldView key param =
+    case param.options of
+        Nothing ->
+            case param.value of
+                String value ->
+                    componentParamsInputView key param value
+
+                Int value ->
+                    componentParamsInputView key param (Debug.toString value)
+
+                Float value ->
+                    componentParamsInputView key param (Debug.toString value)
+
+                _ ->
+                    text ""
+
+        Just opts ->
+            case param.value of
+                _ ->
+                    text ""
+
+
+paramsView : Dict String Param -> Html Msg
+paramsView params =
+    ul []
+        (params
+            |> Dict.toList
+            -- |> sortParamList
+            |>
+                List.map
+                    (\( key, param ) ->
+                        li []
+                            [ paramFieldView key param ]
+                    )
+        )
+
+
+
 -- bodyView : Body -> Html Msg
 -- bodyView body =
 --     div []
@@ -575,8 +596,8 @@ selectedComponentView scene =
                             [ text "Entity does not contain component" ]
 
                         Just { fixture, params } ->
-                            [--   fixtureView fixture
-                             -- , paramsView params
+                            [ --   fixtureView fixture
+                              paramsView params
                             ]
         )
 

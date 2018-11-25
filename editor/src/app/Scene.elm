@@ -22,7 +22,7 @@ import Json.Decode.Extra as JDE
 import Json.Decode as JD
 import Json.Encode as JE
 import Entity exposing (Entity)
-import Component exposing (Component)
+import Component exposing (Component, Param, ParamValue(..))
 import Helpers exposing (dictEncoder, strToFloat, strToInt)
 
 
@@ -52,6 +52,7 @@ type SceneMsg
     | SetId String
     | SetName String
     | SetWidth String
+    | UpdateParam String Param String
 
 
 init : Scene
@@ -159,6 +160,9 @@ update msg scene =
 
         SetWidth width ->
             ( { scene | width = strToInt scene.width width }, Cmd.none )
+
+        UpdateParam key param value ->
+            ( scene, Cmd.none )
 
 
 lastId : List Entity -> Int

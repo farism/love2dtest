@@ -87,7 +87,7 @@ inputStyles =
         , color colors.grey9
         , fontSize (px 13)
         , focus
-            [ boxShadow4 (px 0) (px 0) (px 2) (hex "#e6faff")
+            [ boxShadow4 zero zero (px 2) (hex "#e6faff")
             , border3 (px 1) solid (hex "#66a3ff")
             ]
         , outline none
@@ -106,7 +106,7 @@ inputNarrowStyles =
 labelStyles =
     batch
         [ display inlineBlock
-        , padding (px 15)
+        , padding2 zero (px 15)
         ]
 
 
@@ -349,6 +349,12 @@ selectedComponentStyles =
     css
         [ flexShrink (num 0)
         , padding (px 10)
+        ]
+
+
+componentParamsLabelStyles =
+    css
+        [ displayFlex
         ]
 
 
