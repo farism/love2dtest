@@ -1,5 +1,6 @@
 module Styles exposing (..)
 
+import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes exposing (css)
 import Css exposing (..)
 import Css.Global exposing (..)
@@ -207,7 +208,7 @@ tabStyles selected =
 
 
 draggableStyles point =
-    css
+    batch
         [ transform (translate2 (px point.x) (px point.y))
         , width (px 20)
         , height (px 20)
@@ -235,6 +236,37 @@ sceneParamsStyles =
         , left zero
         , position absolute
         , right zero
+        ]
+
+
+sceneCanvasStyles =
+    css
+        [ bottom zero
+        , displayFlex
+        , alignItems center
+        , left zero
+        , justifyContent center
+        , position absolute
+        , right zero
+        , top (px 40)
+        ]
+
+
+sceneFrameStyles : Int -> Int -> Attribute msg
+sceneFrameStyles w h =
+    css
+        [ border3 (px 1) solid colors.grey9
+        , backgroundColor colors.grey0
+        , width (px (toFloat w))
+        , height (px (toFloat h))
+        ]
+
+
+sceneEntityStyles point =
+    css
+        [ draggableStyles point
+        , backgroundColor colors.grey3
+        , color colors.grey9
         ]
 
 

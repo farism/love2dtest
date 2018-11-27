@@ -2,7 +2,7 @@
   "id": 2,
   "name": "level two",
   "width": 800,
-  "height": 600,
+  "height": 400,
   "entities": {
     "1": {
       "id": 1,

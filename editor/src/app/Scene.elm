@@ -124,7 +124,7 @@ update msg scene =
                 newScene =
                     { scene | selectedEntity = Just entity.id }
             in
-                case selectedEntity scene of
+                case selectedEntity newScene of
                     Nothing ->
                         ( newScene, Cmd.none )
 

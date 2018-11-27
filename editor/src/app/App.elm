@@ -248,8 +248,8 @@ componentParamsInputView key param value_ =
         , input
             [ css [ inputNarrowStyles ]
             , value value_
-            , onBlur (SceneMsg << (UpdateParam key param))
-            , onEnter (SceneMsg << (UpdateParam key param))
+            , onBlur (SceneMsg << UpdateParam key param)
+            , onEnter (SceneMsg << UpdateParam key param)
             ]
             []
         ]
@@ -663,17 +663,19 @@ sceneParamsView scene =
 
 sceneCanvasView : Scene -> Html Msg
 sceneCanvasView scene =
-    div []
-        (List.map
-            (\entity ->
-                div
-                    [ draggableStyles entity.dragVertex
-                      -- , fromUnstyled (Draggable.mouseTrigger () (SceneMsg (DragMsg entity)))
-                    ]
-                    []
+    div [ sceneCanvasStyles ]
+        [ div [ sceneFrameStyles scene.width scene.height ]
+            (List.map
+                (\entity ->
+                    div
+                        [ sceneEntityStyles entity.dragVertex
+                        , fromUnstyled (Draggable.mouseTrigger () (SceneMsg << DragMsg entity))
+                        ]
+                        [ text (String.fromInt entity.id) ]
+                )
+                (Dict.values scene.entities)
             )
-            (Dict.values scene.entities)
-        )
+        ]
 
 
 sceneView : Model -> Html Msg
@@ -685,6 +687,7 @@ sceneView model =
         Just scene ->
             div [ sceneStyles ]
                 [ sceneParamsView scene
+                , sceneCanvasView scene
                 ]
 
 
