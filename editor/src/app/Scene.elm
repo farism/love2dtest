@@ -12,6 +12,7 @@ module Scene
         , selectedComponents
         , selectedEntityId
         , selectedEntity
+        , subscriptions
         , update
         )
 
@@ -24,6 +25,7 @@ import Json.Encode as JE
 import Entity exposing (Entity)
 import Component exposing (Component, Param, ParamValue(..))
 import Helpers exposing (dictEncoder, strToFloat, strToInt)
+import Vertex exposing (Vertex)
 
 
 type alias Scene =
@@ -43,6 +45,8 @@ type alias Scene =
 type SceneMsg
     = AddComponent Component
     | AddEntity
+    | DragMsg Entity (Draggable.Msg ())
+    | OnDragBy Draggable.Delta
     | QueueComponent Component
     | RemoveComponent String
     | RemoveEntity Int
@@ -54,6 +58,17 @@ type SceneMsg
     | SetName String
     | SetWidth String
     | UpdateParam String Param String
+
+
+subscriptions : (SceneMsg -> msg) -> Scene -> List (Sub msg)
+subscriptions msg scene =
+    case selectedEntity scene of
+        Nothing ->
+            []
+
+        Just entity ->
+            [ Draggable.subscriptions (msg << DragMsg entity) entity.drag
+            ]
 
 
 init : Scene
@@ -103,6 +118,43 @@ update msg scene =
                   }
                 , Cmd.none
                 )
+
+        DragMsg entity dragMsg ->
+            let
+                newScene =
+                    { scene | selectedEntity = Just entity.id }
+            in
+                case selectedEntity scene of
+                    Nothing ->
+                        ( newScene, Cmd.none )
+
+                    Just e ->
+                        let
+                            ( newEntity, cmds ) =
+                                Draggable.update dragConfig dragMsg e
+
+                            entities =
+                                Dict.insert entity.id newEntity scene.entities
+                        in
+                            ( { newScene | entities = entities }, cmds )
+
+        OnDragBy ( dx, dy ) ->
+            case selectedEntity scene of
+                Nothing ->
+                    ( scene, Cmd.none )
+
+                Just entity ->
+                    let
+                        dragVertex =
+                            Vertex (entity.dragVertex.x + dx) (entity.dragVertex.y + dy)
+
+                        newEntity =
+                            { entity | dragVertex = dragVertex }
+
+                        entities =
+                            Dict.insert entity.id newEntity scene.entities
+                    in
+                        ( { scene | entities = entities }, Cmd.none )
 
         RemoveComponent id ->
             let
@@ -169,6 +221,11 @@ update msg scene =
                         scene
             in
                 ( newScene, Cmd.none )
+
+
+dragConfig : Draggable.Config () SceneMsg
+dragConfig =
+    Draggable.basicConfig OnDragBy
 
 
 lastId : List Entity -> Int
@@ -242,13 +299,16 @@ selectedComponents scene =
 
 
 updateParam : String -> Param -> Param
-updateParam newValue param =
+updateParam value param =
     case param.value of
-        Int value ->
-            { param | value = Int (strToInt value newValue) }
+        Int oldValue ->
+            { param | value = Int (strToInt oldValue value) }
+
+        Float oldValue ->
+            { param | value = Float (strToFloat oldValue value) }
 
         _ ->
-            param
+            { param | value = String value }
 
 
 updateComponents : (Dict String Component -> Dict String Component) -> Scene -> Scene

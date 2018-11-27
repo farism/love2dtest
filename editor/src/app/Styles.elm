@@ -358,6 +358,7 @@ componentParamInputStyles =
         , descendants
             [ typeSelector "span"
                 [ flex (num 1)
+                , fontSize (px 13)
                 ]
             ]
         , displayFlex

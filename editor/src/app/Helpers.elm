@@ -3,8 +3,13 @@ module Helpers exposing (..)
 import Dict exposing (Dict)
 import Json.Decode as JD
 import Json.Encode as JE
+import Html
 import Html.Styled
-import Html.Styled.Events exposing (keyCode, on, targetValue)
+import Html.Styled.Attributes
+import Html.Styled.Events
+import FontAwesome.Solid as Icon
+import FontAwesome.Attributes as Icon
+import Svg
 
 
 is : a -> a -> Bool
@@ -57,7 +62,9 @@ dictEncoder encoder dict =
 
 onBlur : (String -> msg) -> Html.Styled.Attribute msg
 onBlur handler =
-    on "blur" (JD.map handler targetValue)
+    Html.Styled.Events.on
+        "blur"
+        (JD.map handler Html.Styled.Events.targetValue)
 
 
 onEnter : (String -> msg) -> Html.Styled.Attribute msg
@@ -70,10 +77,15 @@ onEnter msg =
                 JD.fail ""
 
         decodeEnter =
-            JD.andThen isEnter keyCode
+            JD.andThen isEnter Html.Styled.Events.keyCode
     in
-        on "keydown" <|
+        Html.Styled.Events.on "keydown" <|
             JD.map2
                 (\_ value -> msg value)
                 decodeEnter
-                targetValue
+                Html.Styled.Events.targetValue
+
+
+icon : (List (Svg.Attribute msg) -> Html.Html msg) -> Html.Styled.Html msg
+icon ico =
+    Html.Styled.fromUnstyled (ico [])

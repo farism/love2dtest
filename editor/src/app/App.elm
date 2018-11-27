@@ -9,8 +9,8 @@ import Draggable.Events exposing (onDragBy)
 import FontAwesome.Solid as Icon
 import FontAwesome.Attributes as Icon
 import Html.Styled.Events exposing (onClick, onInput)
-import Html.Styled.Attributes exposing (css, disabled, placeholder, selected, title, value)
-import Html.Styled exposing (Attribute, Html, div, fromUnstyled, label, li, option, span, text, ul, toUnstyled)
+import Html.Styled.Attributes exposing (css, disabled, fromUnstyled, placeholder, selected, title, value)
+import Html.Styled exposing (Attribute, Html, div, label, li, option, span, text, ul, toUnstyled)
 import Json.Decode as JD
 import List.Extra
 import Numeral
@@ -45,10 +45,8 @@ type alias Flags =
 
 type Msg
     = CloseScene Int
-    | DragMsg Entity (Draggable.Msg ())
     | LoadFileIn ( String, String )
     | LoadFileOut String
-    | OnDragBy Draggable.Delta
     | SaveFileOut
     | SelectProjectPathIn String
     | SelectProjectPathOut
@@ -88,26 +86,19 @@ initialModel =
     }
 
 
-dragConfig : Draggable.Config () Msg
-dragConfig =
-    Draggable.basicConfig OnDragBy
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     let
-        draggableSubscription =
-            []
+        sceneSubscriptions =
+            case selectedScene model of
+                Nothing ->
+                    []
 
-        -- case selectedEntity model of
-        --     Nothing ->
-        --         []
-        --     Just entity ->
-        --         [ Draggable.subscriptions (DragMsg entity) entity.drag
-        --         ]
+                Just scene ->
+                    Scene.subscriptions SceneMsg scene
     in
         Sub.batch
-            (draggableSubscription
+            (sceneSubscriptions
                 ++ [ selectProjectPathIn SelectProjectPathIn
                    , loadFileIn LoadFileIn
                    ]
@@ -123,9 +114,6 @@ update msg model =
                     List.Extra.removeAt index model.scenes
             in
                 ( ({ model | scenes = scenes }), Cmd.none )
-
-        DragMsg entity dragMsg ->
-            ( model, Cmd.none )
 
         LoadFileIn ( file, json ) ->
             case Scene.decode file json of
@@ -158,9 +146,6 @@ update msg model =
 
                 Just index ->
                     ( { model | selectedSceneIndex = Just index }, Cmd.none )
-
-        OnDragBy ( dx, dy ) ->
-            ( model, Cmd.none )
 
         SaveFileOut ->
             case selectedScene model of
@@ -198,61 +183,6 @@ update msg model =
 
         SelectSceneIndex index ->
             ( { model | selectedSceneIndex = Just index }, Cmd.none )
-
-
-
--- DragMsg entity dragMsg ->
---     let
---         newModel =
---             { model | selectedEntity = Just entity.id }
---     in
---         case selectedEntity newModel of
---             Nothing ->
---                 ( newModel, Cmd.none )
---             Just e ->
---                 let
---                     ( newEntity, cmds ) =
---                         Draggable.update dragConfig dragMsg e
---                     entities =
---                         Dict.insert (String.fromInt entity.id) newEntity newModel.entities
---                 in
---                     ( { newModel | entities = entities }, cmds )
--- OnDragBy ( dx, dy ) ->
---     case selectedEntity model of
---         Nothing ->
---             ( model, Cmd.none )
---         Just entity ->
---             let
---                 dragVertex =
---                     Vertex (entity.dragVertex.x + dx) (entity.dragVertex.y + dy)
---                 newEntity =
---                     { entity | dragVertex = dragVertex }
---                 entities =
---                     Dict.insert (String.fromInt entity.id) newEntity model.entities
---             in
---                 ( { model | entities = entities }, Cmd.none )
--- UpdateParam key param value ->
---     let
---         componentId =
---             selectedComponentId model
---         newParam =
---             { param | value = validateParam param value }
---         newModel =
---             updateComponents
---                 (\components ->
---                     (Dict.map
---                         (\k component ->
---                             if k == componentId then
---                                 { component | params = Dict.insert key newParam component.params }
---                             else
---                                 component
---                         )
---                         components
---                     )
---                 )
---                 model
---     in
---         ( newModel, Cmd.none )
 
 
 selectedSceneIndex : Model -> Int
@@ -295,64 +225,6 @@ sortParams list =
 
 
 
--- updateComponents : (Dict String Component -> Dict String Component) -> Model -> Model
--- updateComponents fn model =
---     let
---         entities =
---             (case selectedEntity model of
---                 Nothing ->
---                     model.entities
---                 Just entity ->
---                     let
---                         newEntity =
---                             { entity | components = fn entity.components }
---                         newEntities =
---                             Dict.insert (String.fromInt entity.id) newEntity model.entities
---                     in
---                         newEntities
---             )
---     in
---         { model | entities = entities }
--- formatParam : Param -> String
--- formatParam param =
---     case param.value of
---         String value ->
---             value
---         Int value ->
---             Numeral.format "0" (toFloat value)
---         Float value ->
---             Numeral.format "0.00" value
---         _ ->
---             Debug.toString param.value
--- validateParam : Param -> String -> ParamValue
--- validateParam param newValue =
---     case param.value of
---         Int oldValue ->
---             if newValue == "" then
---                 Int 0
---             else
---                 case String.toInt newValue of
---                     Nothing ->
---                         Int oldValue
---                     Just value ->
---                         Int value
---         Float oldValue ->
---             if newValue == "" then
---                 Float 0
---             else
---                 case String.toFloat newValue of
---                     Nothing ->
---                         Float oldValue
---                     Just value ->
---                         Float value
---         _ ->
---             String newValue
--- input : String -> String -> (String -> Msg) -> Html Msg
--- input key val fn =
---     label [ paramStyle ]
---         [ div [ paramLabelStyle ] [ text (key ++ ": ") ]
---         , input [ paramInputStyle, onEnter fn, onBlur fn, value val ] []
---         ]
 -- selectView : String -> String -> List String -> (String -> Msg) -> Html Msg
 -- selectView key val options fn =
 --     label [ paramStyle ]
@@ -520,7 +392,7 @@ selectedEntityView scene =
 addEntityButton : Html Msg
 addEntityButton =
     button [ onClick (SceneMsg AddEntity), title "Add Entity" ]
-        [ fromUnstyled (Icon.plus []) ]
+        [ Html.Styled.fromUnstyled (Icon.plus []) ]
 
 
 removeEntityButton : Maybe Int -> Html Msg
@@ -536,7 +408,7 @@ removeEntityButton selected =
             )
     in
         button (attributes ++ [ title "Remove Entity" ])
-            [ fromUnstyled (Icon.minus []) ]
+            [ Html.Styled.fromUnstyled (Icon.minus []) ]
 
 
 entityManagerView : Model -> Html Msg
@@ -580,7 +452,7 @@ addComponentButton queued =
             )
     in
         button (attributes ++ [ title "Add Component" ])
-            [ fromUnstyled (Icon.plus []) ]
+            [ Html.Styled.fromUnstyled (Icon.plus []) ]
 
 
 removeComponentButton : Maybe String -> Html Msg
@@ -596,7 +468,7 @@ removeComponentButton selected =
             )
     in
         button (attributes ++ [ title "Remove Component" ])
-            [ fromUnstyled (Icon.minus []) ]
+            [ Html.Styled.fromUnstyled (Icon.minus []) ]
 
 
 selectedComponentView : Scene -> Html Msg
@@ -721,17 +593,6 @@ componentManagerView model =
 --             ""
 --         Just err ->
 --             err
--- toolbarView : Model -> Html Msg
--- toolbarView model =
---     div
---         [ toolbarStyles ]
---         [ input [ onInput SetSceneId, value (String.fromInt model.sceneId) ] []
---         , input [ onInput SetSceneName, value model.sceneName ] []
---         , button [ onClick SaveFileOut ] [ text "save scene" ]
---         , button [ onClick Undo ] [ text "undo" ]
---         , button [ onClick Redo ] [ text "redo" ]
---         , div [] [ text ("File: " ++ (parseErrorView model)) ]
---         ]
 
 
 nodeView : Model -> Int -> TreeNode -> Html Msg
@@ -800,6 +661,21 @@ sceneParamsView scene =
         ]
 
 
+sceneCanvasView : Scene -> Html Msg
+sceneCanvasView scene =
+    div []
+        (List.map
+            (\entity ->
+                div
+                    [ draggableStyles entity.dragVertex
+                      -- , fromUnstyled (Draggable.mouseTrigger () (SceneMsg (DragMsg entity)))
+                    ]
+                    []
+            )
+            (Dict.values scene.entities)
+        )
+
+
 sceneView : Model -> Html Msg
 sceneView model =
     case selectedScene model of
@@ -810,22 +686,6 @@ sceneView model =
             div [ sceneStyles ]
                 [ sceneParamsView scene
                 ]
-
-
-
--- div [ sceneStyles ]
---     [ div []
---         (List.map
---             (\entity ->
---                 div
---                     [ draggableStyles entity.dragVertex
---                     , fromUnstyled (Draggable.mouseTrigger () (DragMsg entity))
---                     ]
---                     []
---             )
---             (Dict.values model.entities)
---         )
---     ]
 
 
 filename : Scene -> String
@@ -860,7 +720,7 @@ tabsListView model =
                         , span
                             [ onClick (CloseScene index)
                             ]
-                            [ fromUnstyled (Icon.times [ Icon.xs ])
+                            [ Html.Styled.fromUnstyled (Icon.times [ Icon.xs ])
                             ]
                         ]
             )
@@ -881,8 +741,7 @@ view model =
                     ]
 
                 Just tree ->
-                    [ --   toolbarView model
-                      tabsListView model
+                    [ tabsListView model
                     , treeView model
                     , entityManagerView model
                     , componentManagerView model
