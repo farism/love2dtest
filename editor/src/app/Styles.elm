@@ -246,6 +246,7 @@ sceneCanvasStyles =
         , alignItems center
         , left zero
         , justifyContent center
+        , overflow hidden
         , position absolute
         , right zero
         , top (px 40)
@@ -257,8 +258,8 @@ sceneFrameStyles w h =
     css
         [ border3 (px 1) solid colors.grey9
         , backgroundColor colors.grey0
-        , width (px (toFloat w))
-        , height (px (toFloat h))
+        , minWidth (px (toFloat w))
+        , minHeight (px (toFloat h))
         ]
 
 

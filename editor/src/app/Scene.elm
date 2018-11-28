@@ -75,14 +75,14 @@ init : Scene
 init =
     { entities = Dict.empty
     , file = Nothing
-    , height = 0
+    , height = 480
     , id = 0
     , name = "New Scene"
     , nextId = 0
     , queuedComponent = Nothing
     , selectedComponent = Nothing
     , selectedEntity = Nothing
-    , width = 0
+    , width = 800
     }
 
 
