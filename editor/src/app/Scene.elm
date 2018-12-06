@@ -5,7 +5,7 @@ module Scene
         , decode
         , encode
         , init
-        , lastId
+        , lastEntityId
         , queuedComponentId
         , selectedComponentId
         , selectedComponent
@@ -23,8 +23,10 @@ import Json.Decode.Extra as JDE
 import Json.Decode as JD
 import Json.Encode as JE
 import Entity exposing (Entity)
-import Component exposing (Component, Param, ParamValue(..))
+import Component exposing (Component)
+import Fixture exposing (Fixture, FixtureMsg(..))
 import Helpers exposing (dictEncoder, strToFloat, strToInt)
+import Param exposing (Param, ParamValue(..))
 import Vertex exposing (Vertex)
 
 
@@ -46,29 +48,28 @@ type SceneMsg
     = AddComponent Component
     | AddEntity
     | DragMsg Entity (Draggable.Msg ())
+    | FixtureMsg FixtureMsg
     | OnDragBy Draggable.Delta
     | QueueComponent Component
     | RemoveComponent String
     | RemoveEntity Int
     | SelectComponent String
     | SelectEntity Int
-    | SetLabel Entity String
+    | SetEntityLabel Entity String
     | SetHeight String
     | SetId String
     | SetName String
     | SetWidth String
-    | UpdateParam String Param String
+    | UpdateParam (List ( String, Param )) String
 
 
 subscriptions : (SceneMsg -> msg) -> Scene -> List (Sub msg)
 subscriptions msg scene =
-    case selectedEntity scene of
-        Nothing ->
-            []
-
-        Just entity ->
-            [ Draggable.subscriptions (msg << DragMsg entity) entity.drag
-            ]
+    Maybe.withDefault []
+        (selectedEntity scene
+            |> Maybe.andThen
+                (\e -> Just [ Draggable.subscriptions (msg << DragMsg e) e.drag ])
+        )
 
 
 init : Scene
@@ -82,7 +83,7 @@ init =
     , queuedComponent = Nothing
     , selectedComponent = Nothing
     , selectedEntity = Nothing
-    , width = 800
+    , width = 640
     }
 
 
@@ -96,24 +97,16 @@ update msg scene =
                         (\components -> Dict.insert component.id component components)
                         scene
             in
-                ( { newScene
-                    | selectedComponent = Just component.id
-                    , queuedComponent = Nothing
-                  }
-                , Cmd.none
-                )
+                ( { newScene | selectedComponent = Just component.id, queuedComponent = Nothing }, Cmd.none )
 
         AddEntity ->
             let
                 entity =
                     Entity scene.nextId "" Dict.empty { x = 0, y = 0 } Draggable.init
-
-                entities =
-                    Dict.insert entity.id entity scene.entities
             in
                 ( { scene
                     | nextId = scene.nextId + 1
-                    , entities = entities
+                    , entities = Dict.insert entity.id entity scene.entities
                     , selectedEntity = Just entity.id
                   }
                 , Cmd.none
@@ -132,11 +125,22 @@ update msg scene =
                         let
                             ( newEntity, cmds ) =
                                 Draggable.update dragConfig dragMsg e
-
-                            entities =
-                                Dict.insert entity.id newEntity scene.entities
                         in
-                            ( { newScene | entities = entities }, cmds )
+                            ( { newScene | entities = Dict.insert entity.id newEntity scene.entities }, cmds )
+
+        FixtureMsg fixtureMsg ->
+            let
+                fixture =
+                    selectedComponent scene
+                        |> Maybe.andThen .fixture
+                        |> Maybe.andThen (Just << (Fixture.update fixtureMsg))
+
+                newScene =
+                    updateComponent
+                        (\component -> { component | fixture = fixture })
+                        scene
+            in
+                ( newScene, Cmd.none )
 
         OnDragBy ( dx, dy ) ->
             case selectedEntity scene of
@@ -163,18 +167,10 @@ update msg scene =
                         (\components -> Dict.remove id components)
                         scene
             in
-                ( { newScene
-                    | selectedComponent = Nothing
-                  }
-                , Cmd.none
-                )
+                ( { newScene | selectedComponent = Nothing }, Cmd.none )
 
         RemoveEntity id ->
-            let
-                entities =
-                    Dict.remove id scene.entities
-            in
-                ( { scene | entities = entities, selectedEntity = Nothing }, Cmd.none )
+            ( { scene | entities = Dict.remove id scene.entities, selectedEntity = Nothing }, Cmd.none )
 
         QueueComponent component ->
             ( { scene | queuedComponent = Just component, selectedComponent = Nothing }, Cmd.none )
@@ -185,15 +181,8 @@ update msg scene =
         SelectComponent id ->
             ( { scene | queuedComponent = Nothing, selectedComponent = Just id }, Cmd.none )
 
-        SetLabel entity label ->
-            let
-                newEntity =
-                    { entity | label = label }
-
-                entities =
-                    Dict.insert newEntity.id newEntity scene.entities
-            in
-                ( { scene | entities = entities }, Cmd.none )
+        SetEntityLabel entity label ->
+            ( { scene | entities = Dict.insert entity.id { entity | label = label } scene.entities }, Cmd.none )
 
         SetHeight height ->
             ( { scene | height = strToInt scene.height height }, Cmd.none )
@@ -207,17 +196,11 @@ update msg scene =
         SetWidth width ->
             ( { scene | width = strToInt scene.width width }, Cmd.none )
 
-        UpdateParam key param value ->
+        UpdateParam path value ->
             let
                 newScene =
                     updateComponent
-                        (\component ->
-                            let
-                                newParam =
-                                    updateParam value param
-                            in
-                                { component | params = Dict.insert key newParam component.params }
-                        )
+                        (\component -> { component | params = updateParam path value component.params })
                         scene
             in
                 ( newScene, Cmd.none )
@@ -228,24 +211,14 @@ dragConfig =
     Draggable.basicConfig OnDragBy
 
 
-lastId : List Entity -> Int
-lastId entities =
-    case List.maximum <| List.map .id entities of
-        Nothing ->
-            0
-
-        Just id ->
-            id
+lastEntityId : List Entity -> Int
+lastEntityId entities =
+    Maybe.withDefault 0 (List.maximum <| List.map .id entities)
 
 
 selectedEntityId : Scene -> Int
 selectedEntityId scene =
-    case scene.selectedEntity of
-        Nothing ->
-            0
-
-        Just id ->
-            id
+    Maybe.withDefault 0 scene.selectedEntity
 
 
 selectedEntity : Scene -> Maybe Entity
@@ -255,77 +228,47 @@ selectedEntity scene =
 
 queuedComponentId : Scene -> String
 queuedComponentId scene =
-    case scene.queuedComponent of
-        Nothing ->
-            ""
-
-        Just c ->
-            c.id
+    Maybe.withDefault "" (Maybe.map .id scene.queuedComponent)
 
 
 selectedComponentId : Scene -> String
 selectedComponentId scene =
-    case scene.selectedComponent of
-        Nothing ->
-            ""
-
-        Just id ->
-            id
+    Maybe.withDefault "" scene.selectedComponent
 
 
 selectedComponent : Scene -> Maybe Component
 selectedComponent scene =
-    case selectedEntity scene of
-        Nothing ->
-            Nothing
-
-        Just entity ->
-            Dict.get (selectedComponentId scene) entity.components
+    selectedEntity scene
+        |> Maybe.andThen
+            (\e ->
+                Dict.get (selectedComponentId scene) e.components
+            )
 
 
 selectedComponents : Scene -> Dict String Component
 selectedComponents scene =
-    case selectedEntity scene of
-        Nothing ->
-            Dict.empty
-
-        Just entity ->
-            case Dict.get entity.id scene.entities of
-                Nothing ->
-                    Dict.empty
-
-                Just e ->
-                    e.components
-
-
-updateParam : String -> Param -> Param
-updateParam value param =
-    case param.value of
-        Int oldValue ->
-            { param | value = Int (strToInt oldValue value) }
-
-        Float oldValue ->
-            { param | value = Float (strToFloat oldValue value) }
-
-        _ ->
-            { param | value = String value }
+    Maybe.withDefault
+        Dict.empty
+        (selectedEntity scene
+            |> (Maybe.andThen (Just << .components))
+        )
 
 
 updateComponents : (Dict String Component -> Dict String Component) -> Scene -> Scene
 updateComponents updater scene =
-    case selectedEntity scene of
-        Nothing ->
-            scene
-
-        Just entity ->
-            let
-                newEntity =
-                    { entity | components = updater entity.components }
-
-                entities =
-                    Dict.insert newEntity.id newEntity scene.entities
-            in
-                { scene | entities = entities }
+    Maybe.withDefault
+        scene
+        (selectedEntity scene
+            |> Maybe.andThen
+                ((\entity ->
+                    let
+                        newEntity =
+                            { entity | components = updater entity.components }
+                    in
+                        Just { scene | entities = Dict.insert entity.id newEntity scene.entities }
+                 )
+                )
+        )
 
 
 updateComponent : (Component -> Component) -> Scene -> Scene
@@ -349,18 +292,58 @@ updateComponent updater scene =
                 scene
 
 
+updateParam : List ( String, Param ) -> String -> Dict String Param -> Dict String Param
+updateParam path value params =
+    case path of
+        [] ->
+            params
+
+        ( key, param ) :: [] ->
+            Dict.insert key { param | value = updateParamValue value param.value } params
+
+        ( key, param ) :: newPath ->
+            case param.value of
+                Dict oldValue ->
+                    Dict.insert key { param | value = Dict (updateParam newPath value oldValue) } params
+
+                _ ->
+                    params
+
+
+updateParamValue : String -> ParamValue -> ParamValue
+updateParamValue value paramValue =
+    case paramValue of
+        Category oldValue ->
+            Category []
+
+        Float oldValue ->
+            Float (strToFloat oldValue value)
+
+        Int oldValue ->
+            Int (strToInt oldValue value)
+
+        Mask oldValue ->
+            Mask []
+
+        Select options oldValue ->
+            Select options value
+
+        _ ->
+            String value
+
+
 decode : String -> String -> Result JD.Error Scene
 decode file string =
-    case JD.decodeString (sceneDecoder file) string of
+    case JD.decodeString (decoder file) string of
         Err err ->
-            Err (Debug.log "decode level error" err)
+            Err (Debug.log "decode scene error" err)
 
         Ok level ->
             Ok level
 
 
-sceneDecoder : String -> JD.Decoder Scene
-sceneDecoder file =
+decoder : String -> JD.Decoder Scene
+decoder file =
     JD.succeed Scene
         |> JDP.required "entities" (JDE.dict2 JD.int Entity.decoder)
         |> JDP.hardcoded (Just file)

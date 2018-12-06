@@ -1,12 +1,8 @@
-module Body exposing (Body, bodyTypes, init, decoder)
+module Body exposing (Body, BodyMsg(..), bodyTypes, decoder, init, strToType, typeToStr, update)
 
 import Json.Decode as JD
-
-
-type BodyType
-    = Static
-    | Dynamic
-    | Kinematic
+import List.Extra as List
+import Helpers exposing (strToFloat)
 
 
 type alias Body =
@@ -18,9 +14,23 @@ type alias Body =
     }
 
 
+type BodyMsg
+    = SetBodyType String
+    | SetBodyCategory String
+    | SetBodyMask String
+    | SetBodyX String
+    | SetBodyY String
+
+
+type BodyType
+    = Static
+    | Dynamic
+    | Kinematic
+
+
 bodyTypes : List String
 bodyTypes =
-    List.map typeToString [ Static, Dynamic, Kinematic ]
+    List.map typeToStr [ Static, Dynamic, Kinematic ]
 
 
 init : Body
@@ -33,8 +43,27 @@ init =
     }
 
 
-typeToString : BodyType -> String
-typeToString bodyType =
+update : BodyMsg -> Body -> Body
+update msg body =
+    case msg of
+        SetBodyType value ->
+            { body | bodyType = strToType value }
+
+        SetBodyCategory value ->
+            { body | category = strToCategoryList value }
+
+        SetBodyMask value ->
+            { body | mask = strToCategoryList value }
+
+        SetBodyX value ->
+            { body | x = strToFloat body.x value }
+
+        SetBodyY value ->
+            { body | y = strToFloat body.y value }
+
+
+typeToStr : BodyType -> String
+typeToStr bodyType =
     case bodyType of
         Static ->
             "static"
@@ -46,8 +75,8 @@ typeToString bodyType =
             "kinematic"
 
 
-stringToType : String -> BodyType
-stringToType bodyType =
+strToType : String -> BodyType
+strToType bodyType =
     case bodyType of
         "static" ->
             Static
@@ -62,6 +91,16 @@ stringToType bodyType =
             Static
 
 
+strToCategoryList : String -> List Int
+strToCategoryList string =
+    string
+        |> String.split ","
+        |> List.filterMap String.toInt
+        |> List.filter ((>) 16)
+        |> List.unique
+        |> List.sort
+
+
 decoder : JD.Decoder Body
 decoder =
     JD.map5 Body
@@ -74,4 +113,4 @@ decoder =
 
 bodyTypeDecoder : JD.Decoder BodyType
 bodyTypeDecoder =
-    (JD.string |> JD.andThen (JD.succeed << stringToType))
+    (JD.string |> JD.andThen (JD.succeed << strToType))

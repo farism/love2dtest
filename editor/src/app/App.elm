@@ -9,19 +9,23 @@ import Draggable.Events exposing (onDragBy)
 import FontAwesome.Solid as Icon
 import FontAwesome.Attributes as Icon
 import Html.Styled.Events exposing (onClick, onInput)
-import Html.Styled.Attributes exposing (css, disabled, fromUnstyled, placeholder, selected, title, value)
+import Html.Styled.Attributes exposing (checked, css, disabled, fromUnstyled, placeholder, selected, title, value)
 import Html.Styled exposing (Attribute, Html, div, label, li, option, span, text, ul, toUnstyled)
 import Json.Decode as JD
 import List.Extra
 import Numeral
+import Body exposing (Body, BodyMsg(..))
+import Component exposing (Component)
 import Data exposing (availableComponents)
 import Entity exposing (Entity)
-import Component exposing (Component, Param, ParamValue(..))
-import Helpers exposing (..)
+import Fixture exposing (Fixture, FixtureMsg(..))
+import Helpers exposing (commaDelimited, onBlur, onEnter, pathKey)
+import Param exposing (Param, ParamValue(..))
 import Scene exposing (Scene, SceneMsg(..))
+import Shape exposing (Shape(..), ShapeMsg(..))
 import Styles exposing (..)
 import Tree exposing (TreeNode(..))
-import Widgets exposing (button, hr, input, select)
+import Widgets exposing (button, checkbox, hr, input, select)
 
 
 port selectProjectPathIn : (String -> msg) -> Sub msg
@@ -122,11 +126,11 @@ update msg model =
 
                 Ok scene ->
                     let
-                        nextId =
-                            Scene.lastId (Dict.values scene.entities) + 1
+                        lastId =
+                            Scene.lastEntityId (Dict.values scene.entities)
 
                         newScene =
-                            { scene | file = Just file, selectedEntity = Just nextId, nextId = nextId }
+                            { scene | file = Just file, selectedEntity = Just lastId, nextId = lastId + 1 }
 
                         scenes =
                             (model.scenes ++ [ newScene ])
@@ -156,7 +160,7 @@ update msg model =
                     ( model, saveFileOut ( "", Scene.encode scene ) )
 
         SceneMsg sceneMsg ->
-            case List.Extra.getAt (selectedSceneIndex model) model.scenes of
+            case selectedScene model of
                 Nothing ->
                     ( model, Cmd.none )
 
@@ -224,121 +228,196 @@ sortParams list =
         list
 
 
-
--- selectView : String -> String -> List String -> (String -> Msg) -> Html Msg
--- selectView key val options fn =
---     label [ paramStyle ]
---         [ div [ paramLabelStyle ] [ text (key ++ ": ") ]
---         , select
---             [ paramInputStyle
---             , onInput fn
---             , value val
---             ]
---             (List.map
---                 (\opt -> option [ selected (opt == val) ] [ text opt ])
---                 options
---             )
---         ]
+lastPathKey : List ( String, Param ) -> String
+lastPathKey list =
+    pathKey (List.map (\( key, _ ) -> key) list)
 
 
-componentParamsInputView : String -> Param -> String -> Html Msg
-componentParamsInputView key param value_ =
+componentLabelView : String -> List (Html Msg) -> Html Msg
+componentLabelView string children =
     label [ componentParamInputStyles ]
-        [ span [ css [ labelStyles ] ] [ text key ]
-        , input
-            [ css [ inputNarrowStyles ]
-            , value value_
-            , onBlur (SceneMsg << UpdateParam key param)
-            , onEnter (SceneMsg << UpdateParam key param)
-            ]
-            []
+        ([ span [ css [ labelStyles ] ] [ text string ]
+         ]
+            ++ children
+        )
+
+
+componentCheckboxView : (Bool -> SceneMsg) -> Bool -> Html Msg
+componentCheckboxView msg val =
+    checkbox
+        [ onClick (SceneMsg (msg (not val)))
+        , checked val
+        ]
+        []
+
+
+componentInputView : (String -> SceneMsg) -> String -> Html Msg
+componentInputView msg val =
+    input
+        [ css [ inputNarrowStyles ]
+        , value val
+        , onBlur (SceneMsg << msg)
+        , onEnter (SceneMsg << msg)
+        ]
+        []
+
+
+componentSelectView : List String -> (String -> SceneMsg) -> String -> Html Msg
+componentSelectView options msg val =
+    select
+        [ css [ inputNarrowStyles ]
+        , onInput (SceneMsg << msg)
+        , value val
+        ]
+        (List.map
+            (\opt -> option [ selected (opt == val) ] [ text opt ])
+            options
+        )
+
+
+paramInputView : List ( String, Param ) -> String -> Html Msg
+paramInputView path val =
+    componentLabelView (lastPathKey path)
+        [ componentInputView (UpdateParam path) val
         ]
 
 
-paramFieldView : String -> Param -> Html Msg
-paramFieldView key param =
-    case param.options of
-        Nothing ->
-            case param.value of
-                String value ->
-                    componentParamsInputView key param value
+paramSelectView : List String -> List ( String, Param ) -> String -> Html Msg
+paramSelectView options path val =
+    label [ componentParamInputStyles ]
+        [ span [ css [ labelStyles ] ] [ text (lastPathKey path) ]
+        , componentSelectView options (UpdateParam path) val
+        ]
 
-                Int value ->
-                    componentParamsInputView key param (Debug.toString value)
+
+paramFieldView : List ( String, Param ) -> Html Msg
+paramFieldView path =
+    case List.Extra.last path of
+        Nothing ->
+            text ""
+
+        Just ( key, param ) ->
+            case param.value of
+                Bool value ->
+                    div [] []
+
+                Category value ->
+                    paramInputView path (commaDelimited value)
+
+                Dict value ->
+                    div []
+                        [ text key
+                        , paramsView path value
+                        ]
 
                 Float value ->
-                    componentParamsInputView key param (Debug.toString value)
+                    paramInputView path (String.fromFloat value)
+
+                Int value ->
+                    paramInputView path (String.fromInt value)
+
+                Mask value ->
+                    paramInputView path (commaDelimited value)
+
+                Select options value ->
+                    paramSelectView options path value
+
+                String value ->
+                    paramInputView path value
 
                 _ ->
                     text ""
 
-        Just opts ->
-            case param.value of
-                _ ->
-                    text ""
 
-
-paramsView : Dict String Param -> Html Msg
-paramsView params =
+paramsView : List ( String, Param ) -> Dict String Param -> Html Msg
+paramsView path params =
     ul []
         (params
             |> Dict.toList
             |> sortParams
             |> List.map
-                (\( key, param ) ->
+                (\item ->
                     li []
-                        [ paramFieldView key param ]
+                        [ paramFieldView (path ++ [ item ]) ]
                 )
         )
 
 
+fixtureCheckboxView : (Bool -> FixtureMsg) -> String -> Bool -> Html Msg
+fixtureCheckboxView msg key val =
+    componentLabelView key
+        [ componentCheckboxView (FixtureMsg << msg) val
+        ]
 
--- bodyView : Body -> Html Msg
--- bodyView body =
---     div []
---         [ div [] [ text "body" ]
---         , ul []
---             [ selectView
---                 "type"
---                 (fromBodyType body.bodyType)
---                 bodyTypes
---                 (\value -> UpdateBody { body | bodyType = toBodyType value })
---             , input
---                 "x"
---                 (Debug.toString body.x)
---                 (\value -> UpdateBody { body | x = (strToFloat value) })
---             , input
---                 "y"
---                 (Debug.toString body.y)
---                 (\value -> UpdateBody { body | y = (strToFloat value) })
---             ]
---         ]
--- shapeView : Shape -> Html Msg
--- shapeView shape =
---     div []
---         (case shape of
---             Rectangle rectangle ->
---                 []
---             Circle circle ->
---                 []
---             _ ->
---                 []
---         )
--- fixtureView : Maybe Fixture -> Html Msg
--- fixtureView fixture =
---     ul []
---         (case fixture of
---             Nothing ->
---                 []
---             Just { body, shape } ->
---                 [ li []
---                     [ bodyView body
---                     ]
---                 , li []
---                     [ shapeView shape
---                     ]
---                 ]
---         )
+
+fixtureInputView : (String -> FixtureMsg) -> String -> String -> Html Msg
+fixtureInputView msg key val =
+    componentLabelView key
+        [ componentInputView (FixtureMsg << msg) val
+        ]
+
+
+fixtureSelectView : List String -> (String -> FixtureMsg) -> String -> String -> Html Msg
+fixtureSelectView options msg key val =
+    componentLabelView key
+        [ componentSelectView options (FixtureMsg << msg) val
+        ]
+
+
+fixtureBodyView : Body -> Html Msg
+fixtureBodyView body =
+    div []
+        [ fixtureSelectView Body.bodyTypes (BodyMsg << SetBodyType) "bodyType" (Body.typeToStr body.bodyType)
+        , fixtureInputView (BodyMsg << SetBodyCategory) "category" (commaDelimited body.category)
+        , fixtureInputView (BodyMsg << SetBodyMask) "mask" (commaDelimited body.mask)
+        , fixtureInputView (BodyMsg << SetBodyX) "x" (String.fromFloat body.x)
+        , fixtureInputView (BodyMsg << SetBodyY) "y" (String.fromFloat body.y)
+        ]
+
+
+fixtureShapeView : Shape -> Html Msg
+fixtureShapeView shape =
+    div []
+        [ fixtureSelectView Shape.shapeTypes (ShapeMsg << Replace) "shapeType" (Shape.typeToStr shape)
+        , case shape of
+            Chain { loop, vertices } ->
+                div []
+                    [ fixtureCheckboxView (ShapeMsg << SetChainLoop) "loop" loop ]
+
+            Circle { radius } ->
+                div []
+                    [ fixtureInputView (ShapeMsg << SetCircleRadius) "radius" (String.fromInt radius)
+                    ]
+
+            Edge { vertex1, vertex2 } ->
+                div []
+                    []
+
+            Polygon { vertices } ->
+                div []
+                    []
+
+            Rectangle { width, height } ->
+                div []
+                    [ fixtureInputView (ShapeMsg << SetRectangleWidth) "width" (String.fromInt width)
+                    , fixtureInputView (ShapeMsg << SetRectangleHeight) "height" (String.fromInt height)
+                    ]
+        ]
+
+
+fixtureView : Maybe Fixture -> Html Msg
+fixtureView fixture =
+    case fixture of
+        Nothing ->
+            div [] []
+
+        Just { density, friction, body, shape } ->
+            div []
+                [ fixtureInputView SetDensity "density" (String.fromFloat density)
+                , fixtureInputView SetFriction "friction" (String.fromFloat friction)
+                , fixtureBodyView body
+                , fixtureShapeView shape
+                ]
 
 
 entityLabel : Entity -> String
@@ -383,8 +462,8 @@ selectedEntityView scene =
                 [ entityInputStyles
                 , value entity.label
                 , placeholder "Label"
-                , onBlur (SceneMsg << SetLabel entity)
-                , onEnter (SceneMsg << SetLabel entity)
+                , onBlur (SceneMsg << SetEntityLabel entity)
+                , onEnter (SceneMsg << SetEntityLabel entity)
                 ]
                 []
 
@@ -488,8 +567,8 @@ selectedComponentView scene =
                             [ text "Entity does not contain component" ]
 
                         Just { fixture, params } ->
-                            [ --   fixtureView fixture
-                              paramsView params
+                            [ paramsView [] params
+                            , fixtureView fixture
                             ]
         )
 
@@ -635,7 +714,7 @@ treeView model =
 
 
 sceneParamsInputView : (String -> SceneMsg) -> Bool -> String -> String -> Html Msg
-sceneParamsInputView msg narrow label_ value_ =
+sceneParamsInputView msg narrow label_ val =
     label []
         [ span [ css [ labelStyles ] ] [ text label_ ]
         , input
@@ -643,7 +722,7 @@ sceneParamsInputView msg narrow label_ value_ =
                 css [ inputNarrowStyles ]
               else
                 css []
-            , value value_
+            , value val
             , onBlur (SceneMsg << msg)
             , onEnter (SceneMsg << msg)
             ]
@@ -697,8 +776,8 @@ filename scene =
         Nothing ->
             "Untitled"
 
-        Just f ->
-            case f |> String.split "/" |> List.Extra.last of
+        Just file ->
+            case List.Extra.last (String.split "/" file) of
                 Nothing ->
                     ""
 

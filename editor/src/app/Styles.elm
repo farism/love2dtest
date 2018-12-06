@@ -75,6 +75,11 @@ buttonStyles =
         ]
 
 
+checkboxStyles =
+    batch
+        []
+
+
 hrStyles =
     batch
         [ borderTop3 (px 1) solid colors.grey1
@@ -85,6 +90,7 @@ inputStyles =
     batch
         [ backgroundColor colors.grey2
         , border3 (px 1) solid colors.grey4
+        , borderRadius zero
         , color colors.grey9
         , fontSize (px 13)
         , focus
@@ -95,6 +101,18 @@ inputStyles =
         , height (px 24)
         , lineHeight (px 24)
         , padding2 zero (px 10)
+        ]
+
+
+selectStyles =
+    batch
+        [ inputStyles
+        , property "-webkit-appearance" "none"
+        , after
+            [ display block
+            , width (px 10)
+            , height (px 10)
+            ]
         ]
 
 
@@ -374,13 +392,14 @@ selectedComponentsStyles =
 selectedComponentsListStyles =
     css
         [ flexGrow (num 1)
+        , minHeight (px 100)
         , overflowY auto
         ]
 
 
 selectedComponentStyles =
     css
-        [ flexShrink (num 0)
+        [ overflowY auto
         , padding (px 10)
         ]
 

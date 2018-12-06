@@ -1,14 +1,15 @@
 module Helpers exposing (..)
 
 import Dict exposing (Dict)
-import Json.Decode as JD
-import Json.Encode as JE
+import FontAwesome.Solid as Icon
+import FontAwesome.Attributes as Icon
 import Html
 import Html.Styled
 import Html.Styled.Attributes
 import Html.Styled.Events
-import FontAwesome.Solid as Icon
-import FontAwesome.Attributes as Icon
+import Json.Decode as JD
+import Json.Encode as JE
+import List.Extra
 import Svg
 
 
@@ -32,12 +33,7 @@ strToInt default value =
     if value == "" then
         0
     else
-        case String.toInt value of
-            Nothing ->
-                default
-
-            Just int ->
-                int
+        Maybe.withDefault default (String.toInt value)
 
 
 strToFloat : Float -> String -> Float
@@ -45,12 +41,7 @@ strToFloat default value =
     if value == "" then
         0
     else
-        case String.toFloat value of
-            Nothing ->
-                default
-
-            Just int ->
-                int
+        Maybe.withDefault default (String.toFloat value)
 
 
 dictEncoder : (a -> JE.Value) -> Dict b a -> JE.Value
@@ -86,6 +77,11 @@ onEnter msg =
                 Html.Styled.Events.targetValue
 
 
-icon : (List (Svg.Attribute msg) -> Html.Html msg) -> Html.Styled.Html msg
-icon ico =
-    Html.Styled.fromUnstyled (ico [])
+commaDelimited : List Int -> String
+commaDelimited list =
+    String.join "," <| List.map String.fromInt list
+
+
+pathKey : List String -> String
+pathKey list =
+    Maybe.withDefault "" (List.Extra.last list)
