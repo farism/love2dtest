@@ -1,0 +1,17 @@
+{
+  "name": "client2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tstl -w -p tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chokidar": "^2.1.5",
+    "love-typescript-definitions": "^0.9.7-rc1",
+    "typescript-to-lua": "^0.17.0"
+  }
+}

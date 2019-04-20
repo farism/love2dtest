@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "outDir": "build",
+    "strict": true,
+    "types": ["lua-types/jit", "love-typescript-definitions"]
+  },
+  "include": ["./src/**/*.ts"],
+  "tstl": {
+    "luaTarget": "JIT"
+  }
+}
