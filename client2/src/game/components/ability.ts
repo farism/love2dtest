@@ -1,81 +1,83 @@
-// local constants = require 'src.game.components.constants'
+import { Component } from '../../ecs/Component'
+import { Flag } from './flags'
 
-// local Ability = {
-//   _meta = constants.Ability
-// }
+interface Ability {
+  cooldown: number
+  duration: number
+  castspeed: number
+  enabled: boolean
+  activated: boolean
+  timers: object
+}
 
-// local function ability(params)
-//   return {
-//     cooldown = params.cd or 0,
-//     duration = params.dur or 0,
-//     castspeed = params.speed or 0,
-//     enabled = params.enabled == nil and true or params.enabled,
-//     activated = false,
-//     timers = {}
-//   }
-// end
+const defineAbility = (
+  cooldown = 0,
+  duration = 0,
+  castspeed = 0,
+  enabled = true
+): Ability => {
+  return {
+    cooldown: cooldown,
+    duration: duration,
+    castspeed: castspeed,
+    enabled: enabled,
+    activated: false,
+    timers: {},
+  }
+}
 
-// function Ability.new(id, timers)
-//   timers = timers or {}
+export class Abilities extends Component {
+  static _id = 'Abilities'
+  _id = Abilities._id
 
-//   local ability = {
-//     _meta = Ability._meta,
-//     id = id,
-//     abilities = {
-//       -- player
-//       throw = ability({cd = 0.5, dur = 0, speed = 0}),
-//       dash = ability({cd = 1, dur = 0.2, speed = 0}),
-//       grapple = ability({cd = 1, dur = 0, speed = 0}),
-//       dig = ability({cd = 1, dur = 1, speed = 0}),
-//       -- mob, only enable one at a time
-//       shoot = ability({cd = 3, dur = 0, speed = 1.5, enabled = false}),
-//       slash = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
-//       stab = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
-//       ambush = ability({cd = 3, dur = 0, speed = 1, enabled = false}),
-//       taser = ability({cd = 3, dur = 0, speed = 1, enabled = false})
-//     }
-//   }
+  static _flag = Flag.Abilities
+  _flag = Flag.Abilities
 
-//   function ability:reset()
-//     for _, ability in pairs(self.abilities) do
-//       ability.activated = false
-//       ability.timers = {}
-//     end
+  abilities: { [k: string]: Ability }
 
-//     return self
-//   end
+  constructor() {
+    super()
 
-//   function ability:setCooldown(ability, cooldown)
-//     self.abilities[ability].cooldown = cooldown
+    this.abilities = {
+      // player
+      throw: defineAbility(0.5, 0, 0),
+      dash: defineAbility(0.5, 0, 0),
+      grapple: defineAbility(1, 0, 0),
+      dig: defineAbility(1, 1, 0),
 
-//     return self
-//   end
+      // npc
+      shoot: defineAbility(3, 0, 1.5, false),
+      slash: defineAbility(3, 0, 1, false),
+      stab: defineAbility(3, 0, 1, false),
+      ambush: defineAbility(3, 0, 1, false),
+      taser: defineAbility(3, 0, 1, false),
+    }
+  }
 
-//   function ability:setDuration(ability, duration)
-//     self.abilities[ability].duration = duration
+  reset = () => {
+    for (let key in this.abilities) {
+      this.abilities[key].activated = false
+      this.abilities[key].timers = {}
+    }
+  }
 
-//     return self
-//   end
+  setCooldown = (ability: string, cooldown: number) => {
+    this.abilities[ability].cooldown = cooldown
+  }
 
-//   function ability:setCastspeed(ability, castspeed)
-//     self.abilities[ability].castspeed = castspeed
+  setDuration = (ability: string, duration: number) => {
+    this.abilities[ability].duration = duration
+  }
 
-//     return self
-//   end
+  setCastspeed = (ability: string, castspeed: number) => {
+    this.abilities[ability].castspeed = castspeed
+  }
 
-//   function ability:setEnabled(ability, enabled)
-//     self.abilities[ability].enabled = enabled
+  setEnabled = (ability: string, enabled: boolean) => {
+    this.abilities[ability].enabled = enabled
+  }
 
-//     return self
-//   end
-
-//   function ability:setActivated(ability, activated)
-//     self.abilities[ability].activated = activated
-
-//     return self
-//   end
-
-//   return ability
-// end
-
-// return Ability
+  setActivated = (ability: string, activated: boolean) => {
+    this.abilities[ability].activated = activated
+  }
+}

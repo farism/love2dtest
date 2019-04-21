@@ -1,45 +1,66 @@
-// local constants = require 'src.game.components.constants'
+import { Component } from '../../ecs/Component'
+import { Flag } from './flags'
 
-// local Animation = {
-//   _meta = constants.Animation
-// }
+class Sequence {
+  x: number // sequence starting x position
+  y: number // sequence starting y position
+  width: number // frame width
+  height: number // frame height
+  length: number // number of frames in a sequence
+  duration: number // total duration of sequence
 
-// local function buildFrames(width, height, animation)
-//   local frames = {}
+  frames: Quad[]
+  step: number // duration of each frame
 
-//   for step = 1, animation.length do
-//     table.insert(
-//       frames,
-//       love.graphics.newQuad(
-//         animation.x + (step - 1) * animation.width,
-//         animation.y,
-//         animation.width,
-//         animation.height,
-//         width,
-//         height
-//       )
-//     )
-//   end
+  constructor(
+    x = 0,
+    y = 0,
+    width = 0,
+    height = 0,
+    spriteWidth = 0,
+    spriteHeight = 0,
+    length = 0,
+    duration = 0
+  ) {
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
+    this.length = length
+    this.duration = duration
+    this.step = duration / length
 
-//   return frames
-// end
+    this.frames = Array.from(Array(length)).map(() =>
+      love.graphics.newQuad(
+        x + (this.step - 1) * width,
+        y,
+        width,
+        duration,
+        spriteWidth,
+        spriteHeight
+      )
+    )
+  }
+}
 
-// function Animation.new(id, currentAnimation, animations, width, height)
-//   animations = animations or {}
+export class Animation extends Component {
+  static _id = 'Animation'
+  _id = Animation._id
 
-//   for _, animation in pairs(animations) do
-//     animation.frames = buildFrames(width, height, animation)
-//     animation.step = animation.duration / animation.length
-//   end
+  static _flag = Flag.Animation
+  _flag = Flag.Animation
 
-//   return {
-//     _meta = Animation._meta,
-//     id = id,
-//     elapsedTime = 0,
-//     currentFrame = 1,
-//     currentAnimation = currentAnimation,
-//     animations = animations
-//   }
-// end
+  elapsedTime: number
+  currentFrame: number
+  currentSequence: number
+  sequences: Sequence[]
 
-// return Animation
+  constructor(sequences: Sequence[] = [], currentSequence: number = 0) {
+    super()
+
+    this.elapsedTime = 0
+    this.currentFrame = 1
+    this.currentSequence = currentSequence
+    this.sequences = sequences
+  }
+}

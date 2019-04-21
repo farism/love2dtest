@@ -3,7 +3,7 @@ const getFlag = (index: number) => {
 }
 
 export enum Flag {
-  Ability = getFlag(0),
+  Abilities = getFlag(0),
   Animation = getFlag(1),
   Checkpoint = getFlag(2),
   Container = getFlag(3),

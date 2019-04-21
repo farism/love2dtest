@@ -5,8 +5,8 @@ getFlag = function(____, index)
     return bit.lshift(1, index);
 end;
 exports.Flag = {};
-exports.Flag.Ability = getFlag(nil, 0);
-exports.Flag[getFlag(nil, 0)] = "Ability";
+exports.Flag.Abilities = getFlag(nil, 0);
+exports.Flag[getFlag(nil, 0)] = "Abilities";
 exports.Flag.Animation = getFlag(nil, 1);
 exports.Flag[getFlag(nil, 1)] = "Animation";
 exports.Flag.Checkpoint = getFlag(nil, 2);
