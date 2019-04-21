@@ -1,0 +1,27 @@
+--[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+local exports = exports or {};
+local __TSTL_Component = require("ecs.Component");
+local Component = __TSTL_Component.Component;
+local __TSTL_flags = require("game.components.flags");
+local Flag = __TSTL_flags.Flag;
+exports.Input = exports.Input or {};
+exports.Input.__index = exports.Input;
+exports.Input.prototype = exports.Input.prototype or {};
+exports.Input.prototype.__index = exports.Input.prototype;
+exports.Input.prototype.constructor = exports.Input;
+exports.Input.____super = Component;
+setmetatable(exports.Input, exports.Input.____super);
+setmetatable(exports.Input.prototype, exports.Input.____super.prototype);
+exports.Input.new = function(...)
+    local self = setmetatable({}, exports.Input.prototype);
+    self:____constructor(...);
+    return self;
+end;
+exports.Input.prototype.____constructor = function(self)
+    self._id = exports.Input._id;
+    self._flag = Flag.Input;
+    Component.prototype.____constructor(self);
+end;
+exports.Input._id = "Input";
+exports.Input._flag = Flag.Input;
+return exports;

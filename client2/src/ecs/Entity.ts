@@ -1,5 +1,11 @@
 import { Component } from './component'
-import { Manager } from './manager'
+
+interface Manager {
+  getComponent(e: Entity, c: Component): Component | undefined
+  addComponent(e: Entity, c: Component): void
+  removeComponent(e: Entity, c: Component): void
+  removeEntity(e: Entity): void
+}
 
 export class Entity {
   components: number

@@ -1,8 +1,8 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_Aspect = require("src.ecs.Aspect");
+local __TSTL_Aspect = require("ecs.Aspect");
 local Aspect = __TSTL_Aspect.Aspect;
-local __TSTL_System = require("src.ecs.System");
+local __TSTL_System = require("ecs.System");
 local System = __TSTL_System.System;
 exports.IntervalSystem = exports.IntervalSystem or {};
 exports.IntervalSystem.__index = exports.IntervalSystem;

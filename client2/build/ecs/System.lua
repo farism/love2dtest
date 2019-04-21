@@ -141,9 +141,9 @@ Map.prototype.values = function(self)
 end;
 
 local exports = exports or {};
-local __TSTL_Aspect = require("src.ecs.Aspect");
+local __TSTL_Aspect = require("ecs.Aspect");
 local Aspect = __TSTL_Aspect.Aspect;
-local __TSTL_Entity = require("src.ecs.Entity");
+local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
 exports.System = exports.System or {};
 exports.System.__index = exports.System;

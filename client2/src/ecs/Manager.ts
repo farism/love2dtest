@@ -99,6 +99,8 @@ export class Manager {
     //   end
   }
 
+  // managing systems
+
   addSytem = (system: System) => {
     this.entities.forEach(entity => system.check(entity))
     system.setManager(this)
@@ -112,6 +114,8 @@ export class Manager {
   check = (entity: Entity) => {
     this.systems.forEach(system => system.check(entity))
   }
+
+  // lifecycles
 
   keyboard = (
     key: string,

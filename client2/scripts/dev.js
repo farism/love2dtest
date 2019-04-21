@@ -1,21 +1,19 @@
-const { exec } = require('child_process')
+const { spawn } = require('child_process')
 const chokidar = require('chokidar')
 const path = require('path')
 
-const CWD = path.resolve(__dirname, '../build/src')
-
-let proc
+const BUILD_FOLDER = 'build'
+const PATH = path.resolve(BUILD_FOLDER)
 
 const start = () => {
-  proc = exec('love .', { cwd: CWD })
-
-  proc.stdout.on('data', console.log)
-
-  proc.stderr.on('data', console.error)
+  proc = spawn('love', [BUILD_FOLDER], {
+    stdio: 'inherit',
+  })
 }
 
-// One-liner for current directory, ignores .dotfiles
-chokidar.watch(CWD, {}).on('all', (event, path) => {
+chokidar.watch(PATH, {}).on('change', filepath => {
+  console.log('file changed: ', filepath.replace(PATH, ''))
+
   proc && proc.kill('SIGINT')
 
   start()

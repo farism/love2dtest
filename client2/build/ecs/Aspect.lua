@@ -11,9 +11,9 @@ __TS__ArrayForEach = function(arr, callbackFn)
 end;
 
 local exports = exports or {};
-local __TSTL_Component = require("src.ecs.Component");
+local __TSTL_Component = require("ecs.Component");
 local Component = __TSTL_Component.Component;
-local __TSTL_Entity = require("src.ecs.Entity");
+local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
 local flags;
 flags = function(____, components)

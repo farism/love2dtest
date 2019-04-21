@@ -1,9 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_component = require("src.ecs.component");
+local __TSTL_component = require("ecs.component");
 local Component = __TSTL_component.Component;
-local __TSTL_manager = require("src.ecs.manager");
-local Manager = __TSTL_manager.Manager;
 exports.Entity = exports.Entity or {};
 exports.Entity.__index = exports.Entity;
 exports.Entity.prototype = exports.Entity.prototype or {};

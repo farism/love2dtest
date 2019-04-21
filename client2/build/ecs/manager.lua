@@ -174,11 +174,11 @@ __TS__ArrayFilter = function(arr, callbackfn)
 end;
 
 local exports = exports or {};
-local __TSTL_Component = require("src.ecs.Component");
+local __TSTL_Component = require("ecs.Component");
 local Component = __TSTL_Component.Component;
-local __TSTL_Entity = require("src.ecs.Entity");
+local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
-local __TSTL_System = require("src.ecs.System");
+local __TSTL_System = require("ecs.System");
 local System = __TSTL_System.System;
 exports.Manager = exports.Manager or {};
 exports.Manager.__index = exports.Manager;
