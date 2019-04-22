@@ -9,9 +9,6 @@ exports.Platform.__index = exports.Platform;
 exports.Platform.prototype = exports.Platform.prototype or {};
 exports.Platform.prototype.__index = exports.Platform.prototype;
 exports.Platform.prototype.constructor = exports.Platform;
-exports.Platform.____super = Component;
-setmetatable(exports.Platform, exports.Platform.____super);
-setmetatable(exports.Platform.prototype, exports.Platform.____super.prototype);
 exports.Platform.new = function(...)
     local self = setmetatable({}, exports.Platform.prototype);
     self:____constructor(...);
@@ -29,7 +26,6 @@ exports.Platform.prototype.____constructor = function(self, fall, initialX, init
     if initialY == nil then
         initialY = 0;
     end
-    Component.prototype.____constructor(self);
     self.fall = fall;
     self.initialX = initialX;
     self.initialY = initialY;

@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Respawn extends Component {
+export class Respawn {
   static _id = 'Respawn'
   _id = Respawn._id
 
@@ -11,8 +11,6 @@ export class Respawn extends Component {
   waitTime: number
 
   constructor(waitTime: number = 0) {
-    super()
-
     this.waitTime = waitTime
   }
 }

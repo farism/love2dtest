@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Dash extends Component {
+export class Dash {
   static _id = 'Dash'
   _id = Dash._id
 
@@ -11,8 +11,6 @@ export class Dash extends Component {
   velocity: number
 
   constructor(velocity: number = 0) {
-    super()
-
     this.velocity = velocity
   }
 }

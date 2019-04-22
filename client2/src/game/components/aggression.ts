@@ -2,7 +2,7 @@ import { Component } from '../../ecs/component'
 import { Flag } from './flags'
 import { Entity } from '../../ecs/Entity'
 
-export class Aggression extends Component {
+export class Aggression {
   static _id = 'Aggression'
   _id = Aggression._id
 
@@ -23,8 +23,6 @@ export class Aggression extends Component {
     height: number = 0,
     duration: number = 0
   ) {
-    super()
-
     this.width = width
     this.height = height
     this.duration = duration

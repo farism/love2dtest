@@ -26,7 +26,7 @@ const defineAbility = (
   }
 }
 
-export class Abilities extends Component {
+export class Abilities {
   static _id = 'Abilities'
   _id = Abilities._id
 
@@ -36,8 +36,6 @@ export class Abilities extends Component {
   abilities: { [k: string]: Ability }
 
   constructor() {
-    super()
-
     this.abilities = {
       // player
       throw: defineAbility(0.5, 0, 0),

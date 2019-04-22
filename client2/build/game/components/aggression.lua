@@ -11,9 +11,6 @@ exports.Aggression.__index = exports.Aggression;
 exports.Aggression.prototype = exports.Aggression.prototype or {};
 exports.Aggression.prototype.__index = exports.Aggression.prototype;
 exports.Aggression.prototype.constructor = exports.Aggression;
-exports.Aggression.____super = Component;
-setmetatable(exports.Aggression, exports.Aggression.____super);
-setmetatable(exports.Aggression.prototype, exports.Aggression.____super.prototype);
 exports.Aggression.new = function(...)
     local self = setmetatable({}, exports.Aggression.prototype);
     self:____constructor(...);
@@ -40,7 +37,6 @@ exports.Aggression.prototype.____constructor = function(self, world, entity, x, 
     if duration == nil then
         duration = 0;
     end
-    Component.prototype.____constructor(self);
     self.width = width;
     self.height = height;
     self.duration = duration;

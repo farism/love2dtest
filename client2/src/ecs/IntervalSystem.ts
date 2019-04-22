@@ -2,12 +2,18 @@ import { Aspect } from './Aspect'
 import { System } from './System'
 
 export class IntervalSystem extends System {
+  static _id = 'IntervalSystem'
+  _id = IntervalSystem._id
+
+  static _aspect = new Aspect()
+  _aspect = IntervalSystem._aspect
+
   elapsed: number
   interval: number
   onUpdate: any
 
-  constructor(id: string, aspect: Aspect, interval: number, onUpdate: any) {
-    super(id, aspect)
+  constructor(interval: number, onUpdate: any) {
+    super()
 
     this.interval = interval
     this.elapsed = 0

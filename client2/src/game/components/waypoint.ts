@@ -6,7 +6,7 @@ interface Point {
   y: number
 }
 
-export class Waypoint extends Component {
+export class Waypoint {
   static _id = 'Waypoint'
   _id = Waypoint._id
 
@@ -19,8 +19,6 @@ export class Waypoint extends Component {
   path: Point[]
 
   constructor(active: boolean = true, speed: number = 1, path: Point[]) {
-    super()
-
     this.active = active
     this.current = 1
     this.speed = speed

@@ -9,9 +9,6 @@ exports.Dash.__index = exports.Dash;
 exports.Dash.prototype = exports.Dash.prototype or {};
 exports.Dash.prototype.__index = exports.Dash.prototype;
 exports.Dash.prototype.constructor = exports.Dash;
-exports.Dash.____super = Component;
-setmetatable(exports.Dash, exports.Dash.____super);
-setmetatable(exports.Dash.prototype, exports.Dash.____super.prototype);
 exports.Dash.new = function(...)
     local self = setmetatable({}, exports.Dash.prototype);
     self:____constructor(...);
@@ -25,7 +22,6 @@ exports.Dash.prototype.____constructor = function(self)
     self.right = false;
     self.jump = false;
     self.jumpCount = 0;
-    Component.prototype.____constructor(self);
 end;
 exports.Dash._id = "Dash";
 exports.Dash._flag = Flag.Dash;

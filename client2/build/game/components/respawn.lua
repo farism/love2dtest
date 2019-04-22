@@ -9,9 +9,6 @@ exports.Respawn.__index = exports.Respawn;
 exports.Respawn.prototype = exports.Respawn.prototype or {};
 exports.Respawn.prototype.__index = exports.Respawn.prototype;
 exports.Respawn.prototype.constructor = exports.Respawn;
-exports.Respawn.____super = Component;
-setmetatable(exports.Respawn, exports.Respawn.____super);
-setmetatable(exports.Respawn.prototype, exports.Respawn.____super.prototype);
 exports.Respawn.new = function(...)
     local self = setmetatable({}, exports.Respawn.prototype);
     self:____constructor(...);
@@ -23,7 +20,6 @@ exports.Respawn.prototype.____constructor = function(self, waitTime)
     if waitTime == nil then
         waitTime = 0;
     end
-    Component.prototype.____constructor(self);
     self.waitTime = waitTime;
 end;
 exports.Respawn._id = "Respawn";

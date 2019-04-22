@@ -9,9 +9,6 @@ exports.Container.__index = exports.Container;
 exports.Container.prototype = exports.Container.prototype or {};
 exports.Container.prototype.__index = exports.Container.prototype;
 exports.Container.prototype.constructor = exports.Container;
-exports.Container.____super = Component;
-setmetatable(exports.Container, exports.Container.____super);
-setmetatable(exports.Container.prototype, exports.Container.____super.prototype);
 exports.Container.new = function(...)
     local self = setmetatable({}, exports.Container.prototype);
     self:____constructor(...);
@@ -20,7 +17,6 @@ end;
 exports.Container.prototype.____constructor = function(self)
     self._id = exports.Container._id;
     self._flag = Flag.Container;
-    Component.prototype.____constructor(self);
 end;
 exports.Container._id = "Container";
 exports.Container._flag = Flag.Container;

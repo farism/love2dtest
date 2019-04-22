@@ -9,9 +9,6 @@ exports.Upgrades.__index = exports.Upgrades;
 exports.Upgrades.prototype = exports.Upgrades.prototype or {};
 exports.Upgrades.prototype.__index = exports.Upgrades.prototype;
 exports.Upgrades.prototype.constructor = exports.Upgrades;
-exports.Upgrades.____super = Component;
-setmetatable(exports.Upgrades, exports.Upgrades.____super);
-setmetatable(exports.Upgrades.prototype, exports.Upgrades.____super.prototype);
 exports.Upgrades.new = function(...)
     local self = setmetatable({}, exports.Upgrades.prototype);
     self:____constructor(...);
@@ -20,7 +17,6 @@ end;
 exports.Upgrades.prototype.____constructor = function(self, passive, throw_, dash, grapple, dig)
     self._id = exports.Upgrades._id;
     self._flag = Flag.Upgrades;
-    Component.prototype.____constructor(self);
     self.passive = passive;
     self.throw = throw_;
     self.dash = dash;

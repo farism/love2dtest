@@ -43,7 +43,7 @@ class Sequence {
   }
 }
 
-export class Animation extends Component {
+export class Animation {
   static _id = 'Animation'
   _id = Animation._id
 
@@ -56,8 +56,6 @@ export class Animation extends Component {
   sequences: Sequence[]
 
   constructor(sequences: Sequence[] = [], currentSequence: number = 0) {
-    super()
-
     this.elapsedTime = 0
     this.currentFrame = 1
     this.currentSequence = currentSequence

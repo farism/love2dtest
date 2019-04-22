@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Checkpoint extends Component {
+export class Checkpoint {
   static _id = 'Checkpoint'
   _id = Checkpoint._id
 
@@ -11,8 +11,6 @@ export class Checkpoint extends Component {
   hitpoints: number
 
   constructor(hitpoints: number = 0) {
-    super()
-
     this.hitpoints = hitpoints
   }
 }

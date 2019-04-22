@@ -9,9 +9,6 @@ exports.Checkpoint.__index = exports.Checkpoint;
 exports.Checkpoint.prototype = exports.Checkpoint.prototype or {};
 exports.Checkpoint.prototype.__index = exports.Checkpoint.prototype;
 exports.Checkpoint.prototype.constructor = exports.Checkpoint;
-exports.Checkpoint.____super = Component;
-setmetatable(exports.Checkpoint, exports.Checkpoint.____super);
-setmetatable(exports.Checkpoint.prototype, exports.Checkpoint.____super.prototype);
 exports.Checkpoint.new = function(...)
     local self = setmetatable({}, exports.Checkpoint.prototype);
     self:____constructor(...);
@@ -23,7 +20,6 @@ exports.Checkpoint.prototype.____constructor = function(self, hitpoints)
     if hitpoints == nil then
         hitpoints = 0;
     end
-    Component.prototype.____constructor(self);
     self.hitpoints = hitpoints;
 end;
 exports.Checkpoint._id = "Checkpoint";

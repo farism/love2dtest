@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Snare extends Component {
+export class Snare {
   static _id = 'Snare'
   _id = Snare._id
 
@@ -11,8 +11,6 @@ export class Snare extends Component {
   strength: number
 
   constructor(strength: number = 0) {
-    super()
-
     this.strength = strength
   }
 }

@@ -1,9 +1,20 @@
 import { Manager } from '../ecs/manager'
 import { Camera } from './utils/camera'
+import { Factory } from './Factory'
 import { State } from './State'
+import { GameObjectRenderer } from './systems/GameObjectRenderer'
 
-type Factory = any
 type HUD = any
+
+const initializeBlueprints = (factory: Factory) => {
+  const blueprints = [factory.ground()]
+
+  blueprints.forEach(({ entity, components }) => {
+    components.forEach(component => {
+      entity.add(component)
+    })
+  })
+}
 
 export class Game {
   camera: Camera
@@ -14,7 +25,7 @@ export class Game {
   world: World
 
   constructor() {
-    this.state = State.PAUSED
+    this.state = State.PLAYING
 
     this.world = love.physics.newWorld(0, 9.81, true)
 
@@ -29,9 +40,15 @@ export class Game {
 
     this.manager = new Manager(this.world)
 
+    this.factory = new Factory(this.manager)
+
     this.camera = new Camera('right')
 
     love.physics.setMeter(256)
+
+    this.manager.addSystem(new GameObjectRenderer())
+
+    initializeBlueprints(this.factory)
   }
 
   setState = (state: State) => {
@@ -69,9 +86,10 @@ export class Game {
   }
 
   draw = () => {
-    this.camera.set()
+    // this.camera.set()
     this.manager.draw()
-    this.camera.clear()
+    this.factory.draw()
+    // this.camera.clear()
 
     // if player then
     //       self.hud:draw(player, self)

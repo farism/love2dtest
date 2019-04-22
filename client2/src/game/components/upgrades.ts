@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/component'
 import { Flag } from './flags'
 
-export class Upgrades extends Component {
+export class Upgrades {
   static _id = 'Upgrades'
   _id = Upgrades._id
 
@@ -21,8 +21,6 @@ export class Upgrades extends Component {
     grapple: number,
     dig: number
   ) {
-    super()
-
     this.passive = passive
     this.throw = throw_
     this.dash = dash

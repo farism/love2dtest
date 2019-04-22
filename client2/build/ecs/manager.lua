@@ -191,12 +191,6 @@ exports.Manager.new = function(...)
     return self;
 end;
 exports.Manager.prototype.____constructor = function(self, world)
-    self.getFactory = function(____)
-        return self.factory;
-    end;
-    self.setFactory = function(____, factory)
-        self.factory = factory;
-    end;
     self.getNextid = function(____)
         return (function()
             local ____TS_tmp = self.nextId;
@@ -204,8 +198,9 @@ exports.Manager.prototype.____constructor = function(self, world)
             return ____TS_tmp;
         end)();
     end;
-    self.newEntity = function(____, id)
+    self.createEntity = function(____, id)
         local entity = Entity.new(id or self:getNextid(), self);
+        self:addEntity(entity);
         return entity;
     end;
     self.getEntity = function(____, id)
@@ -244,7 +239,7 @@ exports.Manager.prototype.____constructor = function(self, world)
     end;
     self.removeComponents = function(____, entity)
     end;
-    self.addSytem = function(____, system)
+    self.addSystem = function(____, system)
         self.entities:forEach(function(____, entity)
             return system:check(entity);
         end);
@@ -253,7 +248,7 @@ exports.Manager.prototype.____constructor = function(self, world)
     end;
     self.removeSystem = function(____, system)
         self.systems = __TS__ArrayFilter(self.systems, function(____, s)
-            return s.id ~= system.id;
+            return s._id ~= system._id;
         end);
     end;
     self.check = function(____, entity)

@@ -9,9 +9,6 @@ exports.Dash.__index = exports.Dash;
 exports.Dash.prototype = exports.Dash.prototype or {};
 exports.Dash.prototype.__index = exports.Dash.prototype;
 exports.Dash.prototype.constructor = exports.Dash;
-exports.Dash.____super = Component;
-setmetatable(exports.Dash, exports.Dash.____super);
-setmetatable(exports.Dash.prototype, exports.Dash.____super.prototype);
 exports.Dash.new = function(...)
     local self = setmetatable({}, exports.Dash.prototype);
     self:____constructor(...);
@@ -23,7 +20,6 @@ exports.Dash.prototype.____constructor = function(self, velocity)
     if velocity == nil then
         velocity = 0;
     end
-    Component.prototype.____constructor(self);
     self.velocity = velocity;
 end;
 exports.Dash._id = "Dash";

@@ -155,12 +155,14 @@ exports.System.new = function(...)
     self:____constructor(...);
     return self;
 end;
-exports.System.prototype.____constructor = function(self, id, aspect)
+exports.System.prototype.____constructor = function(self)
+    self._id = exports.System._id;
+    self._aspect = exports.System._aspect;
     self.add = function(____, entity)
         self.entities:set(entity.id, entity);
     end;
     self.check = function(____, entity)
-        if self.aspect:check(entity) then
+        if self._aspect:check(entity) then
             if not self.entities:get(entity.id) then
                 self:onAdd(entity);
             end
@@ -171,9 +173,6 @@ exports.System.prototype.____constructor = function(self, id, aspect)
             end
             self.entities:delete(entity.id);
         end
-    end;
-    self.getManager = function(____)
-        return self.manager;
     end;
     self.keyboard = function(____, key, scancode, isRepeat, isPressed)
     end;
@@ -203,10 +202,10 @@ exports.System.prototype.____constructor = function(self, id, aspect)
     end;
     self.update = function(____, dt)
     end;
-    self.id = id;
-    self.aspect = aspect or Aspect.new();
     self.entities = Map.new();
     self.manager = nil;
     self.paused = false;
 end;
+exports.System._id = "System";
+exports.System._aspect = Aspect.new();
 return exports;

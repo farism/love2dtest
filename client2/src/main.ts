@@ -7,8 +7,10 @@ love.load = (arg: table) => {
   love.physics.setMeter(1)
 }
 
-love.update = (delta: number) => {}
+love.update = (dt: number) => {
+  game.update(dt)
+}
 
 love.draw = () => {
-  love.graphics.print('hello world!!!', 400, 300)
+  game.draw()
 }

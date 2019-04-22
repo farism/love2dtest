@@ -12,18 +12,15 @@ exports.Entity.new = function(...)
     self:____constructor(...);
     return self;
 end;
-exports.Entity.prototype.____constructor = function(self, id, manager, meta)
+exports.Entity.prototype.____constructor = function(self, id, manager, userData)
     self.add = function(____, component)
         self.manager:addComponent(self, component);
     end;
-    self.as = function(____, component)
-        local cmp = self.manager:getComponent(self, component);
-        return cmp and (cmp);
+    self.as = function(____, Class)
+        local cmp = self.manager:getComponent(self, Class);
+        return cmp and ((cmp));
     end;
     self.clearFlag = function(____, component)
-        if not self:has(component) then
-            print(("entity " .. (tostring(self.id) .. " does not have component ")) .. (tostring(component._flag) .. ""));
-        end
         self.components = bit.band(self.components, bit.bnot(component._flag));
     end;
     self.destroy = function(____)
@@ -36,15 +33,15 @@ exports.Entity.prototype.____constructor = function(self, id, manager, meta)
         self.manager:removeComponent(self, component);
     end;
     self.setFlag = function(____, component)
-        if self:has(component) then
-            print(("entity " .. (tostring(self.id) .. " already has component ")) .. (tostring(self.id) .. ""));
-            return;
-        end
         self.components = bit.bxor(self.components, component._flag);
     end;
+    if userData == nil then
+        userData = {};
+    end
     self.components = 0;
     self.id = id;
     self.manager = manager;
     self.systems = 0;
+    self.userData = userData;
 end;
 return exports;

@@ -9,9 +9,6 @@ exports.Waypoint.__index = exports.Waypoint;
 exports.Waypoint.prototype = exports.Waypoint.prototype or {};
 exports.Waypoint.prototype.__index = exports.Waypoint.prototype;
 exports.Waypoint.prototype.constructor = exports.Waypoint;
-exports.Waypoint.____super = Component;
-setmetatable(exports.Waypoint, exports.Waypoint.____super);
-setmetatable(exports.Waypoint.prototype, exports.Waypoint.____super.prototype);
 exports.Waypoint.new = function(...)
     local self = setmetatable({}, exports.Waypoint.prototype);
     self:____constructor(...);
@@ -26,7 +23,6 @@ exports.Waypoint.prototype.____constructor = function(self, active, speed, path)
     if speed == nil then
         speed = 1;
     end
-    Component.prototype.____constructor(self);
     self.active = active;
     self.current = 1;
     self.speed = speed;

@@ -17,7 +17,9 @@ exports.IntervalSystem.new = function(...)
     self:____constructor(...);
     return self;
 end;
-exports.IntervalSystem.prototype.____constructor = function(self, id, aspect, interval, onUpdate)
+exports.IntervalSystem.prototype.____constructor = function(self, interval, onUpdate)
+    self._id = exports.IntervalSystem._id;
+    self._aspect = exports.IntervalSystem._aspect;
     self.update = function(____, dt)
         local elapsed = self.elapsed + dt;
         if elapsed >= self.interval then
@@ -27,9 +29,11 @@ exports.IntervalSystem.prototype.____constructor = function(self, id, aspect, in
             self.elapsed = elapsed;
         end
     end;
-    System.prototype.____constructor(self, id, aspect);
+    System.prototype.____constructor(self);
     self.interval = interval;
     self.elapsed = 0;
     self.onUpdate = onUpdate;
 end;
+exports.IntervalSystem._id = "IntervalSystem";
+exports.IntervalSystem._aspect = Aspect.new();
 return exports;

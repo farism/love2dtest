@@ -1,4 +1,4 @@
-export class Component {
-  static _flag = 0
-  _flag: number = Component._flag
+export interface Component {
+  _id: string
+  _flag: number
 }

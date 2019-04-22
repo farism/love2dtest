@@ -9,9 +9,6 @@ exports.Projectile.__index = exports.Projectile;
 exports.Projectile.prototype = exports.Projectile.prototype or {};
 exports.Projectile.prototype.__index = exports.Projectile.prototype;
 exports.Projectile.prototype.constructor = exports.Projectile;
-exports.Projectile.____super = Component;
-setmetatable(exports.Projectile, exports.Projectile.____super);
-setmetatable(exports.Projectile.prototype, exports.Projectile.____super.prototype);
 exports.Projectile.new = function(...)
     local self = setmetatable({}, exports.Projectile.prototype);
     self:____constructor(...);
@@ -20,7 +17,6 @@ end;
 exports.Projectile.prototype.____constructor = function(self)
     self._id = exports.Projectile._id;
     self._flag = Flag.Projectile;
-    Component.prototype.____constructor(self);
 end;
 exports.Projectile._id = "Projectile";
 exports.Projectile._flag = Flag.Projectile;

@@ -9,9 +9,6 @@ exports.Sprite.__index = exports.Sprite;
 exports.Sprite.prototype = exports.Sprite.prototype or {};
 exports.Sprite.prototype.__index = exports.Sprite.prototype;
 exports.Sprite.prototype.constructor = exports.Sprite;
-exports.Sprite.____super = Component;
-setmetatable(exports.Sprite, exports.Sprite.____super);
-setmetatable(exports.Sprite.prototype, exports.Sprite.____super.prototype);
 exports.Sprite.new = function(...)
     local self = setmetatable({}, exports.Sprite.prototype);
     self:____constructor(...);
@@ -35,7 +32,6 @@ exports.Sprite.prototype.____constructor = function(self, filepath, x, y, width,
     if height == nil then
         height = 0;
     end
-    Component.prototype.____constructor(self);
     self.filepath = filepath;
     self.x = x;
     self.y = y;

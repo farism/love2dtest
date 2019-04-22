@@ -9,9 +9,6 @@ exports.Health.__index = exports.Health;
 exports.Health.prototype = exports.Health.prototype or {};
 exports.Health.prototype.__index = exports.Health.prototype;
 exports.Health.prototype.constructor = exports.Health;
-exports.Health.____super = Component;
-setmetatable(exports.Health, exports.Health.____super);
-setmetatable(exports.Health.prototype, exports.Health.____super.prototype);
 exports.Health.new = function(...)
     local self = setmetatable({}, exports.Health.prototype);
     self:____constructor(...);
@@ -26,7 +23,6 @@ exports.Health.prototype.____constructor = function(self, hitpoints, armor)
     if armor == nil then
         armor = 0;
     end
-    Component.prototype.____constructor(self);
     self.hitpoints = hitpoints;
     self.armor = armor;
 end;

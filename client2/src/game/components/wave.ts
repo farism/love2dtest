@@ -7,7 +7,7 @@ enum WaveType {
   Vertical = 'vertical',
 }
 
-export class Wave extends Component {
+export class Wave {
   static _id = 'Wave'
   _id = Wave._id
 
@@ -29,8 +29,6 @@ export class Wave extends Component {
     frequency: number = 0,
     direction: number = 0
   ) {
-    super()
-
     this.type = type
     this.x = x
     this.y = y

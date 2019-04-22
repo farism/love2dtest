@@ -3,7 +3,7 @@ import { Flag } from './flags'
 
 type Direction = 'left' | 'right'
 
-export class Dash extends Component {
+export class Dash {
   static _id = 'Dash'
   _id = Dash._id
 
@@ -16,7 +16,5 @@ export class Dash extends Component {
   jump: boolean = false
   jumpCount: number = 0
 
-  constructor() {
-    super()
-  }
+  constructor() {}
 }

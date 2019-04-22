@@ -2,12 +2,13 @@ import { Component } from './Component'
 import { Entity } from './Entity'
 import { System } from './System'
 
-type Factory = any
+interface SystemClass {
+  new (): System
+}
 
 export class Manager {
   components: Map<number, Map<number, Component>>
   entities: Map<number, Entity>
-  factory: Factory
   nextId: number
   systems: System[]
   world: World
@@ -20,24 +21,16 @@ export class Manager {
     this.world = world
   }
 
-  getFactory = (): Factory => {
-    return this.factory
-  }
-
-  setFactory = (factory: Factory) => {
-    this.factory = factory
-  }
-
   // managing entities
 
   getNextid = () => {
     return this.nextId++
   }
 
-  newEntity = (id: number) => {
+  createEntity = (id: number) => {
     const entity = new Entity(id || this.getNextid(), this)
 
-    // this.addEntity(entity)
+    this.addEntity(entity)
 
     return entity
   }
@@ -101,14 +94,14 @@ export class Manager {
 
   // managing systems
 
-  addSytem = (system: System) => {
+  addSystem = <T extends System>(system: T) => {
     this.entities.forEach(entity => system.check(entity))
     system.setManager(this)
     this.systems.push(system)
   }
 
   removeSystem = (system: System) => {
-    this.systems = this.systems.filter(s => s.id !== system.id)
+    this.systems = this.systems.filter(s => s._id !== system._id)
   }
 
   check = (entity: Entity) => {

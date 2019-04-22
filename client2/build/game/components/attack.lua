@@ -11,9 +11,6 @@ exports.Attack.__index = exports.Attack;
 exports.Attack.prototype = exports.Attack.prototype or {};
 exports.Attack.prototype.__index = exports.Attack.prototype;
 exports.Attack.prototype.constructor = exports.Attack;
-exports.Attack.____super = Component;
-setmetatable(exports.Attack, exports.Attack.____super);
-setmetatable(exports.Attack.prototype, exports.Attack.____super.prototype);
 exports.Attack.new = function(...)
     local self = setmetatable({}, exports.Attack.prototype);
     self:____constructor(...);
@@ -22,7 +19,6 @@ end;
 exports.Attack.prototype.____constructor = function(self, target)
     self._id = exports.Attack._id;
     self._flag = Flag.Attack;
-    Component.prototype.____constructor(self);
     self.target = target;
 end;
 exports.Attack._id = "Attack";

@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Sound extends Component {
+export class Sound {
   static _id = 'Sound'
   _id = Sound._id
 
@@ -12,8 +12,6 @@ export class Sound extends Component {
   sound: any
 
   constructor(filepath: string = '', sound: any) {
-    super()
-
     this.filepath = filepath
     this.sound = sound
   }

@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Player extends Component {
+export class Player {
   static _id = 'Player'
   _id = Player._id
 
@@ -21,8 +21,6 @@ export class Player extends Component {
     documents: number = 0,
     checkpoint: number = 0
   ) {
-    super()
-
     this.alias = alias
     this.money = money
     this.lives = lives

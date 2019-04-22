@@ -68,9 +68,6 @@ exports.Animation.__index = exports.Animation;
 exports.Animation.prototype = exports.Animation.prototype or {};
 exports.Animation.prototype.__index = exports.Animation.prototype;
 exports.Animation.prototype.constructor = exports.Animation;
-exports.Animation.____super = Component;
-setmetatable(exports.Animation, exports.Animation.____super);
-setmetatable(exports.Animation.prototype, exports.Animation.____super.prototype);
 exports.Animation.new = function(...)
     local self = setmetatable({}, exports.Animation.prototype);
     self:____constructor(...);
@@ -85,7 +82,6 @@ exports.Animation.prototype.____constructor = function(self, sequences, currentS
     if currentSequence == nil then
         currentSequence = 0;
     end
-    Component.prototype.____constructor(self);
     self.elapsedTime = 0;
     self.currentFrame = 1;
     self.currentSequence = currentSequence;

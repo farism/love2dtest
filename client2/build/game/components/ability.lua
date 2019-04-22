@@ -25,9 +25,6 @@ exports.Abilities.__index = exports.Abilities;
 exports.Abilities.prototype = exports.Abilities.prototype or {};
 exports.Abilities.prototype.__index = exports.Abilities.prototype;
 exports.Abilities.prototype.constructor = exports.Abilities;
-exports.Abilities.____super = Component;
-setmetatable(exports.Abilities, exports.Abilities.____super);
-setmetatable(exports.Abilities.prototype, exports.Abilities.____super.prototype);
 exports.Abilities.new = function(...)
     local self = setmetatable({}, exports.Abilities.prototype);
     self:____constructor(...);
@@ -60,7 +57,6 @@ exports.Abilities.prototype.____constructor = function(self)
     self.setActivated = function(____, ability, activated)
         self.abilities[ability].activated = activated;
     end;
-    Component.prototype.____constructor(self);
     self.abilities = {throw = defineAbility(nil, 0.5, 0, 0), dash = defineAbility(nil, 0.5, 0, 0), grapple = defineAbility(nil, 1, 0, 0), dig = defineAbility(nil, 1, 1, 0), shoot = defineAbility(nil, 3, 0, 1.5, false), slash = defineAbility(nil, 3, 0, 1, false), stab = defineAbility(nil, 3, 0, 1, false), ambush = defineAbility(nil, 3, 0, 1, false), taser = defineAbility(nil, 3, 0, 1, false)};
 end;
 exports.Abilities._id = "Abilities";

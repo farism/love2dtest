@@ -9,9 +9,6 @@ exports.Sound.__index = exports.Sound;
 exports.Sound.prototype = exports.Sound.prototype or {};
 exports.Sound.prototype.__index = exports.Sound.prototype;
 exports.Sound.prototype.constructor = exports.Sound;
-exports.Sound.____super = Component;
-setmetatable(exports.Sound, exports.Sound.____super);
-setmetatable(exports.Sound.prototype, exports.Sound.____super.prototype);
 exports.Sound.new = function(...)
     local self = setmetatable({}, exports.Sound.prototype);
     self:____constructor(...);
@@ -23,7 +20,6 @@ exports.Sound.prototype.____constructor = function(self, filepath, sound)
     if filepath == nil then
         filepath = "";
     end
-    Component.prototype.____constructor(self);
     self.filepath = filepath;
     self.sound = sound;
 end;

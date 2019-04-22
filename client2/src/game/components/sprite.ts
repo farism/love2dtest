@@ -1,7 +1,7 @@
 import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
-export class Sprite extends Component {
+export class Sprite {
   static _id = 'Sprite'
   _id = Sprite._id
 
@@ -21,8 +21,6 @@ export class Sprite extends Component {
     width: number = 0,
     height: number = 0
   ) {
-    super()
-
     this.filepath = filepath
     this.x = x
     this.y = y

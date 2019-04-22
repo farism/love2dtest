@@ -16,9 +16,6 @@ exports.Wave.__index = exports.Wave;
 exports.Wave.prototype = exports.Wave.prototype or {};
 exports.Wave.prototype.__index = exports.Wave.prototype;
 exports.Wave.prototype.constructor = exports.Wave;
-exports.Wave.____super = Component;
-setmetatable(exports.Wave, exports.Wave.____super);
-setmetatable(exports.Wave.prototype, exports.Wave.____super.prototype);
 exports.Wave.new = function(...)
     local self = setmetatable({}, exports.Wave.prototype);
     self:____constructor(...);
@@ -45,7 +42,6 @@ exports.Wave.prototype.____constructor = function(self, type, x, y, amplitude, f
     if direction == nil then
         direction = 0;
     end
-    Component.prototype.____constructor(self);
     self.type = type;
     self.x = x;
     self.y = y;

@@ -9,9 +9,6 @@ exports.Player.__index = exports.Player;
 exports.Player.prototype = exports.Player.prototype or {};
 exports.Player.prototype.__index = exports.Player.prototype;
 exports.Player.prototype.constructor = exports.Player;
-exports.Player.____super = Component;
-setmetatable(exports.Player, exports.Player.____super);
-setmetatable(exports.Player.prototype, exports.Player.____super.prototype);
 exports.Player.new = function(...)
     local self = setmetatable({}, exports.Player.prototype);
     self:____constructor(...);
@@ -35,7 +32,6 @@ exports.Player.prototype.____constructor = function(self, alias, money, lives, d
     if checkpoint == nil then
         checkpoint = 0;
     end
-    Component.prototype.____constructor(self);
     self.alias = alias;
     self.money = money;
     self.lives = lives;

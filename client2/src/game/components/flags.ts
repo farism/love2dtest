@@ -8,7 +8,7 @@ export enum Flag {
   Checkpoint = getFlag(2),
   Container = getFlag(3),
   Damage = getFlag(4),
-  EntityFixture = getFlag(5),
+  GameObject = getFlag(5),
   Health = getFlag(6),
   Input = getFlag(7),
   Movement = getFlag(8),

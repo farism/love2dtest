@@ -7,7 +7,7 @@ enum TriggerType {
 
 type Action = () => {}
 
-export class Player extends Component {
+export class Player {
   static _id = 'Player'
   _id = Player._id
 
@@ -20,8 +20,6 @@ export class Player extends Component {
   executed: boolean
 
   constructor(type: TriggerType = TriggerType.Spawn, action: Action) {
-    super()
-
     this.type = type
     this.action = action
     this.activated = false

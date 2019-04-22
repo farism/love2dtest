@@ -4,26 +4,28 @@ import { Entity } from './Entity'
 type Manager = any
 
 export class System {
-  id: string
-  aspect: Aspect
+  static _id = 'System'
+  _id = System._id
+
+  static _aspect = new Aspect()
+  _aspect = System._aspect
+
   entities: Map<number, Entity>
   manager: Manager
   paused: boolean
 
-  constructor(id: string, aspect: Aspect) {
-    this.id = id
-    this.aspect = aspect || new Aspect()
+  constructor() {
     this.entities = new Map()
     this.manager = null
     this.paused = false
   }
 
-  public add = (entity: Entity) => {
+  add = (entity: Entity) => {
     this.entities.set(entity.id, entity)
   }
 
-  public check = (entity: Entity) => {
-    if (this.aspect.check(entity)) {
+  check = (entity: Entity) => {
+    if (this._aspect.check(entity)) {
       if (!this.entities.get(entity.id)) {
         this.onAdd(entity)
       }
@@ -38,44 +40,40 @@ export class System {
     }
   }
 
-  public getManager = () => {
-    return this.manager
-  }
-
-  public keyboard = (
+  keyboard = (
     key: string,
     scancode: number,
     isRepeat: boolean,
     isPressed: boolean
   ) => {}
 
-  public mouse = (x: number, y: number, isTouch: boolean, presses: number) => {}
+  mouse = (x: number, y: number, isTouch: boolean, presses: number) => {}
 
-  public pause = () => {
+  pause = () => {
     this.paused = true
   }
 
-  public remove = (entity: Entity) => {
+  remove = (entity: Entity) => {
     this.entities.delete(entity.id)
   }
 
-  public resume = () => {
+  resume = () => {
     this.paused = false
   }
 
-  public setManager = (manager: Manager) => {
+  setManager = (manager: Manager) => {
     this.manager = manager
   }
 
-  public beginContact = (a: Fixture, b: Fixture, contact: Contact) => {}
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {}
 
-  public endContact = (a: Fixture, b: Fixture, contact: Contact) => {}
+  endContact = (a: Fixture, b: Fixture, contact: Contact) => {}
 
-  public draw = () => {}
+  draw = () => {}
 
-  public onAdd = (entity: Entity) => {}
+  onAdd = (entity: Entity) => {}
 
-  public onRemove = (entity: Entity) => {}
+  onRemove = (entity: Entity) => {}
 
-  public update = (dt: number) => {}
+  update = (dt: number) => {}
 }

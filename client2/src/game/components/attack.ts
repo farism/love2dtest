@@ -2,7 +2,7 @@ import { Component } from '../../ecs/Component'
 import { Entity } from '../../ecs/Entity'
 import { Flag } from './flags'
 
-export class Attack extends Component {
+export class Attack {
   static _id = 'Attack'
   _id = Attack._id
 
@@ -12,8 +12,6 @@ export class Attack extends Component {
   target: Entity
 
   constructor(target: Entity) {
-    super()
-
     this.target = target
   }
 }
