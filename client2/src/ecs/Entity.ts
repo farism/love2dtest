@@ -8,6 +8,7 @@ interface Manager {
 }
 
 interface UserData {
+  blueprint?: string
   [k: string]: any
 }
 
@@ -32,17 +33,21 @@ export class Entity {
     this.userData = userData
   }
 
-  public add = (component: Component) => {
+  add = (component: Component) => {
     this.manager.addComponent(this, component)
   }
 
-  public as = <T>(Class: Aliasable<T>) => {
+  addAll = (components: Component[]) => {
+    components.forEach(component => this.add(component))
+  }
+
+  as = <T>(Class: Aliasable<T>) => {
     const cmp = this.manager.getComponent(this, Class)
 
     return cmp && ((cmp as unknown) as T)
   }
 
-  public clearFlag = (component: Component) => {
+  clearFlag = (component: Component) => {
     // if (!this.has(component)) {
     //   print(`entity ${this.id} does not have component ${component._flag}`)
     // }
@@ -50,19 +55,19 @@ export class Entity {
     this.components = bit.band(this.components, bit.bnot(component._flag))
   }
 
-  public destroy = () => {
+  destroy = () => {
     this.manager.removeEntity(this)
   }
 
-  public has = (component: Component) => {
+  has = (component: Component) => {
     return bit.band(this.components, component._flag) === component._flag
   }
 
-  public remove = (component: Component) => {
+  remove = (component: Component) => {
     this.manager.removeComponent(this, component)
   }
 
-  public setFlag = (component: Component) => {
+  setFlag = (component: Component) => {
     // if (this.has(component)) {
     //   print(`entity ${this.id} already has component ${this.id}`)
     //   return

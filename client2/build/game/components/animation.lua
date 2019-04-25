@@ -13,8 +13,6 @@ __TS__ArrayMap = function(arr, callbackfn)
 end;
 
 local exports = exports or {};
-local __TSTL_Component = require("ecs.Component");
-local Component = __TSTL_Component.Component;
 local __TSTL_flags = require("game.components.flags");
 local Flag = __TSTL_flags.Flag;
 local Sequence = Sequence or {};

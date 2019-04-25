@@ -1,4 +1,3 @@
-import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
 enum WaveType {

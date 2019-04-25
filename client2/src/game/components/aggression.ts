@@ -1,4 +1,3 @@
-import { Component } from '../../ecs/component'
 import { Flag } from './flags'
 import { Entity } from '../../ecs/Entity'
 

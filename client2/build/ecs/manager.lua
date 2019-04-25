@@ -191,7 +191,7 @@ exports.Manager.new = function(...)
     return self;
 end;
 exports.Manager.prototype.____constructor = function(self, world)
-    self.getNextid = function(____)
+    self.getNextId = function(____)
         return (function()
             local ____TS_tmp = self.nextId;
             self.nextId = ____TS_tmp + 1;
@@ -199,7 +199,7 @@ exports.Manager.prototype.____constructor = function(self, world)
         end)();
     end;
     self.createEntity = function(____, id)
-        local entity = Entity.new(id or self:getNextid(), self);
+        local entity = Entity.new(id or self:getNextId(), self);
         self:addEntity(entity);
         return entity;
     end;

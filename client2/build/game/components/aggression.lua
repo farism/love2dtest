@@ -1,7 +1,5 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_component = require("ecs.component");
-local Component = __TSTL_component.Component;
 local __TSTL_flags = require("game.components.flags");
 local Flag = __TSTL_flags.Flag;
 local __TSTL_Entity = require("ecs.Entity");

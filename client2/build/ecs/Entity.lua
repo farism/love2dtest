@@ -1,4 +1,15 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
+-- Lua Library inline imports
+__TS__ArrayForEach = function(arr, callbackFn)
+    do
+        local i = 0;
+        while i < (#arr) do
+            callbackFn(_G, arr[i + 1], i, arr);
+            i = i + 1;
+        end
+    end
+end;
+
 local exports = exports or {};
 local __TSTL_component = require("ecs.component");
 local Component = __TSTL_component.Component;
@@ -15,6 +26,11 @@ end;
 exports.Entity.prototype.____constructor = function(self, id, manager, userData)
     self.add = function(____, component)
         self.manager:addComponent(self, component);
+    end;
+    self.addAll = function(____, components)
+        __TS__ArrayForEach(components, function(____, component)
+            return self:add(component);
+        end);
     end;
     self.as = function(____, Class)
         local cmp = self.manager:getComponent(self, Class);

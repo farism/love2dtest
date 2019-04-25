@@ -23,12 +23,12 @@ export class Manager {
 
   // managing entities
 
-  getNextid = () => {
+  getNextId = () => {
     return this.nextId++
   }
 
   createEntity = (id: number) => {
-    const entity = new Entity(id || this.getNextid(), this)
+    const entity = new Entity(id || this.getNextId(), this)
 
     this.addEntity(entity)
 

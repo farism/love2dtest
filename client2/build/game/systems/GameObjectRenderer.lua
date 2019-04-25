@@ -6,21 +6,9 @@ local __TSTL_gameobject = require("game.components.gameobject");
 local GameObject = __TSTL_gameobject.GameObject;
 local __TSTL_flags = require("game.systems.flags");
 local Flag = __TSTL_flags.Flag;
-local isPolygonShape;
-isPolygonShape = function(____, shape)
-    return shape:getType() == "polygon";
-end;
-local isCircleShape;
-isCircleShape = function(____, shape)
-    return shape:getType() == "circle";
-end;
-local isChainShape;
-isChainShape = function(____, shape)
-    return shape:getType() == "edge";
-end;
-local isEdgeShape;
-isEdgeShape = function(____, shape)
-    return shape:getType() == "chain";
+local isShapeType;
+isShapeType = function(____, type, shape)
+    return shape:getType() == type;
 end;
 exports.GameObjectRenderer = exports.GameObjectRenderer or {};
 exports.GameObjectRenderer.__index = exports.GameObjectRenderer;
@@ -47,8 +35,12 @@ exports.GameObjectRenderer.prototype.____constructor = function(self, ...)
             end
             local body = gameObject.fixture:getBody();
             local shape = gameObject.fixture:getShape();
-            if isPolygonShape(nil, shape) then
+            if isShapeType(nil, "polygon", shape) then
                 love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()));
+            elseif isShapeType(nil, "circle", shape) then
+                love.graphics.circle("fill", body:getX(), body:getY(), shape:getRadius());
+            elseif isShapeType(nil, "chain", shape) then
+            elseif isShapeType(nil, "edge", shape) then
             end
         end);
     end;

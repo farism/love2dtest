@@ -1,14 +1,13 @@
-import { Component } from '../../ecs/Component'
 import { Flag } from './flags'
 
 type Direction = 'left' | 'right'
 
-export class Dash {
-  static _id = 'Dash'
-  _id = Dash._id
+export class Movement {
+  static _id = 'Movement'
+  _id = Movement._id
 
-  static _flag = Flag.Dash
-  _flag = Flag.Dash
+  static _flag = Flag.Movement
+  _flag = Flag.Movement
 
   direction: Direction = 'right'
   left: boolean = false
