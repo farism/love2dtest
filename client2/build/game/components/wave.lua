@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 local WaveType = {};
 WaveType.Circular = "circular";
 WaveType.circular = "Circular";
@@ -21,7 +21,7 @@ exports.Wave.new = function(...)
 end;
 exports.Wave.prototype.____constructor = function(self, type, x, y, amplitude, frequency, direction)
     self._id = exports.Wave._id;
-    self._flag = Flag.Wave;
+    self._flag = ComponentFlag.Wave;
     if type == nil then
         type = WaveType.Vertical;
     end
@@ -48,7 +48,7 @@ exports.Wave.prototype.____constructor = function(self, type, x, y, amplitude, f
     self.direction = direction;
 end;
 exports.Wave._id = "Wave";
-exports.Wave._flag = Flag.Wave;
+exports.Wave._flag = ComponentFlag.Wave;
 exports.CircularWave = exports.CircularWave or {};
 exports.CircularWave.__index = exports.CircularWave;
 exports.CircularWave.prototype = exports.CircularWave.prototype or {};

@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Position {
   static _id = 'Position'
   _id = Position._id
 
-  static _flag = Flag.Position
-  _flag = Flag.Position
+  static _flag = ComponentFlag.Position
+  _flag = ComponentFlag.Position
 
   x: number
   y: number

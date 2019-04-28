@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Platform = exports.Platform or {};
 exports.Platform.__index = exports.Platform;
 exports.Platform.prototype = exports.Platform.prototype or {};
@@ -14,7 +14,7 @@ exports.Platform.new = function(...)
 end;
 exports.Platform.prototype.____constructor = function(self, fall, initialX, initialY)
     self._id = exports.Platform._id;
-    self._flag = Flag.Platform;
+    self._flag = ComponentFlag.Platform;
     if fall == nil then
         fall = 0;
     end
@@ -29,5 +29,5 @@ exports.Platform.prototype.____constructor = function(self, fall, initialX, init
     self.initialY = initialY;
 end;
 exports.Platform._id = "Platform";
-exports.Platform._flag = Flag.Platform;
+exports.Platform._flag = ComponentFlag.Platform;
 return exports;

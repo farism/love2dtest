@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Dash = exports.Dash or {};
 exports.Dash.__index = exports.Dash;
 exports.Dash.prototype = exports.Dash.prototype or {};
@@ -14,12 +14,12 @@ exports.Dash.new = function(...)
 end;
 exports.Dash.prototype.____constructor = function(self, velocity)
     self._id = exports.Dash._id;
-    self._flag = Flag.Dash;
+    self._flag = ComponentFlag.Dash;
     if velocity == nil then
         velocity = 0;
     end
     self.velocity = velocity;
 end;
 exports.Dash._id = "Dash";
-exports.Dash._flag = Flag.Dash;
+exports.Dash._flag = ComponentFlag.Dash;
 return exports;

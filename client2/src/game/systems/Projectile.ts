@@ -2,9 +2,9 @@
 // local System = require 'src.ecs.system'
 // local Projectile = require 'src.game.components.projectile'
 
-// local ProjectileSystem = System:new('damage', Aspect.never())
+// local Projectile = System:new('damage', Aspect.never())
 
-// function ProjectileSystem:beginContact(a, b, contact)
+// function Projectile:beginContact(a, b, contact)
 //   local ae = a:getUserData().entity
 //   local be = b:getUserData().entity
 
@@ -15,4 +15,17 @@
 //   end
 // end
 
-// return ProjectileSystem
+// return Projectile
+
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+
+export class Projectile extends System {
+  static _id = 'Projectile'
+  _id = Projectile._id
+
+  static _flag = SystemFlag.Projectile
+  _flag = Projectile._flag
+
+  beginContact = (a: Fixture, b: Fixture, c: Contact) => {}
+}

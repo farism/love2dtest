@@ -1,12 +1,12 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 import { Entity } from '../../ecs/Entity'
 
 export class Aggression {
   static _id = 'Aggression'
   _id = Aggression._id
 
-  static _flag = Flag.Aggression
-  _flag = Flag.Aggression
+  static _flag = ComponentFlag.Aggression
+  _flag = ComponentFlag.Aggression
 
   fixture: Fixture
   width: number

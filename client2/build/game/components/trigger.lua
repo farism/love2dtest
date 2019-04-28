@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 local TriggerType = {};
 TriggerType.Spawn = "spawn";
 TriggerType.spawn = "Spawn";
@@ -17,7 +17,7 @@ exports.Player.new = function(...)
 end;
 exports.Player.prototype.____constructor = function(self, type, action)
     self._id = exports.Player._id;
-    self._flag = Flag.Player;
+    self._flag = ComponentFlag.Player;
     if type == nil then
         type = TriggerType.Spawn;
     end
@@ -27,5 +27,5 @@ exports.Player.prototype.____constructor = function(self, type, action)
     self.executed = false;
 end;
 exports.Player._id = "Player";
-exports.Player._flag = Flag.Player;
+exports.Player._flag = ComponentFlag.Player;
 return exports;

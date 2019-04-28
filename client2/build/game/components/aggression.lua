@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
 exports.Aggression = exports.Aggression or {};
@@ -16,7 +16,7 @@ exports.Aggression.new = function(...)
 end;
 exports.Aggression.prototype.____constructor = function(self, world, entity, x, y, width, height, duration)
     self._id = exports.Aggression._id;
-    self._flag = Flag.Aggression;
+    self._flag = ComponentFlag.Aggression;
     self.destroy = function(____)
         self.fixture:getBody():destroy();
     end;
@@ -44,5 +44,5 @@ exports.Aggression.prototype.____constructor = function(self, world, entity, x, 
     self.fixture:setUserData({entity = entity, aggression = true});
 end;
 exports.Aggression._id = "Aggression";
-exports.Aggression._flag = Flag.Aggression;
+exports.Aggression._flag = ComponentFlag.Aggression;
 return exports;

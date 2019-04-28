@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Respawn = exports.Respawn or {};
 exports.Respawn.__index = exports.Respawn;
 exports.Respawn.prototype = exports.Respawn.prototype or {};
@@ -14,12 +14,12 @@ exports.Respawn.new = function(...)
 end;
 exports.Respawn.prototype.____constructor = function(self, waitTime)
     self._id = exports.Respawn._id;
-    self._flag = Flag.Respawn;
+    self._flag = ComponentFlag.Respawn;
     if waitTime == nil then
         waitTime = 0;
     end
     self.waitTime = waitTime;
 end;
 exports.Respawn._id = "Respawn";
-exports.Respawn._flag = Flag.Respawn;
+exports.Respawn._flag = ComponentFlag.Respawn;
 return exports;

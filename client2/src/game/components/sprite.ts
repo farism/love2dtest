@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Sprite {
   static _id = 'Sprite'
   _id = Sprite._id
 
-  static _flag = Flag.Sprite
-  _flag = Flag.Sprite
+  static _flag = ComponentFlag.Sprite
+  _flag = ComponentFlag.Sprite
 
   filepath: string
   x: number

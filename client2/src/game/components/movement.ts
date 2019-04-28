@@ -1,4 +1,4 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 type Direction = 'left' | 'right'
 
@@ -6,8 +6,8 @@ export class Movement {
   static _id = 'Movement'
   _id = Movement._id
 
-  static _flag = Flag.Movement
-  _flag = Flag.Movement
+  static _flag = ComponentFlag.Movement
+  _flag = ComponentFlag.Movement
 
   direction: Direction = 'right'
   left: boolean = false

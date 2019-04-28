@@ -1,4 +1,4 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 enum WaveType {
   Circular = 'circular',
@@ -10,8 +10,8 @@ export class Wave {
   static _id = 'Wave'
   _id = Wave._id
 
-  static _flag = Flag.Wave
-  _flag = Flag.Wave
+  static _flag = ComponentFlag.Wave
+  _flag = ComponentFlag.Wave
 
   type: WaveType
   x: number

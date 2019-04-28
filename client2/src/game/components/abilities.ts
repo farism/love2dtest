@@ -1,4 +1,4 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 interface Ability {
   cooldown: number
@@ -29,8 +29,8 @@ export class Abilities {
   static _id = 'Abilities'
   _id = Abilities._id
 
-  static _flag = Flag.Abilities
-  _flag = Flag.Abilities
+  static _flag = ComponentFlag.Abilities
+  _flag = ComponentFlag.Abilities
 
   abilities: { [k: string]: Ability }
 

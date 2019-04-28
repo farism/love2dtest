@@ -13,8 +13,8 @@ __TS__ArrayMap = function(arr, callbackfn)
 end;
 
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 local Sequence = Sequence or {};
 Sequence.__index = Sequence;
 Sequence.prototype = Sequence.prototype or {};
@@ -73,7 +73,7 @@ exports.Animation.new = function(...)
 end;
 exports.Animation.prototype.____constructor = function(self, sequences, currentSequence)
     self._id = exports.Animation._id;
-    self._flag = Flag.Animation;
+    self._flag = ComponentFlag.Animation;
     if sequences == nil then
         sequences = {};
     end
@@ -86,5 +86,5 @@ exports.Animation.prototype.____constructor = function(self, sequences, currentS
     self.sequences = sequences;
 end;
 exports.Animation._id = "Animation";
-exports.Animation._flag = Flag.Animation;
+exports.Animation._flag = ComponentFlag.Animation;
 return exports;

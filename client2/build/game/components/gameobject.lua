@@ -2,8 +2,8 @@
 local exports = exports or {};
 local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.GameObject = exports.GameObject or {};
 exports.GameObject.__index = exports.GameObject;
 exports.GameObject.prototype = exports.GameObject.prototype or {};
@@ -16,7 +16,7 @@ exports.GameObject.new = function(...)
 end;
 exports.GameObject.prototype.____constructor = function(self, entity, fixture)
     self._id = exports.GameObject._id;
-    self._flag = Flag.GameObject;
+    self._flag = ComponentFlag.GameObject;
     self.destroy = function(____)
         self.fixture:getBody():destroy();
     end;
@@ -28,5 +28,5 @@ exports.GameObject.prototype.____constructor = function(self, entity, fixture)
     fixture:getBody():setUserData(data);
 end;
 exports.GameObject._id = "GameObject";
-exports.GameObject._flag = Flag.GameObject;
+exports.GameObject._flag = ComponentFlag.GameObject;
 return exports;

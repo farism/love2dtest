@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Sound {
   static _id = 'Sound'
   _id = Sound._id
 
-  static _flag = Flag.Sound
-  _flag = Flag.Sound
+  static _flag = ComponentFlag.Sound
+  _flag = ComponentFlag.Sound
 
   filepath: string
   sound: any

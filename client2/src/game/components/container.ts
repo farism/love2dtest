@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Container {
   static _id = 'Container'
   _id = Container._id
 
-  static _flag = Flag.Container
-  _flag = Flag.Container
+  static _flag = ComponentFlag.Container
+  _flag = ComponentFlag.Container
 
   constructor() {}
 }

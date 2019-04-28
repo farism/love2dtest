@@ -2,10 +2,10 @@
 local exports = exports or {};
 local __TSTL_System = require("ecs.System");
 local System = __TSTL_System.System;
-local __TSTL_gameobject = require("game.components.gameobject");
-local GameObject = __TSTL_gameobject.GameObject;
-local __TSTL_flags = require("game.systems.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_GameObject = require("game.components.GameObject");
+local GameObject = __TSTL_GameObject.GameObject;
+local __TSTL_flags = require("game.flags");
+local SystemFlag = __TSTL_flags.SystemFlag;
 local isShapeType;
 isShapeType = function(____, type, shape)
     return shape:getType() == type;
@@ -46,5 +46,5 @@ exports.GameObjectRenderer.prototype.____constructor = function(self, ...)
     end;
 end;
 exports.GameObjectRenderer._id = "GameObjectRenderer";
-exports.GameObjectRenderer._flag = Flag.GameObjectRenderer;
+exports.GameObjectRenderer._flag = SystemFlag.GameObjectRenderer;
 return exports;

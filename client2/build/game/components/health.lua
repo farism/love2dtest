@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Health = exports.Health or {};
 exports.Health.__index = exports.Health;
 exports.Health.prototype = exports.Health.prototype or {};
@@ -14,7 +14,7 @@ exports.Health.new = function(...)
 end;
 exports.Health.prototype.____constructor = function(self, hitpoints, armor)
     self._id = exports.Health._id;
-    self._flag = Flag.Health;
+    self._flag = ComponentFlag.Health;
     if hitpoints == nil then
         hitpoints = 0;
     end
@@ -25,5 +25,5 @@ exports.Health.prototype.____constructor = function(self, hitpoints, armor)
     self.armor = armor;
 end;
 exports.Health._id = "Health";
-exports.Health._flag = Flag.Health;
+exports.Health._flag = ComponentFlag.Health;
 return exports;

@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Respawn {
   static _id = 'Respawn'
   _id = Respawn._id
 
-  static _flag = Flag.Respawn
-  _flag = Flag.Respawn
+  static _flag = ComponentFlag.Respawn
+  _flag = ComponentFlag.Respawn
 
   waitTime: number
 

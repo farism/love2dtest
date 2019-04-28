@@ -1,4 +1,4 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 interface Point {
   x: number
@@ -9,8 +9,8 @@ export class Waypoint {
   static _id = 'Waypoint'
   _id = Waypoint._id
 
-  static _flag = Flag.Waypoint
-  _flag = Flag.Waypoint
+  static _flag = ComponentFlag.Waypoint
+  _flag = ComponentFlag.Waypoint
 
   active: boolean
   current: number

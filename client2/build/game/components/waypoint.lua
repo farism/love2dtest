@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Waypoint = exports.Waypoint or {};
 exports.Waypoint.__index = exports.Waypoint;
 exports.Waypoint.prototype = exports.Waypoint.prototype or {};
@@ -14,7 +14,7 @@ exports.Waypoint.new = function(...)
 end;
 exports.Waypoint.prototype.____constructor = function(self, active, speed, path)
     self._id = exports.Waypoint._id;
-    self._flag = Flag.Waypoint;
+    self._flag = ComponentFlag.Waypoint;
     if active == nil then
         active = true;
     end
@@ -27,5 +27,5 @@ exports.Waypoint.prototype.____constructor = function(self, active, speed, path)
     self.path = path;
 end;
 exports.Waypoint._id = "Waypoint";
-exports.Waypoint._flag = Flag.Waypoint;
+exports.Waypoint._flag = ComponentFlag.Waypoint;
 return exports;

@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Health {
   static _id = 'Health'
   _id = Health._id
 
-  static _flag = Flag.Health
-  _flag = Flag.Health
+  static _flag = ComponentFlag.Health
+  _flag = ComponentFlag.Health
 
   hitpoints: number
   armor: number

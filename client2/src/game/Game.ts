@@ -3,6 +3,7 @@ import { Camera } from './utils/camera'
 import * as Factory from './Factory'
 import { State } from './State'
 import { GameObjectRenderer } from './systems/GameObjectRenderer'
+import { Projectile } from './systems/Projectile'
 
 type HUD = any
 
@@ -40,6 +41,7 @@ export class Game {
     love.physics.setMeter(256)
 
     this.manager.addSystem(new GameObjectRenderer())
+    this.manager.addSystem(new Projectile())
 
     initializeBlueprints(this.manager)
   }

@@ -1,14 +1,14 @@
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../conf'
 import { Entity } from '../ecs/Entity'
 import { Component } from '../ecs/Component'
-import { GameObject } from './components/gameobject'
-import { Player } from './components/player'
-import { Position } from './components/position'
-import { Input } from './components/input'
-import { Health } from './components/health'
-import { Abilities } from './components/ability'
-import { Animation } from './components/animation'
-import { Movement } from './components/movement'
+import { GameObject } from './components/GameObject'
+import { Player } from './components/Player'
+import { Position } from './components/Position'
+import { Input } from './components/Input'
+import { Health } from './components/Health'
+import { Abilities } from './components/Abilities'
+import { Animation } from './components/Animation'
+import { Movement } from './components/Movement'
 
 interface Manager {
   world: World

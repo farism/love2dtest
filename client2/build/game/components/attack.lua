@@ -2,8 +2,8 @@
 local exports = exports or {};
 local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Attack = exports.Attack or {};
 exports.Attack.__index = exports.Attack;
 exports.Attack.prototype = exports.Attack.prototype or {};
@@ -16,9 +16,9 @@ exports.Attack.new = function(...)
 end;
 exports.Attack.prototype.____constructor = function(self, target)
     self._id = exports.Attack._id;
-    self._flag = Flag.Attack;
+    self._flag = ComponentFlag.Attack;
     self.target = target;
 end;
 exports.Attack._id = "Attack";
-exports.Attack._flag = Flag.Attack;
+exports.Attack._flag = ComponentFlag.Attack;
 return exports;

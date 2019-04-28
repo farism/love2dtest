@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Snare = exports.Snare or {};
 exports.Snare.__index = exports.Snare;
 exports.Snare.prototype = exports.Snare.prototype or {};
@@ -14,12 +14,12 @@ exports.Snare.new = function(...)
 end;
 exports.Snare.prototype.____constructor = function(self, strength)
     self._id = exports.Snare._id;
-    self._flag = Flag.Snare;
+    self._flag = ComponentFlag.Snare;
     if strength == nil then
         strength = 0;
     end
     self.strength = strength;
 end;
 exports.Snare._id = "Snare";
-exports.Snare._flag = Flag.Snare;
+exports.Snare._flag = ComponentFlag.Snare;
 return exports;

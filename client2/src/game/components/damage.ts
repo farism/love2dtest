@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Checkpoint {
   static _id = 'Checkpoint'
   _id = Checkpoint._id
 
-  static _flag = Flag.Checkpoint
-  _flag = Flag.Checkpoint
+  static _flag = ComponentFlag.Checkpoint
+  _flag = ComponentFlag.Checkpoint
 
   hitpoints: number
 

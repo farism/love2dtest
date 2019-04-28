@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Checkpoint = exports.Checkpoint or {};
 exports.Checkpoint.__index = exports.Checkpoint;
 exports.Checkpoint.prototype = exports.Checkpoint.prototype or {};
@@ -14,12 +14,12 @@ exports.Checkpoint.new = function(...)
 end;
 exports.Checkpoint.prototype.____constructor = function(self, hitpoints)
     self._id = exports.Checkpoint._id;
-    self._flag = Flag.Checkpoint;
+    self._flag = ComponentFlag.Checkpoint;
     if hitpoints == nil then
         hitpoints = 0;
     end
     self.hitpoints = hitpoints;
 end;
 exports.Checkpoint._id = "Checkpoint";
-exports.Checkpoint._flag = Flag.Checkpoint;
+exports.Checkpoint._flag = ComponentFlag.Checkpoint;
 return exports;

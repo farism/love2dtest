@@ -1,6 +1,6 @@
 import { System } from '../../ecs/System'
-import { GameObject } from '../components/gameobject'
-import { Flag } from './flags'
+import { GameObject } from '../components/GameObject'
+import { SystemFlag } from '../flags'
 
 const isShapeType = <T extends Shape>(type: string, shape: Shape): shape is T =>
   shape.getType() === type
@@ -9,7 +9,7 @@ export class GameObjectRenderer extends System {
   static _id = 'GameObjectRenderer'
   _id = GameObjectRenderer._id
 
-  static _flag = Flag.GameObjectRenderer
+  static _flag = SystemFlag.GameObjectRenderer
   _flag = GameObjectRenderer._flag
 
   draw = () => {

@@ -1,4 +1,4 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 class Sequence {
   x: number // sequence starting x position
@@ -46,8 +46,8 @@ export class Animation {
   static _id = 'Animation'
   _id = Animation._id
 
-  static _flag = Flag.Animation
-  _flag = Flag.Animation
+  static _flag = ComponentFlag.Animation
+  _flag = ComponentFlag.Animation
 
   elapsedTime: number
   currentFrame: number

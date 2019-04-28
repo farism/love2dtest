@@ -1,12 +1,12 @@
 import { System } from '../../ecs/System'
-import { GameObject } from '../components/gameobject'
-import { Flag } from './flags'
+import { GameObject } from '../components/GameObject'
+import { SystemFlag } from '../flags'
 
 export class Input extends System {
   static _id = 'Input'
   _id = Input._id
 
-  static _flag = Flag.Input
+  static _flag = SystemFlag.Input
   _flag = Input._flag
 
   update = (dt: number) => {}

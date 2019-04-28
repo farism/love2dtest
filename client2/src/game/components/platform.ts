@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Platform {
   static _id = 'Platform'
   _id = Platform._id
 
-  static _flag = Flag.Platform
-  _flag = Flag.Platform
+  static _flag = ComponentFlag.Platform
+  _flag = ComponentFlag.Platform
 
   fall: number
   initialX: number

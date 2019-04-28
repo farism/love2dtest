@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Snare {
   static _id = 'Snare'
   _id = Snare._id
 
-  static _flag = Flag.Snare
-  _flag = Flag.Snare
+  static _flag = ComponentFlag.Snare
+  _flag = ComponentFlag.Snare
 
   strength: number
 

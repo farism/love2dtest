@@ -1,11 +1,11 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Upgrades {
   static _id = 'Upgrades'
   _id = Upgrades._id
 
-  static _flag = Flag.Upgrades
-  _flag = Flag.Upgrades
+  static _flag = ComponentFlag.Upgrades
+  _flag = ComponentFlag.Upgrades
 
   passive: number
   throw: number

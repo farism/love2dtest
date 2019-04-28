@@ -1,7 +1,7 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 local exports = exports or {};
-local __TSTL_flags = require("game.components.flags");
-local Flag = __TSTL_flags.Flag;
+local __TSTL_flags = require("game.flags");
+local ComponentFlag = __TSTL_flags.ComponentFlag;
 exports.Container = exports.Container or {};
 exports.Container.__index = exports.Container;
 exports.Container.prototype = exports.Container.prototype or {};
@@ -14,8 +14,8 @@ exports.Container.new = function(...)
 end;
 exports.Container.prototype.____constructor = function(self)
     self._id = exports.Container._id;
-    self._flag = Flag.Container;
+    self._flag = ComponentFlag.Container;
 end;
 exports.Container._id = "Container";
-exports.Container._flag = Flag.Container;
+exports.Container._flag = ComponentFlag.Container;
 return exports;

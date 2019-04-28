@@ -25,6 +25,8 @@ local __TSTL_State = require("game.State");
 local State = __TSTL_State.State;
 local __TSTL_GameObjectRenderer = require("game.systems.GameObjectRenderer");
 local GameObjectRenderer = __TSTL_GameObjectRenderer.GameObjectRenderer;
+local __TSTL_Projectile = require("game.systems.Projectile");
+local Projectile = __TSTL_Projectile.Projectile;
 local initializeBlueprints;
 initializeBlueprints = function(____, manager)
     __TS__ArrayForEach({Factory.createPlayer, Factory.createGround, Factory.createSlope}, function(____, fn)
@@ -73,6 +75,7 @@ exports.Game.prototype.____constructor = function(self)
     self.camera = Camera.new("right");
     love.physics.setMeter(256);
     self.manager:addSystem(GameObjectRenderer.new());
+    self.manager:addSystem(Projectile.new());
     initializeBlueprints(nil, self.manager);
 end;
 return exports;

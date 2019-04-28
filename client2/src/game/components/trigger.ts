@@ -1,4 +1,4 @@
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 enum TriggerType {
   Spawn = 'spawn',
@@ -10,8 +10,8 @@ export class Player {
   static _id = 'Player'
   _id = Player._id
 
-  static _flag = Flag.Player
-  _flag = Flag.Player
+  static _flag = ComponentFlag.Player
+  _flag = ComponentFlag.Player
 
   type: TriggerType
   action: Action

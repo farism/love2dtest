@@ -1,12 +1,12 @@
 import { Entity } from '../../ecs/Entity'
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class GameObject {
   static _id = 'GameObject'
   _id = GameObject._id
 
-  static _flag = Flag.GameObject
-  _flag = Flag.GameObject
+  static _flag = ComponentFlag.GameObject
+  _flag = ComponentFlag.GameObject
 
   entity: Entity
   fixture: Fixture

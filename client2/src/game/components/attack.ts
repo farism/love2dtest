@@ -1,12 +1,12 @@
 import { Entity } from '../../ecs/Entity'
-import { Flag } from './flags'
+import { ComponentFlag } from '../flags'
 
 export class Attack {
   static _id = 'Attack'
   _id = Attack._id
 
-  static _flag = Flag.Attack
-  _flag = Flag.Attack
+  static _flag = ComponentFlag.Attack
+  _flag = ComponentFlag.Attack
 
   target: Entity
 
