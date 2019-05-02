@@ -2,6 +2,8 @@
 local exports = exports or {};
 local __TSTL_flags = require("game.flags");
 local ComponentFlag = __TSTL_flags.ComponentFlag;
+local __TSTL_asset = require("game.utils.asset");
+local loadImage = __TSTL_asset.loadImage;
 exports.Sprite = exports.Sprite or {};
 exports.Sprite.__index = exports.Sprite;
 exports.Sprite.prototype = exports.Sprite.prototype or {};
@@ -25,16 +27,19 @@ exports.Sprite.prototype.____constructor = function(self, filepath, x, y, width,
         y = 0;
     end
     if width == nil then
-        width = 0;
+        width = 32;
     end
     if height == nil then
-        height = 0;
+        height = 32;
     end
     self.filepath = filepath;
     self.x = x;
     self.y = y;
     self.width = width;
     self.height = height;
+    self.image = loadImage(nil, filepath);
+    local sw, sh = unpack((self.image and ({self.image:getDimensions()})) or {32, 32});
+    self.frame = love.graphics.newQuad(x, y, width, height, sw, sh);
 end;
 exports.Sprite._id = "Sprite";
 exports.Sprite._flag = ComponentFlag.Sprite;

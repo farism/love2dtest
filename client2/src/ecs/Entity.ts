@@ -1,4 +1,5 @@
 import { Component } from './component'
+import { Aliasable } from './types'
 
 interface Manager {
   getComponent(e: Entity, c: Component): Component | undefined
@@ -10,12 +11,6 @@ interface Manager {
 interface UserData {
   blueprint?: string
   [k: string]: any
-}
-
-interface Aliasable<T> {
-  new (...args: any[]): T
-  _id: string
-  _flag: number
 }
 
 export class Entity {

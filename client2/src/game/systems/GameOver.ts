@@ -1,19 +1,26 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local State = require 'src.game.state'
-// local Player = require 'src.game.components.player'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { Player } from '../components/Player'
+import { State } from '../State'
 
-// local aspect = Aspect.new({Player})
-// local GameOver = System:new('gameover', aspect)
+export class GameOverSystem extends System {
+  static _id = 'GameOver'
+  _id = GameOverSystem._id
 
-// function GameOver:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local player = entity:as(Player)
+  static _flag = SystemFlag.GameOver
+  _flag = GameOverSystem._flag
 
-//     if (player.lives == 0) then
-//       game:setState(State.GAMEOVER)
-//     end
-//   end
-// end
+  static _aspect = new Aspect([Player])
+  _aspect = GameOverSystem._aspect
 
-// return GameOver
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const player = entity.as(Player)
+
+      if (player && player.lives === 0) {
+        // game.setState(State.GAMEOVER)
+      }
+    })
+  }
+}

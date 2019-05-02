@@ -1,23 +1,35 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Fixture = require 'src.game.components.fixture'
-// local Health = require 'src.game.components.health'
-// local Player = require 'src.game.components.player'
-// local Position = require 'src.game.components.position'
+import { WINDOW_HEIGHT } from '../../conf'
+import { System } from '../../ecs/System'
+import { Aspect } from '../../ecs/Aspect'
+import { SystemFlag } from '../flags'
+import { GameObject } from '../components/GameObject'
+import { Health } from '../components/Health'
+import { Player } from '../components/Player'
+import { Position } from '../components/Position'
 
-// local aspect = Aspect.new({Fixture, Health, Player, Position})
-// local Death = System:new('falldeath', aspect)
+const BUFFER = 100
 
-// local BUFFER = 100
+export class FallDeathSystem extends System {
+  static _id = 'FallDeath'
+  _id = FallDeathSystem._id
 
-// function Death:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local position = entity:as(Position)
+  static _flag = SystemFlag.FallDeath
+  _flag = FallDeathSystem._flag
 
-//     if position.y > WINDOW_HEIGHT + BUFFER then
-//       entity:as(Health).hitpoints = 0
-//     end
-//   end
-// end
+  static _aspect = new Aspect([GameObject, Health, Player, Position])
+  _aspect = FallDeathSystem._aspect
 
-// return Death
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const position = entity.as(Position)
+
+      if (position && position.y > WINDOW_HEIGHT + BUFFER) {
+        const health = entity.as(Health)
+
+        if (health) {
+          health.hitpoints = 0
+        }
+      }
+    })
+  }
+}

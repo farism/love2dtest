@@ -1,11 +1,25 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Snare = require 'src.game.components.snare'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { NeverAspect } from '../../ecs/Aspect'
+import { check, hasComponent } from '../utils/collision'
+import { Player } from '../components/Player'
+import { Snare } from '../components/Snare'
 
-// local aspect = Aspect.new({Snare})
-// local SnareSystem = System:new('snare', aspect)
+export class SnareSystem extends System {
+  static _id = 'Snare'
+  _id = SnareSystem._id
 
-// function SnareSystem:beginContact(a, b, contact)
-// end
+  static _flag = SystemFlag.Snare
+  _flag = SnareSystem._flag
 
-// return SnareSystem
+  static _aspect = new NeverAspect()
+  _aspect = SnareSystem._aspect
+
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [hasComponent(Player), hasComponent(Snare)])
+
+    if (!result) {
+      return
+    }
+  }
+}

@@ -1,32 +1,45 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Fixture = require 'src.game.components.fixture'
-// local Wave = require 'src.game.components.wave'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { GameObject } from '../components/GameObject'
+import { Wave, WaveType } from '../components/Wave'
 
-// local aspect = Aspect.new({Fixture, Wave})
-// local WaveMovement = System:new('wavemovement', aspect)
+export class WaveMovementSystem extends System {
+  static _id = 'WaveMovement'
+  _id = WaveMovementSystem._id
 
-// local time = 0
+  static _flag = SystemFlag.WaveMovement
+  _flag = WaveMovementSystem._flag
 
-// function WaveMovement:update(dt)
-//   time = time + dt
+  static _aspect = new Aspect([GameObject, Wave])
+  _aspect = WaveMovementSystem._aspect
 
-//   for _, entity in pairs(self.entities) do
-//     local fixture = entity:as(Fixture)
-//     local wave = entity:as(Wave)
-//     local body = fixture.fixture:getBody()
+  time: number = 0
 
-//     if wave.type == 'circular' then
-//       body:setPosition(
-//         wave.x + math.cos(time * wave.frequency) * wave.amplitude,
-//         wave.y + math.sin(time * wave.frequency) * wave.amplitude
-//       )
-//     elseif wave.type == 'horizontal' then
-//       body:setX(wave.x + math.cos(time * wave.frequency) * wave.amplitude)
-//     elseif wave.type == 'vertical' then
-//       body:setY(wave.y + math.sin(time * wave.frequency) * wave.amplitude)
-//     end
-//   end
-// end
+  update = (dt: number) => {
+    this.time = this.time + dt
 
-// return WaveMovement
+    this.entities.forEach(entity => {
+      const wave = entity.as(Wave)
+      const gameObject = entity.as(GameObject)
+
+      if (!wave || !gameObject) {
+        return
+      }
+
+      const step = this.time * wave.frequency
+      const body = gameObject.fixture.getBody()
+
+      if (wave.type === WaveType.Circular) {
+        body.setPosition(
+          wave.x + math.cos(step) * wave.amplitude,
+          wave.y + math.sin(step) * wave.amplitude
+        )
+      } else if (wave.type === WaveType.Horizontal) {
+        body.setX(wave.x + math.cos(step) * wave.amplitude)
+      } else if (wave.type === WaveType.Vertical) {
+        body.setY(wave.y + math.sin(step) * wave.amplitude)
+      }
+    })
+  }
+}

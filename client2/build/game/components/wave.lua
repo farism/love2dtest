@@ -2,13 +2,13 @@
 local exports = exports or {};
 local __TSTL_flags = require("game.flags");
 local ComponentFlag = __TSTL_flags.ComponentFlag;
-local WaveType = {};
-WaveType.Circular = "circular";
-WaveType.circular = "Circular";
-WaveType.Horizontal = "horizontal";
-WaveType.horizontal = "Horizontal";
-WaveType.Vertical = "vertical";
-WaveType.vertical = "Vertical";
+exports.WaveType = {};
+exports.WaveType.Circular = "circular";
+exports.WaveType.circular = "Circular";
+exports.WaveType.Horizontal = "horizontal";
+exports.WaveType.horizontal = "Horizontal";
+exports.WaveType.Vertical = "vertical";
+exports.WaveType.vertical = "Vertical";
 exports.Wave = exports.Wave or {};
 exports.Wave.__index = exports.Wave;
 exports.Wave.prototype = exports.Wave.prototype or {};
@@ -23,7 +23,7 @@ exports.Wave.prototype.____constructor = function(self, type, x, y, amplitude, f
     self._id = exports.Wave._id;
     self._flag = ComponentFlag.Wave;
     if type == nil then
-        type = WaveType.Vertical;
+        type = exports.WaveType.Vertical;
     end
     if x == nil then
         x = 0;
@@ -75,7 +75,7 @@ exports.CircularWave.prototype.____constructor = function(self, x, y, amplitude,
     if frequency == nil then
         frequency = 0;
     end
-    exports.Wave.prototype.____constructor(self, WaveType.Circular, x, y, amplitude, frequency);
+    exports.Wave.prototype.____constructor(self, exports.WaveType.Circular, x, y, amplitude, frequency);
 end;
 exports.HorizontalWave = exports.HorizontalWave or {};
 exports.HorizontalWave.__index = exports.HorizontalWave;
@@ -106,7 +106,7 @@ exports.HorizontalWave.prototype.____constructor = function(self, x, y, amplitud
     if direction == nil then
         direction = 1;
     end
-    exports.Wave.prototype.____constructor(self, WaveType.Horizontal, x, y, amplitude, frequency, direction);
+    exports.Wave.prototype.____constructor(self, exports.WaveType.Horizontal, x, y, amplitude, frequency, direction);
 end;
 exports.VerticalWave = exports.VerticalWave or {};
 exports.VerticalWave.__index = exports.VerticalWave;
@@ -137,6 +137,6 @@ exports.VerticalWave.prototype.____constructor = function(self, x, y, amplitude,
     if direction == nil then
         direction = 1;
     end
-    exports.Wave.prototype.____constructor(self, WaveType.Vertical, x, y, amplitude, frequency, direction);
+    exports.Wave.prototype.____constructor(self, exports.WaveType.Vertical, x, y, amplitude, frequency, direction);
 end;
 return exports;

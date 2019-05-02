@@ -180,6 +180,8 @@ local __TSTL_Entity = require("ecs.Entity");
 local Entity = __TSTL_Entity.Entity;
 local __TSTL_System = require("ecs.System");
 local System = __TSTL_System.System;
+local __TSTL_types = require("ecs.types");
+local Aliasable = __TSTL_types.Aliasable;
 exports.Manager = exports.Manager or {};
 exports.Manager.__index = exports.Manager;
 exports.Manager.prototype = exports.Manager.prototype or {};
@@ -245,6 +247,11 @@ exports.Manager.prototype.____constructor = function(self, world)
         end);
         system:setManager(self);
         __TS__ArrayPush(self.systems, system);
+    end;
+    self.addSystems = function(____, systems)
+        __TS__ArrayForEach(systems, function(____, Class)
+            self:addSystem(Class.new());
+        end);
     end;
     self.removeSystem = function(____, system)
         self.systems = __TS__ArrayFilter(self.systems, function(____, s)

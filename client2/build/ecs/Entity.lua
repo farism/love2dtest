@@ -13,6 +13,8 @@ end;
 local exports = exports or {};
 local __TSTL_component = require("ecs.component");
 local Component = __TSTL_component.Component;
+local __TSTL_types = require("ecs.types");
+local Aliasable = __TSTL_types.Aliasable;
 exports.Entity = exports.Entity or {};
 exports.Entity.__index = exports.Entity;
 exports.Entity.prototype = exports.Entity.prototype or {};

@@ -1,28 +1,31 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Damage = require 'src.game.components.damage'
-// local Fixture = require 'src.game.components.fixture'
-// local Health = require 'src.game.components.health'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { NeverAspect } from '../../ecs/Aspect'
+import { check, hasComponent, isNotBodyType } from '../utils/collision'
+import { Damage } from '../components/Damage'
+import { Health } from '../components/Health'
 
-// local DamageSystem = System:new('damage', Aspect.always())
+export class DamageSystem extends System {
+  static _id = 'Damage'
+  _id = DamageSystem._id
 
-// function DamageSystem:beginContact(a, b, contact)
-//   a = a:getUserData().entity
-//   b = b:getUserData().entity
-//   local health
-//   local damage
+  static _flag = SystemFlag.Damage
+  _flag = DamageSystem._flag
 
-//   if a:has(Damage) and b:has(Health) then
-//     damage = a:as(Damage)
-//     health = b:as(Health)
-//   elseif a:has(Health) and b:has(Damage) then
-//     health = a:as(Health)
-//     damage = b:as(Damage)
-//   end
+  static _aspect = new NeverAspect()
+  _aspect = DamageSystem._aspect
 
-//   if health and damage then
-//     health.hitpoints = health.hitpoints - damage.hitpoints
-//   end
-// end
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [hasComponent(Damage), hasComponent(Health)])
 
-// return DamageSystem
+    if (!result) {
+      return
+    }
+
+    const damage = result[0].as(Damage)
+    const health = result[0].as(Health)
+    if (damage && health) {
+      health.hitpoints = health.armor - damage.hitpoints
+    }
+  }
+}

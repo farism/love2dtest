@@ -1,27 +1,47 @@
-// local cron = require 'src.vendor.cron'
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Checkpoint = require 'src.game.components.checkpoint'
-// local Fixture = require 'src.game.components.fixture'
-// local Player = require 'src.game.components.player'
-// local Position = require 'src.game.components.position'
-// local Respawn = require 'src.game.components.respawn'
+import { System } from '../../ecs/System'
+import { Manager } from '../../ecs/manager'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { Player } from '../components/Player'
+import { Respawn } from '../components/Respawn'
+import { Checkpoint } from '../components/Checkpoint'
 
-// local aspect = Aspect.new({Respawn})
-// local RespawnSystem = System:new('respawn', aspect)
+const findCheckpoint = (index: number, manager: Manager) => {
+  let entity
 
-// function findCheckpoint(entity)
-//   local player = entity:as(Player)
-//   local fixture = entity:as(Fixture)
+  manager.entities.forEach(entity => {
+    const checkpoint = entity.as(Checkpoint)
 
-//   for _, entity in pairs(entity.manager.entities) do
-//     local checkpoint = entity:as(Checkpoint)
+    if (checkpoint && checkpoint.index) {
+      entity = entity
+    }
+  })
 
-//     if checkpoint and player.checkpoint == checkpoint.index then
-//       return entity
-//     end
-//   end
-// end
+  return entity
+}
+
+export class RespawnSystem extends System {
+  static _id = 'Respawn'
+  _id = RespawnSystem._id
+
+  static _flag = SystemFlag.Respawn
+  _flag = RespawnSystem._flag
+
+  static _aspect = new Aspect([Respawn])
+  _aspect = RespawnSystem._aspect
+
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const player = entity.as(Player)
+      const respawn = entity.as(Respawn)
+
+      if (player && respawn) {
+        if (respawn.waitTime) {
+        }
+      }
+    })
+  }
+}
 
 // local function resetPosition(entity)
 //   return function()

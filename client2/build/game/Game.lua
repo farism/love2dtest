@@ -32,6 +32,10 @@ local __TSTL_SyncBodyPosition = require("game.systems.SyncBodyPosition");
 local SyncBodyPositionSystem = __TSTL_SyncBodyPosition.SyncBodyPositionSystem;
 local __TSTL_Checkpoint = require("game.systems.Checkpoint");
 local CheckpointSystem = __TSTL_Checkpoint.CheckpointSystem;
+local __TSTL_GameOver = require("game.systems.GameOver");
+local GameOverSystem = __TSTL_GameOver.GameOverSystem;
+local __TSTL_Damage = require("game.systems.Damage");
+local DamageSystem = __TSTL_Damage.DamageSystem;
 local initializeBlueprints;
 initializeBlueprints = function(____, manager)
     local blueprints = {Factory.createPlayer, Factory.createGround, Factory.createSlope};
@@ -72,21 +76,15 @@ exports.Game.prototype.____constructor = function(self)
     end;
     self.state = State.PLAYING;
     self.world = love.physics.newWorld(0, 9.81, true);
+    love.physics.setMeter(256);
     self.world:setCallbacks(function(a, b, contact)
         self.manager:beginContact(a, b, contact);
     end, function(a, b, contact)
         self.manager:endContact(a, b, contact);
     end);
-    love.physics.setMeter(256);
     self.camera = Camera.new("right");
     self.manager = Manager.new(self.world);
-    self.manager:addSystem(InputSystem.new());
-    self.manager:addSystem(InputMovementSystem.new());
-    self.manager:addSystem(CheckpointSystem.new());
-    self.manager:addSystem(ProjectileSystem.new());
-    self.manager:addSystem(JumpResetSystem.new());
-    self.manager:addSystem(SyncBodyPositionSystem.new());
-    self.manager:addSystem(RenderSystem.new());
+    self.manager:addSystems({InputSystem, InputMovementSystem, CheckpointSystem, DamageSystem, GameOverSystem, ProjectileSystem, JumpResetSystem, SyncBodyPositionSystem, RenderSystem});
     initializeBlueprints(nil, self.manager);
 end;
 return exports;

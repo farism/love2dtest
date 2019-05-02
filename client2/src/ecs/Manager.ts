@@ -1,10 +1,7 @@
 import { Component } from './Component'
 import { Entity } from './Entity'
 import { System } from './System'
-
-interface SystemClass {
-  new (): System
-}
+import { Aliasable } from './types'
 
 export class Manager {
   components: Map<number, Map<number, Component>>
@@ -98,6 +95,12 @@ export class Manager {
     this.entities.forEach(entity => system.check(entity))
     system.setManager(this)
     this.systems.push(system)
+  }
+
+  addSystems = <T extends System>(systems: Aliasable<T>[]) => {
+    systems.forEach(Class => {
+      this.addSystem(new Class())
+    })
   }
 
   removeSystem = (system: System) => {

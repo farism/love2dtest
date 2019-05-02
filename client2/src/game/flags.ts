@@ -58,4 +58,10 @@ export enum SystemFlag {
   SyncBodyPosition = getFlag(25),
   InputMovement = getFlag(26),
   JumpReset = getFlag(27),
+  GameOver = getFlag(28),
+  AnimateSprite = getFlag(29),
+  FallDeath = getFlag(30),
+  SpriteRender = getFlag(31),
+  WaveMovement = getFlag(32),
+  SetCurrentAnimation = getFlag(33),
 }

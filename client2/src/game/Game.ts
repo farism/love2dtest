@@ -9,6 +9,8 @@ import { State } from './State'
 import { JumpResetSystem } from './systems/JumpReset'
 import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
 import { CheckpointSystem } from './systems/Checkpoint'
+import { GameOverSystem } from './systems/GameOver'
+import { DamageSystem } from './systems/Damage'
 
 type HUD = any
 
@@ -32,6 +34,7 @@ export class Game {
   constructor() {
     this.state = State.PLAYING
     this.world = love.physics.newWorld(0, 9.81, true)
+    love.physics.setMeter(256)
     this.world.setCallbacks(
       (a: Fixture, b: Fixture, contact: Contact) => {
         this.manager.beginContact(a, b, contact)
@@ -40,16 +43,19 @@ export class Game {
         this.manager.endContact(a, b, contact)
       }
     )
-    love.physics.setMeter(256)
     this.camera = new Camera('right')
     this.manager = new Manager(this.world)
-    this.manager.addSystem(new InputSystem())
-    this.manager.addSystem(new InputMovementSystem())
-    this.manager.addSystem(new CheckpointSystem())
-    this.manager.addSystem(new ProjectileSystem())
-    this.manager.addSystem(new JumpResetSystem())
-    this.manager.addSystem(new SyncBodyPositionSystem())
-    this.manager.addSystem(new RenderSystem())
+    this.manager.addSystems([
+      InputSystem,
+      InputMovementSystem,
+      CheckpointSystem,
+      DamageSystem,
+      GameOverSystem,
+      ProjectileSystem,
+      JumpResetSystem,
+      SyncBodyPositionSystem,
+      RenderSystem,
+    ])
 
     initializeBlueprints(this.manager)
   }

@@ -1,24 +1,32 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Position = require 'src.game.components.position'
-// local Sprite = require 'src.game.components.sprite'
+import { Aspect } from '../../ecs/Aspect'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Position } from '../components/Position'
+import { Sprite } from '../components/Sprite'
 
-// local aspect = Aspect.new({Position, Sprite})
-// local SpriteRender = System:new('spriterender', aspect)
+export class SpriteRenderSystem extends System {
+  static _id = 'SpriteRenderSystem'
+  _id = SpriteRenderSystem._id
 
-// function SpriteRender:draw()
-//   for _, entity in pairs(self.entities) do
-//     local position = entity:as(Position)
-//     local sprite = entity:as(Sprite)
-//     local frame = sprite.frame
+  static _flag = SystemFlag.SpriteRender
+  _flag = SpriteRenderSystem._flag
 
-//     love.graphics.draw(
-//       sprite.image,
-//       frame,
-//       math.floor(position.x + 0.5),
-//       math.floor(position.y + 0.5)
-//     )
-//   end
-// end
+  static _aspect = new Aspect([Position, Sprite])
+  _aspect = SpriteRenderSystem._aspect
 
-// return SpriteRender
+  draw = () => {
+    this.entities.forEach(entity => {
+      const position = entity.as(Position)
+      const sprite = entity.as(Sprite)
+
+      if (position && sprite && sprite.image) {
+        love.graphics.draw(
+          sprite.image,
+          sprite.frame,
+          Math.floor(position.x + 0.5),
+          Math.floor(position.y + 0.5)
+        )
+      }
+    })
+  }
+}

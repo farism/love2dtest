@@ -1,6 +1,6 @@
 import { ComponentFlag } from '../flags'
 
-enum WaveType {
+export enum WaveType {
   Circular = 'circular',
   Horizontal = 'horizontal',
   Vertical = 'vertical',

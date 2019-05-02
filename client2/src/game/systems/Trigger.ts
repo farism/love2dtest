@@ -1,32 +1,42 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Player = require 'src.game.components.player'
-// local Trigger = require 'src.game.components.trigger'
-// local collision = require 'src.game.utils.collision'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { check, hasComponent } from '../utils/collision'
+import { Trigger } from '../components/Trigger'
+import { Player } from '../components/Player'
 
-// local aspect = Aspect.new({Trigger})
-// local TriggerSystem = System:new('trigger', aspect)
+export class TriggerSystem extends System {
+  static _id = 'Trigger'
+  _id = TriggerSystem._id
 
-// function TriggerSystem:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local trigger = entity:as(Trigger)
+  static _flag = SystemFlag.Trigger
+  _flag = TriggerSystem._flag
 
-//     if (trigger.activated and not trigger.executed) then
-//       trigger.action()
-//       trigger.executed = true
-//     end
-//   end
-// end
+  static _aspect = new Aspect([Trigger])
+  _aspect = TriggerSystem._aspect
 
-// function TriggerSystem:beginContact(a, b, contact)
-//   a = collision.entity(a)
-//   b = collision.entity(b)
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const trigger = entity.as(Trigger)
 
-//   if a:has(Trigger) and b:has(Player) then
-//     a:as(Trigger).activated = true
-//   elseif b:has(Trigger) and a:has(Player) then
-//     b:as(Trigger).activated = true
-//   end
-// end
+      if (trigger && trigger.activated && !trigger.executed) {
+        trigger.action()
+        trigger.executed = true
+      }
+    })
+  }
 
-// return TriggerSystem
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [hasComponent(Trigger), hasComponent(Player)])
+
+    if (!result) {
+      return
+    }
+
+    const trigger = result[0].as(Trigger)
+
+    if (trigger) {
+      trigger.activated = true
+    }
+  }
+}
