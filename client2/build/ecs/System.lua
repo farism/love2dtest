@@ -176,7 +176,7 @@ exports.System.prototype.____constructor = function(self)
     end;
     self.keyboard = function(____, key, scancode, isRepeat, isPressed)
     end;
-    self.mouse = function(____, x, y, isTouch, presses)
+    self.mouse = function(____, x, y, isTouch)
     end;
     self.pause = function(____)
         self.paused = true;

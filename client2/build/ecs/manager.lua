@@ -261,9 +261,9 @@ exports.Manager.prototype.____constructor = function(self, world)
             return s:keyboard(key, scancode, isRepeat, isPressed);
         end);
     end;
-    self.mouse = function(____, x, y, isTouch, presses)
+    self.mouse = function(____, x, y, isTouch)
         __TS__ArrayForEach(self.systems, function(____, s)
-            return s:mouse(x, y, isTouch, presses);
+            return s:mouse(x, y, isTouch);
         end);
     end;
     self.beginContact = function(____, a, b, contact)

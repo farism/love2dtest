@@ -27,6 +27,7 @@ export enum ComponentFlag {
   Upgrades = getFlag(21),
   Wave = getFlag(22),
   Waypoint = getFlag(23),
+  SyncBodyPosition = getFlag(24),
 }
 
 export enum SystemFlag {
@@ -38,14 +39,14 @@ export enum SystemFlag {
   Container = getFlag(6),
   Damage = getFlag(7),
   Dash = getFlag(8),
-  GameObjectRenderer = getFlag(9),
+  RenderSystem = getFlag(9),
   Health = getFlag(10),
   Input = getFlag(11),
   Movement = getFlag(12),
   Platform = getFlag(13),
   Player = getFlag(14),
   Position = getFlag(15),
-  Projectile = getFlag(16),
+  ProjectileSystem = getFlag(16),
   Respawn = getFlag(17),
   Snare = getFlag(18),
   Sound = getFlag(19),
@@ -54,4 +55,7 @@ export enum SystemFlag {
   Upgrades = getFlag(22),
   Wave = getFlag(23),
   Waypoint = getFlag(24),
+  SyncBodyPosition = getFlag(25),
+  InputMovement = getFlag(26),
+  JumpReset = getFlag(27),
 }

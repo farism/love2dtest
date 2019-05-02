@@ -42,12 +42,12 @@ export class System {
 
   keyboard = (
     key: string,
-    scancode: number,
+    scancode: Scancode,
     isRepeat: boolean,
     isPressed: boolean
   ) => {}
 
-  mouse = (x: number, y: number, isTouch: boolean, presses: number) => {}
+  mouse = (x: number, y: number, isTouch: boolean) => {}
 
   pause = () => {
     this.paused = true

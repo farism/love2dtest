@@ -2,6 +2,25 @@
 local exports = exports or {};
 local __TSTL_flags = require("game.flags");
 local ComponentFlag = __TSTL_flags.ComponentFlag;
+exports.AbilityType = {};
+exports.AbilityType.Throw = "throw";
+exports.AbilityType.throw = "Throw";
+exports.AbilityType.Dash = "dash";
+exports.AbilityType.dash = "Dash";
+exports.AbilityType.Grapple = "grapple";
+exports.AbilityType.grapple = "Grapple";
+exports.AbilityType.Dig = "dig";
+exports.AbilityType.dig = "Dig";
+exports.AbilityType.Shoot = "shoot";
+exports.AbilityType.shoot = "Shoot";
+exports.AbilityType.Slash = "slash";
+exports.AbilityType.slash = "Slash";
+exports.AbilityType.Stab = "stab";
+exports.AbilityType.stab = "Stab";
+exports.AbilityType.Ambush = "ambush";
+exports.AbilityType.ambush = "Ambush";
+exports.AbilityType.Taser = "taser";
+exports.AbilityType.taser = "Taser";
 local defineAbility;
 defineAbility = function(____, cooldown, duration, castspeed, enabled)
     if cooldown == nil then
@@ -55,7 +74,7 @@ exports.Abilities.prototype.____constructor = function(self)
     self.setActivated = function(____, ability, activated)
         self.abilities[ability].activated = activated;
     end;
-    self.abilities = {throw = defineAbility(nil, 0.5, 0, 0), dash = defineAbility(nil, 0.5, 0, 0), grapple = defineAbility(nil, 1, 0, 0), dig = defineAbility(nil, 1, 1, 0), shoot = defineAbility(nil, 3, 0, 1.5, false), slash = defineAbility(nil, 3, 0, 1, false), stab = defineAbility(nil, 3, 0, 1, false), ambush = defineAbility(nil, 3, 0, 1, false), taser = defineAbility(nil, 3, 0, 1, false)};
+    self.abilities = {[exports.AbilityType.Throw] = defineAbility(nil, 0.5, 0, 0), [exports.AbilityType.Dash] = defineAbility(nil, 0.5, 0, 0), [exports.AbilityType.Grapple] = defineAbility(nil, 1, 0, 0), [exports.AbilityType.Dig] = defineAbility(nil, 1, 1, 0), [exports.AbilityType.Shoot] = defineAbility(nil, 3, 0, 1.5, false), [exports.AbilityType.Slash] = defineAbility(nil, 3, 0, 1, false), [exports.AbilityType.Stab] = defineAbility(nil, 3, 0, 1, false), [exports.AbilityType.Ambush] = defineAbility(nil, 3, 0, 1, false), [exports.AbilityType.Taser] = defineAbility(nil, 3, 0, 1, false)};
 end;
 exports.Abilities._id = "Abilities";
 exports.Abilities._flag = ComponentFlag.Abilities;

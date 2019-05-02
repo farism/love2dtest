@@ -2,6 +2,11 @@
 local exports = exports or {};
 local __TSTL_flags = require("game.flags");
 local ComponentFlag = __TSTL_flags.ComponentFlag;
+exports.Direction = {};
+exports.Direction.Left = "left";
+exports.Direction.left = "Left";
+exports.Direction.Right = "right";
+exports.Direction.right = "Right";
 exports.Movement = exports.Movement or {};
 exports.Movement.__index = exports.Movement;
 exports.Movement.prototype = exports.Movement.prototype or {};
@@ -15,7 +20,7 @@ end;
 exports.Movement.prototype.____constructor = function(self)
     self._id = exports.Movement._id;
     self._flag = ComponentFlag.Movement;
-    self.direction = "right";
+    self.direction = exports.Direction.Right;
     self.left = false;
     self.right = false;
     self.jump = false;

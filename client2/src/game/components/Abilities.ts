@@ -1,6 +1,18 @@
 import { ComponentFlag } from '../flags'
 
-interface Ability {
+export enum AbilityType {
+  Throw = 'throw',
+  Dash = 'dash',
+  Grapple = 'grapple',
+  Dig = 'dig',
+  Shoot = 'shoot',
+  Slash = 'slash',
+  Stab = 'stab',
+  Ambush = 'ambush',
+  Taser = 'taser',
+}
+
+interface AbilityProperties {
   cooldown: number
   duration: number
   castspeed: number
@@ -14,7 +26,7 @@ const defineAbility = (
   duration = 0,
   castspeed = 0,
   enabled = true
-): Ability => {
+): AbilityProperties => {
   return {
     cooldown: cooldown,
     duration: duration,
@@ -32,22 +44,22 @@ export class Abilities {
   static _flag = ComponentFlag.Abilities
   _flag = ComponentFlag.Abilities
 
-  abilities: { [k: string]: Ability }
+  abilities: { [k: string]: AbilityProperties }
 
   constructor() {
     this.abilities = {
       // player
-      throw: defineAbility(0.5, 0, 0),
-      dash: defineAbility(0.5, 0, 0),
-      grapple: defineAbility(1, 0, 0),
-      dig: defineAbility(1, 1, 0),
+      [AbilityType.Throw]: defineAbility(0.5, 0, 0),
+      [AbilityType.Dash]: defineAbility(0.5, 0, 0),
+      [AbilityType.Grapple]: defineAbility(1, 0, 0),
+      [AbilityType.Dig]: defineAbility(1, 1, 0),
 
       // npc
-      shoot: defineAbility(3, 0, 1.5, false),
-      slash: defineAbility(3, 0, 1, false),
-      stab: defineAbility(3, 0, 1, false),
-      ambush: defineAbility(3, 0, 1, false),
-      taser: defineAbility(3, 0, 1, false),
+      [AbilityType.Shoot]: defineAbility(3, 0, 1.5, false),
+      [AbilityType.Slash]: defineAbility(3, 0, 1, false),
+      [AbilityType.Stab]: defineAbility(3, 0, 1, false),
+      [AbilityType.Ambush]: defineAbility(3, 0, 1, false),
+      [AbilityType.Taser]: defineAbility(3, 0, 1, false),
     }
   }
 
@@ -58,23 +70,23 @@ export class Abilities {
     }
   }
 
-  setCooldown = (ability: string, cooldown: number) => {
+  setCooldown = (ability: AbilityType, cooldown: number) => {
     this.abilities[ability].cooldown = cooldown
   }
 
-  setDuration = (ability: string, duration: number) => {
+  setDuration = (ability: AbilityType, duration: number) => {
     this.abilities[ability].duration = duration
   }
 
-  setCastspeed = (ability: string, castspeed: number) => {
+  setCastspeed = (ability: AbilityType, castspeed: number) => {
     this.abilities[ability].castspeed = castspeed
   }
 
-  setEnabled = (ability: string, enabled: boolean) => {
+  setEnabled = (ability: AbilityType, enabled: boolean) => {
     this.abilities[ability].enabled = enabled
   }
 
-  setActivated = (ability: string, activated: boolean) => {
+  setActivated = (ability: AbilityType, activated: boolean) => {
     this.abilities[ability].activated = activated
   }
 }

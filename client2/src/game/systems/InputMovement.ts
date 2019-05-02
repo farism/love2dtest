@@ -1,38 +1,52 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Fixture = require 'src.game.components.fixture'
-// local Input = require 'src.game.components.input'
-// local Movement = require 'src.game.components.movement'
-// local Position = require 'src.game.components.position'
-// local Respawn = require 'src.game.components.respawn'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { GameObject } from '../components/GameObject'
+import { Input } from '../components/Input'
+import { Movement } from '../components/Movement'
+import { Position } from '../components/Position'
+import { Respawn } from '../components/Respawn'
 
-// local aspect = Aspect.new({Fixture, Input, Movement, Position}, {Respawn})
-// local InputMovement = System:new('inputmovement', aspect)
+export class InputMovementSystem extends System {
+  static _id = 'InputMovement'
+  _id = InputMovementSystem._id
 
-// function InputMovement:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local fixture = entity:as(Fixture)
-//     local movement = entity:as(Movement)
-//     local body = fixture.fixture:getBody()
-//     local velocityX, velocityY = body:getLinearVelocity()
+  static _flag = SystemFlag.InputMovement
+  _flag = InputMovementSystem._flag
 
-//     local newVelocityX = 0
-//     local newVelocityY = velocityY
+  static _aspect = new Aspect([GameObject, Input, Movement, Position])
+  _aspect = InputMovementSystem._aspect
 
-//     if (movement.left == true) then
-//       newVelocityX = -300
-//     elseif movement.right == true then
-//       newVelocityX = 300
-//     end
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const gameObject = entity.as(GameObject)
+      const movement = entity.as(Movement)
 
-//     if (movement.jump and movement.jumpCount < 2) then
-//       newVelocityY = -1000
-//       movement.jump = false
-//       movement.jumpCount = movement.jumpCount + 1
-//     end
+      if (!gameObject || !movement) {
+        return
+      }
 
-//     body:setLinearVelocity(newVelocityX, newVelocityY)
-//   end
-// end
+      const body = gameObject.fixture.getBody()
+      const [velocityX, velocityY] = body.getLinearVelocity()
 
-// return InputMovement
+      let newVelocityX = 0
+      let newVelocityY = velocityY
+
+      if (movement.left) {
+        newVelocityX = -300
+      } else if (movement.right) {
+        newVelocityX = 300
+      }
+
+      if (movement.jump && movement.jumpCount < 2) {
+        newVelocityY = -1000
+        movement.jump = false
+        movement.jumpCount++
+
+        print(movement.jumpCount)
+      }
+
+      body.setLinearVelocity(newVelocityX, newVelocityY)
+    })
+  }
+}

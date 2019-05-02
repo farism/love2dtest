@@ -17,3 +17,12 @@ love.draw = function()
         game:draw();
     end
 end;
+love.keypressed = function(key, scancode, isRepeat)
+    game:keyboard(key, scancode, isRepeat, true);
+end;
+love.keyreleased = function(key, scancode)
+    game:keyboard(key, scancode, false, false);
+end;
+love.mousepressed = function(x, y, button, isTouch)
+    game:mouse(x, y, isTouch);
+end;

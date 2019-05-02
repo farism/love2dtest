@@ -5,12 +5,12 @@ import { SystemFlag } from '../flags'
 const isShapeType = <T extends Shape>(type: string, shape: Shape): shape is T =>
   shape.getType() === type
 
-export class GameObjectRenderer extends System {
-  static _id = 'GameObjectRenderer'
-  _id = GameObjectRenderer._id
+export class RenderSystem extends System {
+  static _id = 'RenderSystem'
+  _id = RenderSystem._id
 
-  static _flag = SystemFlag.GameObjectRenderer
-  _flag = GameObjectRenderer._flag
+  static _flag = SystemFlag.RenderSystem
+  _flag = RenderSystem._flag
 
   draw = () => {
     this.entities.forEach(entity => {

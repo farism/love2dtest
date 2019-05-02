@@ -1,19 +1,33 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Fixture = require 'src.game.components.fixture'
-// local Position = require 'src.game.components.position'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { GameObject } from '../components/GameObject'
+import { Position } from '../components/Position'
 
-// local aspect = Aspect.new({Fixture, Position})
-// local SyncBodyPosition = System:new('syncbodyposition', aspect)
+export class SyncBodyPositionSystem extends System {
+  static _id = 'SyncBodyPosition'
+  _id = SyncBodyPositionSystem._id
 
-// function SyncBodyPosition:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local fixture = entity:as(Fixture)
-//     local position = entity:as(Position)
-//     local body = fixture.fixture:getBody()
-//     position.x = body:getX()
-//     position.y = body:getY()
-//   end
-// end
+  static _flag = SystemFlag.SyncBodyPosition
+  _flag = SyncBodyPositionSystem._flag
 
-// return SyncBodyPosition
+  static _aspect = new Aspect([GameObject, Position])
+  _aspect = SyncBodyPositionSystem._aspect
+
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const gameObject = entity.as(GameObject)
+      const position = entity.as(Position)
+
+      if (!gameObject || !position) {
+        return
+      }
+
+      const body = gameObject.fixture.getBody()
+      const [x, y] = body.getPosition()
+
+      position.x = x
+      position.y = y
+    })
+  }
+}

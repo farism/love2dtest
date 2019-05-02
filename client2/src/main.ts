@@ -19,3 +19,20 @@ love.draw = () => {
     game.draw()
   }
 }
+
+love.keypressed = (key: KeyConstant, scancode: Scancode, isRepeat: boolean) => {
+  game.keyboard(key, scancode, isRepeat, true)
+}
+
+love.keyreleased = (key: KeyConstant, scancode: Scancode) => {
+  game.keyboard(key, scancode, false, false)
+}
+
+love.mousepressed = (
+  x: number,
+  y: number,
+  button: number,
+  isTouch: boolean
+) => {
+  game.mouse(x, y, isTouch)
+}

@@ -6,12 +6,12 @@ enum TriggerType {
 
 type Action = () => {}
 
-export class Player {
-  static _id = 'Player'
-  _id = Player._id
+export class Trigger {
+  static _id = 'Trigger'
+  _id = Trigger._id
 
-  static _flag = ComponentFlag.Player
-  _flag = ComponentFlag.Player
+  static _flag = ComponentFlag.Trigger
+  _flag = ComponentFlag.Trigger
 
   type: TriggerType
   action: Action

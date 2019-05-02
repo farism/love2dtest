@@ -1,10 +1,5 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 -- Lua Library inline imports
-__TS__FunctionCall = function(fn, thisArg, ...)
-    local args = ({...});
-    return fn(thisArg, (unpack or table.unpack)(args));
-end;
-
 __TS__ArrayForEach = function(arr, callbackFn)
     do
         local i = 0;
@@ -16,21 +11,32 @@ __TS__ArrayForEach = function(arr, callbackFn)
 end;
 
 local exports = exports or {};
-local __TSTL_manager = require("ecs.manager");
-local Manager = __TSTL_manager.Manager;
+local Factory = require("game.utils.factory");
 local __TSTL_camera = require("game.utils.camera");
 local Camera = __TSTL_camera.Camera;
-local Factory = require("game.Factory");
+local __TSTL_manager = require("ecs.manager");
+local Manager = __TSTL_manager.Manager;
+local __TSTL_InputSystem = require("game.systems.InputSystem");
+local InputSystem = __TSTL_InputSystem.InputSystem;
+local __TSTL_InputMovement = require("game.systems.InputMovement");
+local InputMovementSystem = __TSTL_InputMovement.InputMovementSystem;
+local __TSTL_RenderSystem = require("game.systems.RenderSystem");
+local RenderSystem = __TSTL_RenderSystem.RenderSystem;
+local __TSTL_ProjectileSystem = require("game.systems.ProjectileSystem");
+local ProjectileSystem = __TSTL_ProjectileSystem.ProjectileSystem;
 local __TSTL_State = require("game.State");
 local State = __TSTL_State.State;
-local __TSTL_GameObjectRenderer = require("game.systems.GameObjectRenderer");
-local GameObjectRenderer = __TSTL_GameObjectRenderer.GameObjectRenderer;
-local __TSTL_Projectile = require("game.systems.Projectile");
-local Projectile = __TSTL_Projectile.Projectile;
+local __TSTL_JumpReset = require("game.systems.JumpReset");
+local JumpResetSystem = __TSTL_JumpReset.JumpResetSystem;
+local __TSTL_SyncBodyPosition = require("game.systems.SyncBodyPosition");
+local SyncBodyPositionSystem = __TSTL_SyncBodyPosition.SyncBodyPositionSystem;
+local __TSTL_Checkpoint = require("game.systems.Checkpoint");
+local CheckpointSystem = __TSTL_Checkpoint.CheckpointSystem;
 local initializeBlueprints;
 initializeBlueprints = function(____, manager)
-    __TS__ArrayForEach({Factory.createPlayer, Factory.createGround, Factory.createSlope}, function(____, fn)
-        return __TS__FunctionCall(fn, nil, manager);
+    local blueprints = {Factory.createPlayer, Factory.createGround, Factory.createSlope};
+    __TS__ArrayForEach(blueprints, function(____, blueprint)
+        return blueprint(nil, manager);
     end);
 end;
 exports.Game = exports.Game or {};
@@ -52,8 +58,8 @@ exports.Game.prototype.____constructor = function(self)
     self.keyboard = function(____, key, scancode, isRepeat, isPressed)
         self.manager:keyboard(key, scancode, isRepeat, isPressed);
     end;
-    self.mouse = function(____, x, y, isTouch, presses)
-        self.manager:mouse(x, y, isTouch, presses);
+    self.mouse = function(____, x, y, isTouch)
+        self.manager:mouse(x, y, isTouch);
     end;
     self.update = function(____, dt)
         if self.state == State.PLAYING then
@@ -71,11 +77,16 @@ exports.Game.prototype.____constructor = function(self)
     end, function(a, b, contact)
         self.manager:endContact(a, b, contact);
     end);
-    self.manager = Manager.new(self.world);
-    self.camera = Camera.new("right");
     love.physics.setMeter(256);
-    self.manager:addSystem(GameObjectRenderer.new());
-    self.manager:addSystem(Projectile.new());
+    self.camera = Camera.new("right");
+    self.manager = Manager.new(self.world);
+    self.manager:addSystem(InputSystem.new());
+    self.manager:addSystem(InputMovementSystem.new());
+    self.manager:addSystem(CheckpointSystem.new());
+    self.manager:addSystem(ProjectileSystem.new());
+    self.manager:addSystem(JumpResetSystem.new());
+    self.manager:addSystem(SyncBodyPositionSystem.new());
+    self.manager:addSystem(RenderSystem.new());
     initializeBlueprints(nil, self.manager);
 end;
 return exports;

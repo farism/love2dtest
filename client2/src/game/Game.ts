@@ -1,16 +1,25 @@
-import { Manager } from '../ecs/manager'
+import * as Factory from './utils/factory'
 import { Camera } from './utils/camera'
-import * as Factory from './Factory'
+import { Manager } from '../ecs/manager'
+import { InputSystem } from './systems/InputSystem'
+import { InputMovementSystem } from './systems/InputMovement'
+import { RenderSystem } from './systems/RenderSystem'
+import { ProjectileSystem } from './systems/ProjectileSystem'
 import { State } from './State'
-import { GameObjectRenderer } from './systems/GameObjectRenderer'
-import { Projectile } from './systems/Projectile'
+import { JumpResetSystem } from './systems/JumpReset'
+import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
+import { CheckpointSystem } from './systems/Checkpoint'
 
 type HUD = any
 
 const initializeBlueprints = (manager: Manager) => {
-  ;[Factory.createPlayer, Factory.createGround, Factory.createSlope].forEach(
-    fn => fn.call(null, manager)
-  )
+  const blueprints = [
+    Factory.createPlayer,
+    Factory.createGround,
+    Factory.createSlope,
+  ]
+
+  blueprints.forEach(blueprint => blueprint(manager))
 }
 
 export class Game {
@@ -22,9 +31,7 @@ export class Game {
 
   constructor() {
     this.state = State.PLAYING
-
     this.world = love.physics.newWorld(0, 9.81, true)
-
     this.world.setCallbacks(
       (a: Fixture, b: Fixture, contact: Contact) => {
         this.manager.beginContact(a, b, contact)
@@ -33,15 +40,16 @@ export class Game {
         this.manager.endContact(a, b, contact)
       }
     )
-
-    this.manager = new Manager(this.world)
-
-    this.camera = new Camera('right')
-
     love.physics.setMeter(256)
-
-    this.manager.addSystem(new GameObjectRenderer())
-    this.manager.addSystem(new Projectile())
+    this.camera = new Camera('right')
+    this.manager = new Manager(this.world)
+    this.manager.addSystem(new InputSystem())
+    this.manager.addSystem(new InputMovementSystem())
+    this.manager.addSystem(new CheckpointSystem())
+    this.manager.addSystem(new ProjectileSystem())
+    this.manager.addSystem(new JumpResetSystem())
+    this.manager.addSystem(new SyncBodyPositionSystem())
+    this.manager.addSystem(new RenderSystem())
 
     initializeBlueprints(this.manager)
   }
@@ -54,15 +62,15 @@ export class Game {
 
   keyboard = (
     key: string,
-    scancode: number,
+    scancode: Scancode,
     isRepeat: boolean,
     isPressed: boolean
   ) => {
     this.manager.keyboard(key, scancode, isRepeat, isPressed)
   }
 
-  mouse = (x: number, y: number, isTouch: boolean, presses: number) => {
-    this.manager.mouse(x, y, isTouch, presses)
+  mouse = (x: number, y: number, isTouch: boolean) => {
+    this.manager.mouse(x, y, isTouch)
   }
 
   update = (dt: number) => {

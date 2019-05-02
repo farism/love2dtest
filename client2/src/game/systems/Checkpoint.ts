@@ -1,29 +1,31 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Checkpoint = require 'src.game.components.checkpoint'
-// local Player = require 'src.game.components.player'
-// local collision = require 'src.game.utils.collision'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { NeverAspect } from '../../ecs/Aspect'
+import { hasComponent, check } from '../utils/collision'
+import { Player } from '../components/Player'
+import { Checkpoint } from '../components/Checkpoint'
 
-// local CheckpointSystem = System:new('checkpoint', Aspect.always())
+export class CheckpointSystem extends System {
+  static _id = 'Checkpoint'
+  _id = CheckpointSystem._id
 
-// local function checkCollision(a, b)
-//   return a.meta.type == 'player' and b.meta.type == 'checkpoint'
-// end
+  static _flag = SystemFlag.Checkpoint
+  _flag = CheckpointSystem._flag
 
-// local function updateCheckpoint(player, checkpoint)
-//   player.checkpoint = math.max(player.checkpoint, checkpoint.index)
-//   checkpoint.visted = true
-// end
+  static _aspect = new NeverAspect()
+  _aspect = CheckpointSystem._aspect
 
-// function CheckpointSystem:beginContact(a, b, contact)
-//   a = a:getUserData().entity
-//   b = b:getUserData().entity
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [hasComponent(Player), hasComponent(Checkpoint)])
 
-//   if checkCollision(a, b) then
-//     updateCheckpoint(a:as(Player), b:as(Checkpoint))
-//   elseif checkCollision(b, a) then
-//     updateCheckpoint(b:as(Player), a:as(Checkpoint))
-//   end
-// end
+    if (result) {
+      const player = result[0].as(Player)
+      const checkpoint = result[1].as(Checkpoint)
 
-// return CheckpointSystem
+      if (player && checkpoint) {
+        checkpoint.visited = true
+        player.checkpoint = Math.max(checkpoint.index)
+      }
+    }
+  }
+}

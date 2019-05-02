@@ -112,15 +112,15 @@ export class Manager {
 
   keyboard = (
     key: string,
-    scancode: number,
+    scancode: Scancode,
     isRepeat: boolean,
     isPressed: boolean
   ) => {
     this.systems.forEach(s => s.keyboard(key, scancode, isRepeat, isPressed))
   }
 
-  mouse = (x: number, y: number, isTouch: boolean, presses: number) => {
-    this.systems.forEach(s => s.mouse(x, y, isTouch, presses))
+  mouse = (x: number, y: number, isTouch: boolean) => {
+    this.systems.forEach(s => s.mouse(x, y, isTouch))
   }
 
   beginContact = (a: Fixture, b: Fixture, contact: Contact) => {

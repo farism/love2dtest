@@ -10,7 +10,21 @@ local __TSTL_Input = require("game.components.Input");
 local Input = __TSTL_Input.Input;
 local __TSTL_Movement = require("game.components.Movement");
 local Movement = __TSTL_Movement.Movement;
-local INPUTS = {left = "a", right = "d", jump = "space", throw = "j", dash = "k"};
+local Direction = __TSTL_Movement.Direction;
+local __TSTL_Abilities = require("game.components.Abilities");
+local Abilities = __TSTL_Abilities.Abilities;
+local AbilityType = __TSTL_Abilities.AbilityType;
+local Keymap = {};
+Keymap.Left = "a";
+Keymap.a = "Left";
+Keymap.Right = "d";
+Keymap.d = "Right";
+Keymap.Jump = "space";
+Keymap.space = "Jump";
+Keymap.Throw = "j";
+Keymap.j = "Throw";
+Keymap.Dash = "k";
+Keymap.k = "Dash";
 exports.InputSystem = exports.InputSystem or {};
 exports.InputSystem.__index = exports.InputSystem;
 exports.InputSystem.prototype = exports.InputSystem.prototype or {};
@@ -30,7 +44,27 @@ exports.InputSystem.prototype.____constructor = function(self, ...)
     self._flag = exports.InputSystem._flag;
     self._aspect = exports.InputSystem._aspect;
     self.keyboard = function(____, key, scancode, isRepeat, isPressed)
-        print({key = key, scancode = scancode, isRepeat = isRepeat, isPressed = isPressed});
+        self.entities:forEach(function(____, entity)
+            local abilities = entity:as(Abilities);
+            local movement = entity:as(Movement);
+            if (not abilities) or (not movement) then
+                return;
+            end
+            if key == Keymap.Throw then
+                abilities:setActivated(AbilityType.Throw, isPressed);
+            end
+            if key == Keymap.Dash then
+                abilities:setActivated(AbilityType.Dash, isPressed);
+            end
+            if key == Keymap.Left then
+                movement.left = isPressed;
+            end
+            if key == Keymap.Right then
+                movement.right = isPressed;
+            end
+            movement.jump = ((key == Keymap.Jump) and isPressed) and (movement.jumpCount < 2);
+            movement.direction = (movement.right and Direction.Right) or Direction.Left;
+        end);
     end;
 end;
 exports.InputSystem._id = "Input";

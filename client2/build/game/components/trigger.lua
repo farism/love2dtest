@@ -5,19 +5,19 @@ local ComponentFlag = __TSTL_flags.ComponentFlag;
 local TriggerType = {};
 TriggerType.Spawn = "spawn";
 TriggerType.spawn = "Spawn";
-exports.Player = exports.Player or {};
-exports.Player.__index = exports.Player;
-exports.Player.prototype = exports.Player.prototype or {};
-exports.Player.prototype.__index = exports.Player.prototype;
-exports.Player.prototype.constructor = exports.Player;
-exports.Player.new = function(...)
-    local self = setmetatable({}, exports.Player.prototype);
+exports.Trigger = exports.Trigger or {};
+exports.Trigger.__index = exports.Trigger;
+exports.Trigger.prototype = exports.Trigger.prototype or {};
+exports.Trigger.prototype.__index = exports.Trigger.prototype;
+exports.Trigger.prototype.constructor = exports.Trigger;
+exports.Trigger.new = function(...)
+    local self = setmetatable({}, exports.Trigger.prototype);
     self:____constructor(...);
     return self;
 end;
-exports.Player.prototype.____constructor = function(self, type, action)
-    self._id = exports.Player._id;
-    self._flag = ComponentFlag.Player;
+exports.Trigger.prototype.____constructor = function(self, type, action)
+    self._id = exports.Trigger._id;
+    self._flag = ComponentFlag.Trigger;
     if type == nil then
         type = TriggerType.Spawn;
     end
@@ -26,6 +26,6 @@ exports.Player.prototype.____constructor = function(self, type, action)
     self.activated = false;
     self.executed = false;
 end;
-exports.Player._id = "Player";
-exports.Player._flag = ComponentFlag.Player;
+exports.Trigger._id = "Trigger";
+exports.Trigger._flag = ComponentFlag.Trigger;
 return exports;

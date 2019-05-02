@@ -1,14 +1,14 @@
-import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../conf'
-import { Entity } from '../ecs/Entity'
-import { Component } from '../ecs/Component'
-import { GameObject } from './components/GameObject'
-import { Player } from './components/Player'
-import { Position } from './components/Position'
-import { Input } from './components/Input'
-import { Health } from './components/Health'
-import { Abilities } from './components/Abilities'
-import { Animation } from './components/Animation'
-import { Movement } from './components/Movement'
+import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../conf'
+import { Entity } from '../../ecs/Entity'
+import { Component } from '../../ecs/Component'
+import { GameObject } from '../components/GameObject'
+import { Player } from '../components/Player'
+import { Position } from '../components/Position'
+import { Input } from '../components/Input'
+import { Health } from '../components/Health'
+import { Abilities } from '../components/Abilities'
+import { Animation } from '../components/Animation'
+import { Movement } from '../components/Movement'
 
 interface Manager {
   world: World
@@ -56,7 +56,7 @@ export const createPlayer = (
     new GameObject(entity, fixture),
     new Health(),
     new Input(),
-    // new Movement()
+    new Movement(),
     new Player(),
     new Position(),
   ])
