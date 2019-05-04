@@ -318,7 +318,49 @@ local function Factory(world, manager)
 
       if (origin:has(Player)) then
         fixture:setCategory(category.PLAYER_ATTACK)
-        fixture:setMask(category.PLAYER, category.AGGRESSION)
+        fixture:setMask(
+          category.PLAYER,
+          category.PLAYER_ATTACK,
+          category.AGGRESSION
+        )
+      else
+        fixture:setCategory(category.ENEMY_ATTACK)
+        fixture:setMask(category.ENEMY, category.AGGRESSION)
+      end
+
+      return entity, {
+        Damage.new(1, 1),
+        Fixture.new(1, entity, fixture),
+        Position.new(1),
+        Projectile.new(1)
+      }
+    end
+  end
+
+  function factory.grapple(origin, x, y)
+    return function()
+      local cfg = {
+        bullet = true,
+        fixedRotation = false,
+        gravityScale = 1
+      }
+      local entity = manager:newEntity()
+      entity.meta.type = type.GRAPPLE
+      local body = love.physics.newBody(world, x or 0, y or 0, 'dynamic')
+      local shape = love.physics.newRectangleShape(8, 8)
+      local fixture = love.physics.newFixture(body, shape, 1)
+
+      body:setBullet(cfg.bullet)
+      body:setGravityScale(cfg.gravityScale)
+      body:setFixedRotation(cfg.fixedRotation)
+
+      if (origin:has(Player)) then
+        fixture:setCategory(category.PLAYER_ATTACK)
+        fixture:setMask(
+          category.PLAYER,
+          category.PLAYER_ATTACK,
+          category.AGGRESSION
+        )
       else
         fixture:setCategory(category.ENEMY_ATTACK)
         fixture:setMask(category.ENEMY, category.AGGRESSION)
