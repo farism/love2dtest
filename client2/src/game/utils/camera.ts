@@ -1,17 +1,20 @@
+import { WINDOW_WIDTH } from '../../conf'
 import { Entity } from '../../ecs/entity'
+import { Movement } from '../components/Movement'
+import { Position } from '../components/Position'
+import { Tween } from './tween'
 
-// local LEFT_OFFSET = -WINDOW_WIDTH + 300
-// local RIGHT_OFFSET = -200
+const LEFT_OFFSET = -WINDOW_WIDTH + 300
+const RIGHT_OFFSET = -200
 
 type Direction = 'left' | 'right'
-type Tween = any
 
 export class Camera {
   x: number
   y: number
   offset: number
   direction: Direction
-  tween: Tween
+  tween?: Tween<any>
 
   constructor(initialDirection: Direction) {
     this.x = 0
@@ -33,37 +36,35 @@ export class Camera {
   }
 
   update = (dt: number, target: Entity) => {
-    // const movement = this.target.as(Movement)
-    // const position = this.target.as(Position)
-    // const offset = this.offset
+    const movement = target.as(Movement)
+    const position = target.as(Position)
+
+    if (!movement || !position) {
+      return
+    }
+
+    let offset = this.offset
+
+    if (movement.direction == 'left') {
+      offset = LEFT_OFFSET
+    } else if (movement.direction == 'right') {
+      offset = RIGHT_OFFSET
+    }
+
+    if (this.direction !== movement.direction) {
+      this.tween = new Tween<{ offset: number }>({
+        duration: 3,
+        target: this,
+        to: {
+          offset: offset,
+        },
+      })
+
+      // self.tween = flux.group()
+      // self.tween:to(self, 3, {offset = offset}):ease('quadout')
+    }
+
+    this.x = position.x + this.offset
+    this.direction = movement.direction
   }
 }
-
-//   function camera:update(dt, player)
-//     local movement = player:as(Movement)
-//     local position = player:as(Position)
-//     local offset = self.offset
-
-//     if movement.direction == 'left' then
-//       offset = LEFT_OFFSET
-//     elseif movement.direction == 'right' then
-//       offset = RIGHT_OFFSET
-//     end
-
-//     if self.direction ~= movement.direction then
-//       self.tween = flux.group()
-//       self.tween:to(self, 3, {offset = offset}):ease('quadout')
-//     end
-
-//     if self.tween then
-//       self.tween:update(dt)
-//     end
-
-//     self.x = position.x + self.offset
-//     self.direction = movement.direction
-//   end
-
-//   return camera
-// end
-
-// return Camera

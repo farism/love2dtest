@@ -1,82 +1,79 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Ability = require 'src.game.components.ability'
-// local Aggression = require 'src.game.components.aggression'
-// local Attack = require 'src.game.components.attack'
-// local Fixture = require 'src.game.components.fixture'
-// local Movement = require 'src.game.components.movement'
-// local Position = require 'src.game.components.position'
+import { Aspect } from '../../ecs/Aspect'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { GameObject } from '../components/GameObject'
+import { Position } from '../components/Position'
+import { Attack } from '../components/Attack'
+import { Movement } from '../components/Movement'
+import { Abilities } from '../components/Abilities'
+import { Entity } from '../../ecs/Entity'
+import { Point } from '../components/Waypoint'
+import { sign } from '../utils/math'
 
-// local aspect = Aspect.new({Ability, Attack, Fixture, Movement, Position})
-// local AttackSystem = System:new('aggression', aspect)
+const targetDistance = (entity: Entity): Point => {
+  const attack = entity.as(Attack)
+  const pos1 = entity.as(Position)
 
-// local function targetDistance(entity)
-//   local ability = entity:as(Ability)
-//   local attack = entity:as(Attack)
-//   local movement = entity:as(Movement)
-//   local x1, y1 = entity:as(Position):coords()
-//   local x2, y2 = attack.target:as(Position):coords()
+  if (attack && pos1) {
+    const pos2 = attack.target.as(Position)
 
-//   return x2 - x1, y2 - y1
-// end
+    if (pos2) {
+      return {
+        x: pos2.x - pos1.x,
+        y: pos2.y - pos1.y,
+      }
+    }
+  }
 
-// local function track(entity, distance, speed)
-//   local ability = entity:as(Ability)
-//   local fixture = entity:as(Fixture)
-//   local body = fixture.fixture:getBody()
-//   local velocityX, velocityY = body:getLinearVelocity()
-//   local dx, dy = targetDistance(entity)
-//   local newVelocityX = math.sign(dx) * (speed or 100)
+  return {
+    x: 0,
+    y: 0,
+  }
+}
 
-//   if math.abs(dx) < distance then
-//     newVelocityX = 0
-//   end
+const track = (distance: number, speed: number, entity: Entity) => {
+  const gameObject = entity.as(GameObject)
 
-//   body:setLinearVelocity(newVelocityX, velocityY)
-// end
+  if (!gameObject) {
+    return
+  }
 
-// function AttackSystem:onRemove(entity)
-//   entity:as(Ability):reset()
-// end
+  const body = gameObject.fixture.getBody()
+  const [velocityX, velocityY] = body.getLinearVelocity()
+  const delta = targetDistance(entity)
 
-// function AttackSystem:shoot(dt, entity)
-//   local dx, dy = targetDistance(entity)
+  let newVelocityX = sign(delta.x) * (speed || 100)
 
-//   if dx <= 0 then
-//     movement.direction = 'left'
-//   else
-//     movement.direction = 'right'
-//   end
+  if (Math.abs(delta.x) < distance) {
+    newVelocityX = 0
+  }
 
-//   ability:setActivated('shoot', true)
-// end
+  body.setLinearVelocity(newVelocityX, velocityY)
+}
 
-// function AttackSystem:slash(dt, entity)
-//   track(entity, 50)
-// end
+export class AttackSystem extends System {
+  static _id = 'Attack'
+  _id = AttackSystem._id
 
-// function AttackSystem:stab(dt, entity)
-//   track(entity, 50)
-// end
+  static _flag = SystemFlag.Attack
+  _flag = AttackSystem._flag
 
-// function AttackSystem:taser(dt, entity)
-//   track(entity, entity:as(Aggression).width / 2)
-// end
+  static _aspect = new Aspect([
+    Abilities,
+    Attack,
+    GameObject,
+    Movement,
+    Position,
+  ])
+  _aspect = AttackSystem._aspect
 
-// function AttackSystem:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local abilities = entity:as(Ability).abilities
+  update = (dt: number) => {
+    this.entities.forEach(entity => {})
+  }
 
-//     if abilities.slash.enabled then
-//       self:slash(dt, entity)
-//     elseif abilities.shoot.enabled then
-//       self:shoot(dt, entity)
-//     elseif abilities.stab.enabled then
-//       self:stab(dt, entity)
-//     elseif abilities.taser.enabled then
-//       self:taser(dt, entity)
-//     end
-//   end
-// end
+  onRemove = (entity: Entity) => {
+    const abilities = entity.as(Abilities)
 
-// return AttackSystem
+    abilities && abilities.reset()
+  }
+}

@@ -165,7 +165,8 @@ end
 local ____exports = {}
 local _cache = Map.new()
 local _nextTimerId = 0
-local Timer = {}
+____exports.Timer = {}
+local Timer = ____exports.Timer
 Timer.name = "Timer"
 Timer.__index = Timer
 Timer.prototype = {}
@@ -186,6 +187,7 @@ function Timer.prototype.____constructor(self, id, timeout, callback)
         end
         self.currentTime = self.currentTime + dt
         if self.currentTime >= self.timeout then
+            ____exports.clearTimeout(nil, self.id)
             self:callback()
             return true
         end
@@ -195,13 +197,23 @@ function Timer.prototype.____constructor(self, id, timeout, callback)
     self.timeout = timeout
     self.callback = callback
 end
+____exports.createTimer = function(____, timeout, callback)
+    local id = (function()
+        local ____TS_tmp = _nextTimerId
+        _nextTimerId = ____TS_tmp + 1
+        return ____TS_tmp
+    end)()
+    local timer = ____exports.Timer.new(id, timeout, callback)
+    _cache:set(id, timer)
+    return timer
+end
 ____exports.setTimeout = function(____, timeout, callback)
     local id = (function()
         local ____TS_tmp = _nextTimerId
         _nextTimerId = ____TS_tmp + 1
         return ____TS_tmp
     end)()
-    _cache:set(id, Timer.new(id, timeout, callback))
+    _cache:set(id, ____exports.Timer.new(id, timeout, callback))
     return id
 end
 ____exports.clearTimeout = function(____, timerId)
