@@ -1,74 +1,84 @@
-// local cron = require 'src.vendor.cron'
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Fixture = require 'src.game.components.fixture'
-// local Platform = require 'src.game.components.platform'
-// local Player = require 'src.game.components.player'
-// local Position = require 'src.game.components.position'
-// local Waypoint = require 'src.game.components.waypoint'
-// local collision = require 'src.game.utils.collision'
+import { System } from '../../ecs/System'
+import * as Timer from '../utils/timer'
+import { SystemFlag } from '../flags'
+import { NeverAspect } from '../../ecs/Aspect'
+import { hasComponent, check } from '../utils/collision'
+import { Player } from '../components/Player'
+import { Platform } from '../components/Platform'
+import { Entity } from '../../ecs/Entity'
+import { Position } from '../components/Position'
+import { GameObject } from '../components/GameObject'
+import { Waypoint } from '../components/Waypoint'
 
-// local aspect = Aspect.new({Fixture, Platform})
-// local PlatformSystem = System:new('fall', aspect)
+const reset = (
+  gameObject: GameObject,
+  platform: Platform,
+  waypoint: Waypoint
+) => () => {
+  const body = gameObject.fixture.getBody()
+  body.setType('static')
+  body.setPosition(platform.initialX, platform.initialY)
+  body.setGravityScale(0)
+  body.setType('kinematic')
 
-// local function reset(entity)
-//   local body = entity:as(Fixture).fixture:getBody()
-//   local platform = entity:as(Platform) or {}
-//   local waypoint = entity:as(Waypoint) or {}
+  waypoint.active = true
 
-//   return function()
-//     body:setType('static')
-//     body:setPosition(platform.initialX, platform.initialY)
-//     body:setGravityScale(0)
-//     body:setType('kinematic')
-//     waypoint.active = true
-//     platform.timeout = nil
-//   end
-// end
+  delete platform.timer
+}
 
-// local function startFalling(entity)
-//   local body = entity:as(Fixture).fixture:getBody()
-//   local platform = entity:as(Platform)
-//   local waypoint = entity:as(Waypoint) or {}
+const startFalling = (entity: Entity) => () => {
+  const gameObject = entity.as(GameObject)
+  const platform = entity.as(Platform)
+  const waypoint = entity.as(Waypoint)
 
-//   return function()
-//     body:setType('dynamic')
-//     body:setGravityScale(1)
-//     waypoint.active = false
-//     platform.timeout = cron.after(3, reset(entity))
-//   end
-// end
+  if (!gameObject || !platform || !waypoint) {
+    return
+  }
 
-// local function fall(entity)
-//   local platform = entity:as(Platform)
+  const body = gameObject.fixture.getBody()
+  body.setType('dynamic')
+  body.setGravityScale(1)
 
-//   if (platform.fall or 0) > 0 and not platform.timeout then
-//     local x, y = entity:as(Position):coords()
-//     platform.initialX = x
-//     platform.initialY = y
-//     platform.timeout = cron.after(platform.fall, startFalling(entity))
-//   end
-// end
+  waypoint.active = false
 
-// function PlatformSystem:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local platform = entity:as(Platform)
+  platform.timer = Timer.setTimeout(3, reset(gameObject, platform, waypoint))
+}
 
-//     if platform.timeout then
-//       platform.timeout:update(dt)
-//     end
-//   end
-// end
+const fall = (entity: Entity) => {
+  const platform = entity.as(Platform)
+  const position = entity.as(Position)
 
-// function PlatformSystem:beginContact(a, b, contact)
-//   a = collision.entity(a)
-//   b = collision.entity(b)
+  if (!position || !platform) {
+    return
+  }
 
-//   if a:has(Platform) and b:has(Player) then
-//     fall(a)
-//   elseif b:has(Platform) and a:has(Player) then
-//     fall(b)
-//   end
-// end
+  platform.initialX = position.x
+  platform.initialY = position.y
+  platform.timer = Timer.setTimeout(platform.duration, startFalling(entity))
+}
 
-// return PlatformSystem
+export class PlatformSystem extends System {
+  static _id = 'Platform'
+  _id = PlatformSystem._id
+
+  static _flag = SystemFlag.Platform
+  _flag = PlatformSystem._flag
+
+  static _aspect = new NeverAspect()
+  _aspect = PlatformSystem._aspect
+
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [hasComponent(Platform), hasComponent(Player)])
+
+    if (!result) {
+      return
+    }
+
+    const entity = result[0]
+    const platform = entity.as(Platform)
+
+    if (platform && platform.duration > 0 && !platform.timer) {
+      fall(entity)
+    }
+  }
+}

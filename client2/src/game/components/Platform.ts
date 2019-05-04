@@ -7,12 +7,17 @@ export class Platform {
   static _flag = ComponentFlag.Platform
   _flag = ComponentFlag.Platform
 
-  fall: number
+  duration: number
   initialX: number
   initialY: number
+  timer?: number
 
-  constructor(fall: number = 0, initialX: number = 0, initialY: number = 0) {
-    this.fall = fall
+  constructor(
+    duration: number = 0,
+    initialX: number = 0,
+    initialY: number = 0
+  ) {
+    this.duration = duration
     this.initialX = initialX
     this.initialY = initialY
   }

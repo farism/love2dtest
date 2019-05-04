@@ -21,6 +21,7 @@ import { Entity } from '../ecs/Entity'
 import { DashSystem } from './systems/Dash'
 import { DeathSystem } from './systems/Death'
 import { RespawnSystem } from './systems/Respawn'
+import { PlatformSystem } from './systems/Platform'
 
 type HUD = any
 
@@ -71,6 +72,7 @@ export class Game {
       new FallDeathSystem(),
       new InputMovementSystem(),
       new JumpResetSystem(),
+      new PlatformSystem(),
       new ProjectileSystem(),
       new DashSystem(),
       new RespawnSystem(),

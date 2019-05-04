@@ -55,6 +55,8 @@ local __TSTL_Death = require("game.systems.Death")
 local DeathSystem = __TSTL_Death.DeathSystem
 local __TSTL_Respawn = require("game.systems.Respawn")
 local RespawnSystem = __TSTL_Respawn.RespawnSystem
+local __TSTL_Platform = require("game.systems.Platform")
+local PlatformSystem = __TSTL_Platform.PlatformSystem
 local initializeBlueprints
 initializeBlueprints = function(____, manager)
     local blueprints = {
@@ -121,6 +123,7 @@ function Game.prototype.____constructor(self)
         FallDeathSystem.new(),
         InputMovementSystem.new(),
         JumpResetSystem.new(),
+        PlatformSystem.new(),
         ProjectileSystem.new(),
         DashSystem.new(),
         RespawnSystem.new(),

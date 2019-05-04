@@ -14,11 +14,11 @@ function Platform.new(...)
     self:____constructor(...)
     return self
 end
-function Platform.prototype.____constructor(self, fall, initialX, initialY)
+function Platform.prototype.____constructor(self, duration, initialX, initialY)
     self._id = ____exports.Platform._id
     self._flag = ComponentFlag.Platform
-    if fall == nil then
-        fall = 0
+    if duration == nil then
+        duration = 0
     end
     if initialX == nil then
         initialX = 0
@@ -26,7 +26,7 @@ function Platform.prototype.____constructor(self, fall, initialX, initialY)
     if initialY == nil then
         initialY = 0
     end
-    self.fall = fall
+    self.duration = duration
     self.initialX = initialX
     self.initialY = initialY
 end
