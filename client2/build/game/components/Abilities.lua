@@ -1,81 +1,93 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local exports = exports or {};
-local __TSTL_flags = require("game.flags");
-local ComponentFlag = __TSTL_flags.ComponentFlag;
-exports.AbilityType = {};
-exports.AbilityType.Throw = "throw";
-exports.AbilityType.throw = "Throw";
-exports.AbilityType.Dash = "dash";
-exports.AbilityType.dash = "Dash";
-exports.AbilityType.Grapple = "grapple";
-exports.AbilityType.grapple = "Grapple";
-exports.AbilityType.Dig = "dig";
-exports.AbilityType.dig = "Dig";
-exports.AbilityType.Shoot = "shoot";
-exports.AbilityType.shoot = "Shoot";
-exports.AbilityType.Slash = "slash";
-exports.AbilityType.slash = "Slash";
-exports.AbilityType.Stab = "stab";
-exports.AbilityType.stab = "Stab";
-exports.AbilityType.Ambush = "ambush";
-exports.AbilityType.ambush = "Ambush";
-exports.AbilityType.Taser = "taser";
-exports.AbilityType.taser = "Taser";
-local defineAbility;
+local ____exports = {}
+local __TSTL_flags = require("game.flags")
+local ComponentFlag = __TSTL_flags.ComponentFlag
+____exports.AbilityType = {}
+____exports.AbilityType.Throw = "throw"
+____exports.AbilityType.throw = "Throw"
+____exports.AbilityType.Dash = "dash"
+____exports.AbilityType.dash = "Dash"
+____exports.AbilityType.Grapple = "grapple"
+____exports.AbilityType.grapple = "Grapple"
+____exports.AbilityType.Dig = "dig"
+____exports.AbilityType.dig = "Dig"
+____exports.AbilityType.Shoot = "shoot"
+____exports.AbilityType.shoot = "Shoot"
+____exports.AbilityType.Slash = "slash"
+____exports.AbilityType.slash = "Slash"
+____exports.AbilityType.Stab = "stab"
+____exports.AbilityType.stab = "Stab"
+____exports.AbilityType.Ambush = "ambush"
+____exports.AbilityType.ambush = "Ambush"
+____exports.AbilityType.Taser = "taser"
+____exports.AbilityType.taser = "Taser"
+local defineAbility
 defineAbility = function(____, cooldown, duration, castspeed, enabled)
     if cooldown == nil then
-        cooldown = 0;
+        cooldown = 0
     end
     if duration == nil then
-        duration = 0;
+        duration = 0
     end
     if castspeed == nil then
-        castspeed = 0;
+        castspeed = 0
     end
     if enabled == nil then
-        enabled = true;
+        enabled = true
     end
-    return {cooldown = cooldown, duration = duration, castspeed = castspeed, enabled = enabled, activated = false, timers = {}};
-end;
-exports.Abilities = exports.Abilities or {};
-exports.Abilities.__index = exports.Abilities;
-exports.Abilities.prototype = exports.Abilities.prototype or {};
-exports.Abilities.prototype.__index = exports.Abilities.prototype;
-exports.Abilities.prototype.constructor = exports.Abilities;
-exports.Abilities.new = function(...)
-    local self = setmetatable({}, exports.Abilities.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.Abilities.prototype.____constructor = function(self)
-    self._id = exports.Abilities._id;
-    self._flag = ComponentFlag.Abilities;
-    self.reset = function(____)
-        for key in pairs(self.abilities) do
-            do
-                self.abilities[key].activated = false;
-                self.abilities[key].timers = {};
-            end
-            ::__continue3::
-        end
-    end;
+    return {
+        activated = false,
+        castspeed = castspeed,
+        cooldown = cooldown,
+        duration = duration,
+        enabled = enabled,
+        timers = {},
+    }
+end
+____exports.Abilities = {}
+local Abilities = ____exports.Abilities
+Abilities.name = "Abilities"
+Abilities.__index = Abilities
+Abilities.prototype = {}
+Abilities.prototype.__index = Abilities.prototype
+Abilities.prototype.constructor = Abilities
+function Abilities.new(...)
+    local self = setmetatable({}, Abilities.prototype)
+    self:____constructor(...)
+    return self
+end
+function Abilities.prototype.____constructor(self)
+    self._id = ____exports.Abilities._id
+    self._flag = ComponentFlag.Abilities
+    self.reset = function()
+    end
     self.setCooldown = function(____, ability, cooldown)
-        self.abilities[ability].cooldown = cooldown;
-    end;
+        self.abilities[ability].cooldown = cooldown
+    end
     self.setDuration = function(____, ability, duration)
-        self.abilities[ability].duration = duration;
-    end;
+        self.abilities[ability].duration = duration
+    end
     self.setCastspeed = function(____, ability, castspeed)
-        self.abilities[ability].castspeed = castspeed;
-    end;
+        self.abilities[ability].castspeed = castspeed
+    end
     self.setEnabled = function(____, ability, enabled)
-        self.abilities[ability].enabled = enabled;
-    end;
+        self.abilities[ability].enabled = enabled
+    end
     self.setActivated = function(____, ability, activated)
-        self.abilities[ability].activated = activated;
-    end;
-    self.abilities = {[exports.AbilityType.Throw] = defineAbility(nil, 0.5, 0, 0), [exports.AbilityType.Dash] = defineAbility(nil, 0.5, 0, 0), [exports.AbilityType.Grapple] = defineAbility(nil, 1, 0, 0), [exports.AbilityType.Dig] = defineAbility(nil, 1, 1, 0), [exports.AbilityType.Shoot] = defineAbility(nil, 3, 0, 1.5, false), [exports.AbilityType.Slash] = defineAbility(nil, 3, 0, 1, false), [exports.AbilityType.Stab] = defineAbility(nil, 3, 0, 1, false), [exports.AbilityType.Ambush] = defineAbility(nil, 3, 0, 1, false), [exports.AbilityType.Taser] = defineAbility(nil, 3, 0, 1, false)};
-end;
-exports.Abilities._id = "Abilities";
-exports.Abilities._flag = ComponentFlag.Abilities;
-return exports;
+        self.abilities[ability].activated = activated
+    end
+    self.abilities = {
+        [____exports.AbilityType.Throw] = defineAbility(nil, 0.5, 0, 0),
+        [____exports.AbilityType.Dash] = defineAbility(nil, 1, 0.1, 0),
+        [____exports.AbilityType.Grapple] = defineAbility(nil, 1, 0, 0),
+        [____exports.AbilityType.Dig] = defineAbility(nil, 1, 1, 0),
+        [____exports.AbilityType.Shoot] = defineAbility(nil, 3, 0, 1.5, false),
+        [____exports.AbilityType.Slash] = defineAbility(nil, 3, 0, 1, false),
+        [____exports.AbilityType.Stab] = defineAbility(nil, 3, 0, 1, false),
+        [____exports.AbilityType.Ambush] = defineAbility(nil, 3, 0, 1, false),
+        [____exports.AbilityType.Taser] = defineAbility(nil, 3, 0, 1, false),
+    }
+end
+Abilities._id = "Abilities"
+Abilities._flag = ComponentFlag.Abilities
+return ____exports

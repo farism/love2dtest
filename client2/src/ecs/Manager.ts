@@ -24,7 +24,7 @@ export class Manager {
     return this.nextId++
   }
 
-  createEntity = (id: number) => {
+  createEntity = (id?: number): Entity => {
     const entity = new Entity(id || this.getNextId(), this)
 
     this.addEntity(entity)
@@ -97,9 +97,9 @@ export class Manager {
     this.systems.push(system)
   }
 
-  addSystems = <T extends System>(systems: Aliasable<T>[]) => {
-    systems.forEach(Class => {
-      this.addSystem(new Class())
+  addSystems = <T extends System>(systems: T[]) => {
+    systems.forEach(system => {
+      this.addSystem(system)
     })
   }
 

@@ -10,7 +10,7 @@ export class Health {
   hitpoints: number
   armor: number
 
-  constructor(hitpoints: number = 0, armor: number = 0) {
+  constructor(hitpoints: number = 1, armor: number = 0) {
     this.hitpoints = hitpoints
     this.armor = armor
   }

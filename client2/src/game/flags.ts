@@ -64,4 +64,6 @@ export enum SystemFlag {
   SpriteRender = getFlag(31),
   WaveMovement = getFlag(32),
   SetCurrentAnimation = getFlag(33),
+  WaypointMovement = getFlag(34),
+  Death = getFlag(35),
 }

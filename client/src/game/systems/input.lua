@@ -7,12 +7,12 @@ local Movement = require 'src.game.components.movement'
 local aspect = Aspect.new({Input, Movement})
 local InputSystem = System:new('input', aspect)
 
-local inputs = {
-  left = 'a',
-  right = 'd',
-  jump = 'space',
-  throw = 'j',
-  dash = 'k'
+local keymap = {
+   'a': left ,
+   'd': right ,
+   'space': jump ,
+   'j': throw ,
+   'k': dash
 }
 
 function InputSystem:keyboard(key, scancode, isrepeat, ispressed)

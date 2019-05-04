@@ -1,3 +1,4 @@
+import * as timer from './utils/timer'
 import * as Factory from './utils/factory'
 import { Camera } from './utils/camera'
 import { Manager } from '../ecs/manager'
@@ -11,6 +12,15 @@ import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
 import { CheckpointSystem } from './systems/Checkpoint'
 import { GameOverSystem } from './systems/GameOver'
 import { DamageSystem } from './systems/Damage'
+import { ContainerSystem } from './systems/Container'
+import { AggressionSystem } from './systems/Aggression'
+import { AnimateSpriteSystem } from './systems/AnimateSprite'
+import { FallDeathSystem } from './systems/FallDeath'
+import { AbilitiesSystem } from './systems/Abilities'
+import { Entity } from '../ecs/Entity'
+import { DashSystem } from './systems/Dash'
+import { DeathSystem } from './systems/Death'
+import { RespawnSystem } from './systems/Respawn'
 
 type HUD = any
 
@@ -19,6 +29,7 @@ const initializeBlueprints = (manager: Manager) => {
     Factory.createPlayer,
     Factory.createGround,
     Factory.createSlope,
+    Factory.createIcicle(200, 200),
   ]
 
   blueprints.forEach(blueprint => blueprint(manager))
@@ -46,15 +57,30 @@ export class Game {
     this.camera = new Camera('right')
     this.manager = new Manager(this.world)
     this.manager.addSystems([
-      InputSystem,
-      InputMovementSystem,
-      CheckpointSystem,
-      DamageSystem,
-      GameOverSystem,
-      ProjectileSystem,
-      JumpResetSystem,
-      SyncBodyPositionSystem,
-      RenderSystem,
+      // pre-processors
+      new InputSystem(),
+      new GameOverSystem(),
+
+      // processors
+      new AbilitiesSystem(),
+      new AggressionSystem(),
+      new DamageSystem(),
+      new DeathSystem(),
+      new CheckpointSystem(),
+      new ContainerSystem(),
+      new FallDeathSystem(),
+      new InputMovementSystem(),
+      new JumpResetSystem(),
+      new ProjectileSystem(),
+      new DashSystem(),
+      new RespawnSystem(),
+
+      // post-processors
+      new SyncBodyPositionSystem(),
+
+      // renderers
+      new AnimateSpriteSystem(),
+      new RenderSystem(),
     ])
 
     initializeBlueprints(this.manager)
@@ -81,6 +107,7 @@ export class Game {
 
   update = (dt: number) => {
     if (this.state === State.PLAYING) {
+      timer.update(dt)
       this.world.update(dt)
       this.manager.update(dt)
 

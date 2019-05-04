@@ -163,25 +163,57 @@ function Map.prototype.values(self)
 end
 
 local ____exports = {}
-local imageCache = Map.new()
-local audioCache = Map.new()
-____exports.loadImage = function(____, filepath)
-    if imageCache:get(filepath) then
-        return imageCache:get(filepath)
-    else
-        local image = love.graphics.newImage(filepath)
-        image:setWrap("repeat", "repeat")
-        imageCache:set(filepath, image)
-        return image
+local _cache = Map.new()
+local _nextTimerId = 0
+local Timer = {}
+Timer.name = "Timer"
+Timer.__index = Timer
+Timer.prototype = {}
+Timer.prototype.__index = Timer.prototype
+Timer.prototype.constructor = Timer
+function Timer.new(...)
+    local self = setmetatable({}, Timer.prototype)
+    self:____constructor(...)
+    return self
+end
+function Timer.prototype.____constructor(self, id, timeout, callback)
+    self.id = 0
+    self.currentTime = 0
+    self.timeout = 0
+    self.update = function(____, dt)
+        if self.currentTime > self.timeout then
+            return false
+        end
+        self.currentTime = self.currentTime + dt
+        if self.currentTime >= self.timeout then
+            self:callback()
+            return true
+        end
+        return false
+    end
+    self.id = id
+    self.timeout = timeout
+    self.callback = callback
+end
+____exports.setTimeout = function(____, timeout, callback)
+    local id = (function()
+        local ____TS_tmp = _nextTimerId
+        _nextTimerId = ____TS_tmp + 1
+        return ____TS_tmp
+    end)()
+    _cache:set(id, Timer.new(id, timeout, callback))
+    return id
+end
+____exports.clearTimeout = function(____, timerId)
+    if (type(timerId) == "table" and "object" or type(timerId)) == "number" then
+        _cache:delete(timerId)
     end
 end
-____exports.loadAudio = function(____, filepath)
-    if audioCache:get(filepath) then
-        return audioCache:get(filepath)
-    else
-        local audio = love.audio.newSource(filepath, "static")
-        audioCache:set(filepath, audio)
-        return audio
-    end
+____exports.update = function(____, dt)
+    _cache:forEach(function(____, timer)
+        if timer:update(dt) then
+            ____exports.clearTimeout(nil, timer.id)
+        end
+    end)
 end
 return ____exports

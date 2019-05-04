@@ -8,6 +8,7 @@ export class Aggression {
   static _flag = ComponentFlag.Aggression
   _flag = ComponentFlag.Aggression
 
+  active: boolean
   fixture: Fixture
   width: number
   height: number
@@ -22,6 +23,7 @@ export class Aggression {
     height: number = 0,
     duration: number = 0
   ) {
+    this.active = false
     this.width = width
     this.height = height
     this.duration = duration
@@ -33,7 +35,7 @@ export class Aggression {
     )
     this.fixture.setSensor(true)
     this.fixture.setCategory(8)
-    this.fixture.setUserData({ entity: entity, aggression: true })
+    this.fixture.setUserData({ entity: entity, isAggression: true })
   }
 
   destroy = () => {

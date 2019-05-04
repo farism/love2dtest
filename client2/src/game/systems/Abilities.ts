@@ -1,132 +1,117 @@
-// local cron = require 'src.vendor.cron'
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local collision = require 'src.game.utils.collision'
-// local Ability = require 'src.game.components.ability'
-// local Damage = require 'src.game.components.damage'
-// local Dash = require 'src.game.components.dash'
-// local Fixture = require 'src.game.components.fixture'
-// local Movement = require 'src.game.components.movement'
-// local Player = require 'src.game.components.player'
-// local Position = require 'src.game.components.position'
-// local Projectile = require 'src.game.components.projectile'
-// local Respawn = require 'src.game.components.respawn'
+import { Aspect } from '../../ecs/Aspect'
+import { System } from '../../ecs/System'
+import * as Timer from '../utils/timer'
+import * as Factory from '../utils/factory'
+import { SystemFlag } from '../flags'
+import { GameObject } from '../components/GameObject'
+import { Abilities, AbilityType, Ability } from '../components/Abilities'
+import { Entity } from '../../ecs/Entity'
+import { Movement, Direction } from '../components/Movement'
+import { Position } from '../components/Position'
+import { Dash } from '../components/Dash'
+import { Damage } from '../components/Damage'
 
-// local aspect = Aspect.new({Ability}, {Respawn})
-// local AbilitySystem = System:new('ability', aspect)
+type AbilityList = {
+  [key in AbilityType]: (entity: Entity, ability: Ability) => void
+}
 
-// function AbilitySystem:throw(entity)
-//   local factory = entity.manager.factory
-//   local position = entity:as(Position)
-//   local movement = entity:as(Movement)
-//   local x, y = position:coords()
-//   local projectile = factory.create(factory.throwingPick(entity, x, y))
-//   local fixture = projectile:as(Fixture)
-//   local body = fixture.fixture:getBody()
+const abilityFunctions: AbilityList = {
+  throw: (entity: Entity, ability: Ability) => {
+    const movement = entity.as(Movement)
+    const position = entity.as(Position)
 
-//   if (movement.direction == 'left') then
-//     body:setLinearVelocity(-1500, 0)
-//   else
-//     body:setLinearVelocity(1500, 0)
-//   end
-// end
+    if (!movement || !position) {
+      return
+    }
 
-// function AbilitySystem:dashStart(entity)
-//   local fixture = entity:as(Fixture)
-//   fixture.fixture:setCategory(3)
+    const x = position.x
+    const y = position.y
+    const projectile = Factory.createThrowingPick(entity, x, y)
 
-//   entity:add(Dash.new(1))
-//   entity:add(Damage.new(1, 1))
-// end
+    const gameObject = projectile.as(GameObject)
 
-// function AbilitySystem:dashEnd(entity)
-//   local fixture = entity:as(Fixture)
-//   fixture.fixture:setCategory(2)
+    if (gameObject) {
+      const body = gameObject.fixture.getBody()
 
-//   entity:remove(Dash)
-//   entity:remove(Damage)
-// end
+      if (movement.direction == Direction.Left) {
+        body.setLinearVelocity(-1500, 0)
+      } else {
+        body.setLinearVelocity(1500, 0)
+      }
+    }
+  },
 
-// function AbilitySystem:grapple(entity)
-// end
+  dash: (entity: Entity, ability: Ability) => {
+    const gameObject = entity.as(GameObject)
 
-// function AbilitySystem:dig(entity)
-// end
+    if (!gameObject) {
+      return
+    }
 
-// function AbilitySystem:shoot(entity)
-//   local factory = entity.manager.factory
-//   local position = entity:as(Position)
-//   local movement = entity:as(Movement)
-//   local x, y = position:coords()
-//   local projectile = factory.create(factory.throwingPick(entity, x, y))
-//   local fixture = projectile:as(Fixture)
-//   local body = fixture.fixture:getBody()
+    gameObject.fixture.setCategory(3)
 
-//   if (movement.direction == 'left') then
-//     body:setLinearVelocity(-2000, 0)
-//   else
-//     body:setLinearVelocity(2000, 0)
-//   end
-// end
+    entity.add(new Dash())
+    entity.add(new Damage(1))
 
-// function AbilitySystem:slash(entity)
-// end
+    ability.timers.duration = Timer.setTimeout(ability.duration, () => {
+      gameObject.fixture.setCategory(2)
 
-// function AbilitySystem:stab(entity)
-// end
+      entity.remove(Dash)
+      entity.remove(Damage)
+    })
+  },
 
-// function AbilitySystem:taser(entity)
-// end
+  ambush: (entity: Entity, ability: Ability) => {},
 
-// function AbilitySystem:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local abilities = entity:as(Ability).abilities
+  grapple: (entity: Entity, ability: Ability) => {},
 
-//     for key, ability in pairs(abilities) do
-//       local timers = ability.timers
+  dig: (entity: Entity, ability: Ability) => {},
 
-//       if timers.cooldown then
-//         timers.cooldown:update(dt)
-//       end
+  shoot: (entity: Entity, ability: Ability) => {},
 
-//       if timers.duration then
-//         timers.duration:update(dt)
-//       end
+  slash: (entity: Entity, ability: Ability) => {},
 
-//       if timers.casting then
-//         timers.casting:update(dt)
-//       end
+  stab: (entity: Entity, ability: Ability) => {},
 
-//       local cooldown = function()
-//         timers.cooldown = nil
-//       end
+  taser: (entity: Entity, ability: Ability) => {},
+}
 
-//       local casting = function()
-//         timers.casting = nil
-//         self[key](self, entity)
-//       end
+export class AbilitiesSystem extends System {
+  static _id = 'Abilities'
+  _id = AbilitiesSystem._id
 
-//       local duration = function()
-//         timers.duration = nil
-//         self[key .. 'End'](self, entity)
-//       end
+  static _flag = SystemFlag.Abilities
+  _flag = AbilitiesSystem._flag
 
-//       if ability.activated and not timers.cooldown then
-//         ability.activated = false
+  static _aspect = new Aspect([Abilities])
+  _aspect = AbilitiesSystem._aspect
 
-//         timers.cooldown = cron.after(ability.cooldown, cooldown)
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const abilities = entity.as(Abilities)
 
-//         if (ability.castspeed or 0) > 0 and not timers.casting then
-//           timers.casting = cron.after(ability.castspeed, casting)
-//         elseif (ability.duration or 0) > 0 and not timers.duration then
-//           self[key .. 'Start'](self, entity)
-//           timers.duration = cron.after(ability.duration, duration)
-//         else
-//           self[key](self, entity)
-//         end
-//       end
-//     end
-//   end
-// end
+      if (!abilities) {
+        return
+      }
 
-// return AbilitySystem
+      for (let _key in abilities.abilities) {
+        const key = _key as AbilityType
+        const ability = abilities.abilities[key]
+
+        if (ability.activated && !ability.timers.cooldown) {
+          ability.timers.cooldown = Timer.setTimeout(ability.cooldown, () => {
+            delete ability.timers.cooldown
+          })
+
+          Timer.clearTimeout(ability.timers.castspeed)
+
+          ability.timers.castspeed = Timer.setTimeout(ability.castspeed, () => {
+            delete ability.timers.castspeed
+
+            abilityFunctions[key](entity, ability)
+          })
+        }
+      }
+    })
+  }
+}

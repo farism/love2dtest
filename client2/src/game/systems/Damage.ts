@@ -23,9 +23,12 @@ export class DamageSystem extends System {
     }
 
     const damage = result[0].as(Damage)
-    const health = result[0].as(Health)
-    if (damage && health) {
-      health.hitpoints = health.armor - damage.hitpoints
+    const health = result[1].as(Health)
+
+    if (!damage || !health) {
+      return
     }
+
+    health.hitpoints = health.armor - damage.hitpoints
   }
 }

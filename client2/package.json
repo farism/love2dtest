@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "chokidar": "^2.1.5",
-    "execa": "^1.0.0",
+    "chokidar": "3.0.0",
+    "execa": "1.0.0",
     "love-typescript-definitions": "^0.9.7-rc1",
-    "typescript-to-lua": "^0.17.0"
+    "typescript-to-lua": "0.18.0"
   }
 }

@@ -11,6 +11,12 @@ export const hasComponent = (component: Component) => (fixture: Fixture) => {
   return getEntity(fixture).has(component)
 }
 
+export const hasComponents = (...components: Component[]) => (
+  fixture: Fixture
+) => {
+  return components.every(component => hasComponent(component)(fixture))
+}
+
 export const isBodyType = (type: BodyType) => (fixture: Fixture) => {
   return fixture.getBody().getType() === type
 }

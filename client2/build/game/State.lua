@@ -1,14 +1,14 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local exports = exports or {};
-exports.State = {};
-exports.State.GAMEOVER = "gameover";
-exports.State.gameover = "GAMEOVER";
-exports.State.HOME = "home";
-exports.State.home = "HOME";
-exports.State.PAUSED = "paused";
-exports.State.paused = "PAUSED";
-exports.State.PLAYING = "playing";
-exports.State.playing = "PLAYING";
-exports.State.UPGRADES = "upgrades";
-exports.State.upgrades = "UPGRADES";
-return exports;
+local ____exports = {}
+____exports.State = {}
+____exports.State.GAMEOVER = "gameover"
+____exports.State.gameover = "GAMEOVER"
+____exports.State.HOME = "home"
+____exports.State.home = "HOME"
+____exports.State.PAUSED = "paused"
+____exports.State.paused = "PAUSED"
+____exports.State.PLAYING = "playing"
+____exports.State.playing = "PLAYING"
+____exports.State.UPGRADES = "upgrades"
+____exports.State.upgrades = "UPGRADES"
+return ____exports

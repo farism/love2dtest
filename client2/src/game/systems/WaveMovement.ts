@@ -32,13 +32,13 @@ export class WaveMovementSystem extends System {
 
       if (wave.type === WaveType.Circular) {
         body.setPosition(
-          wave.x + math.cos(step) * wave.amplitude,
-          wave.y + math.sin(step) * wave.amplitude
+          wave.x + Math.cos(step) * wave.amplitude,
+          wave.y + Math.sin(step) * wave.amplitude
         )
       } else if (wave.type === WaveType.Horizontal) {
-        body.setX(wave.x + math.cos(step) * wave.amplitude)
+        body.setX(wave.x + Math.cos(step) * wave.amplitude)
       } else if (wave.type === WaveType.Vertical) {
-        body.setY(wave.y + math.sin(step) * wave.amplitude)
+        body.setY(wave.y + Math.sin(step) * wave.amplitude)
       }
     })
   }

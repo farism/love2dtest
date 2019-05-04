@@ -7,9 +7,10 @@ export class Respawn {
   static _flag = ComponentFlag.Respawn
   _flag = ComponentFlag.Respawn
 
-  waitTime: number
+  duration: number
+  timer: number = 0
 
-  constructor(waitTime: number = 0) {
-    this.waitTime = waitTime
+  constructor(duration: number = 0) {
+    this.duration = duration
   }
 }

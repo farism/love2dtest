@@ -1,142 +1,150 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local exports = exports or {};
-local __TSTL_flags = require("game.flags");
-local ComponentFlag = __TSTL_flags.ComponentFlag;
-exports.WaveType = {};
-exports.WaveType.Circular = "circular";
-exports.WaveType.circular = "Circular";
-exports.WaveType.Horizontal = "horizontal";
-exports.WaveType.horizontal = "Horizontal";
-exports.WaveType.Vertical = "vertical";
-exports.WaveType.vertical = "Vertical";
-exports.Wave = exports.Wave or {};
-exports.Wave.__index = exports.Wave;
-exports.Wave.prototype = exports.Wave.prototype or {};
-exports.Wave.prototype.__index = exports.Wave.prototype;
-exports.Wave.prototype.constructor = exports.Wave;
-exports.Wave.new = function(...)
-    local self = setmetatable({}, exports.Wave.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.Wave.prototype.____constructor = function(self, type, x, y, amplitude, frequency, direction)
-    self._id = exports.Wave._id;
-    self._flag = ComponentFlag.Wave;
+local ____exports = {}
+local __TSTL_flags = require("game.flags")
+local ComponentFlag = __TSTL_flags.ComponentFlag
+____exports.WaveType = {}
+____exports.WaveType.Circular = "circular"
+____exports.WaveType.circular = "Circular"
+____exports.WaveType.Horizontal = "horizontal"
+____exports.WaveType.horizontal = "Horizontal"
+____exports.WaveType.Vertical = "vertical"
+____exports.WaveType.vertical = "Vertical"
+____exports.Wave = {}
+local Wave = ____exports.Wave
+Wave.name = "Wave"
+Wave.__index = Wave
+Wave.prototype = {}
+Wave.prototype.__index = Wave.prototype
+Wave.prototype.constructor = Wave
+function Wave.new(...)
+    local self = setmetatable({}, Wave.prototype)
+    self:____constructor(...)
+    return self
+end
+function Wave.prototype.____constructor(self, type, x, y, amplitude, frequency, direction)
+    self._id = ____exports.Wave._id
+    self._flag = ComponentFlag.Wave
     if type == nil then
-        type = exports.WaveType.Vertical;
+        type = ____exports.WaveType.Vertical
     end
     if x == nil then
-        x = 0;
+        x = 0
     end
     if y == nil then
-        y = 0;
+        y = 0
     end
     if amplitude == nil then
-        amplitude = 0;
+        amplitude = 0
     end
     if frequency == nil then
-        frequency = 0;
+        frequency = 0
     end
     if direction == nil then
-        direction = 0;
+        direction = 0
     end
-    self.type = type;
-    self.x = x;
-    self.y = y;
-    self.amplitude = amplitude;
-    self.frequency = frequency;
-    self.direction = direction;
-end;
-exports.Wave._id = "Wave";
-exports.Wave._flag = ComponentFlag.Wave;
-exports.CircularWave = exports.CircularWave or {};
-exports.CircularWave.__index = exports.CircularWave;
-exports.CircularWave.prototype = exports.CircularWave.prototype or {};
-exports.CircularWave.prototype.__index = exports.CircularWave.prototype;
-exports.CircularWave.prototype.constructor = exports.CircularWave;
-exports.CircularWave.____super = exports.Wave;
-setmetatable(exports.CircularWave, exports.CircularWave.____super);
-setmetatable(exports.CircularWave.prototype, exports.CircularWave.____super.prototype);
-exports.CircularWave.new = function(...)
-    local self = setmetatable({}, exports.CircularWave.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.CircularWave.prototype.____constructor = function(self, x, y, amplitude, frequency)
+    self.type = type
+    self.x = x
+    self.y = y
+    self.amplitude = amplitude
+    self.frequency = frequency
+    self.direction = direction
+end
+Wave._id = "Wave"
+Wave._flag = ComponentFlag.Wave
+____exports.CircularWave = {}
+local CircularWave = ____exports.CircularWave
+CircularWave.name = "CircularWave"
+CircularWave.__index = CircularWave
+CircularWave.prototype = {}
+CircularWave.prototype.__index = CircularWave.prototype
+CircularWave.prototype.constructor = CircularWave
+CircularWave.____super = Wave
+setmetatable(CircularWave, CircularWave.____super)
+setmetatable(CircularWave.prototype, CircularWave.____super.prototype)
+function CircularWave.new(...)
+    local self = setmetatable({}, CircularWave.prototype)
+    self:____constructor(...)
+    return self
+end
+function CircularWave.prototype.____constructor(self, x, y, amplitude, frequency)
     if x == nil then
-        x = 0;
+        x = 0
     end
     if y == nil then
-        y = 0;
+        y = 0
     end
     if amplitude == nil then
-        amplitude = 0;
+        amplitude = 0
     end
     if frequency == nil then
-        frequency = 0;
+        frequency = 0
     end
-    exports.Wave.prototype.____constructor(self, exports.WaveType.Circular, x, y, amplitude, frequency);
-end;
-exports.HorizontalWave = exports.HorizontalWave or {};
-exports.HorizontalWave.__index = exports.HorizontalWave;
-exports.HorizontalWave.prototype = exports.HorizontalWave.prototype or {};
-exports.HorizontalWave.prototype.__index = exports.HorizontalWave.prototype;
-exports.HorizontalWave.prototype.constructor = exports.HorizontalWave;
-exports.HorizontalWave.____super = exports.Wave;
-setmetatable(exports.HorizontalWave, exports.HorizontalWave.____super);
-setmetatable(exports.HorizontalWave.prototype, exports.HorizontalWave.____super.prototype);
-exports.HorizontalWave.new = function(...)
-    local self = setmetatable({}, exports.HorizontalWave.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.HorizontalWave.prototype.____constructor = function(self, x, y, amplitude, frequency, direction)
+    Wave.prototype.____constructor(self, ____exports.WaveType.Circular, x, y, amplitude, frequency)
+end
+____exports.HorizontalWave = {}
+local HorizontalWave = ____exports.HorizontalWave
+HorizontalWave.name = "HorizontalWave"
+HorizontalWave.__index = HorizontalWave
+HorizontalWave.prototype = {}
+HorizontalWave.prototype.__index = HorizontalWave.prototype
+HorizontalWave.prototype.constructor = HorizontalWave
+HorizontalWave.____super = Wave
+setmetatable(HorizontalWave, HorizontalWave.____super)
+setmetatable(HorizontalWave.prototype, HorizontalWave.____super.prototype)
+function HorizontalWave.new(...)
+    local self = setmetatable({}, HorizontalWave.prototype)
+    self:____constructor(...)
+    return self
+end
+function HorizontalWave.prototype.____constructor(self, x, y, amplitude, frequency, direction)
     if x == nil then
-        x = 0;
+        x = 0
     end
     if y == nil then
-        y = 0;
+        y = 0
     end
     if amplitude == nil then
-        amplitude = 0;
+        amplitude = 0
     end
     if frequency == nil then
-        frequency = 0;
+        frequency = 0
     end
     if direction == nil then
-        direction = 1;
+        direction = 1
     end
-    exports.Wave.prototype.____constructor(self, exports.WaveType.Horizontal, x, y, amplitude, frequency, direction);
-end;
-exports.VerticalWave = exports.VerticalWave or {};
-exports.VerticalWave.__index = exports.VerticalWave;
-exports.VerticalWave.prototype = exports.VerticalWave.prototype or {};
-exports.VerticalWave.prototype.__index = exports.VerticalWave.prototype;
-exports.VerticalWave.prototype.constructor = exports.VerticalWave;
-exports.VerticalWave.____super = exports.Wave;
-setmetatable(exports.VerticalWave, exports.VerticalWave.____super);
-setmetatable(exports.VerticalWave.prototype, exports.VerticalWave.____super.prototype);
-exports.VerticalWave.new = function(...)
-    local self = setmetatable({}, exports.VerticalWave.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.VerticalWave.prototype.____constructor = function(self, x, y, amplitude, frequency, direction)
+    Wave.prototype.____constructor(self, ____exports.WaveType.Horizontal, x, y, amplitude, frequency, direction)
+end
+____exports.VerticalWave = {}
+local VerticalWave = ____exports.VerticalWave
+VerticalWave.name = "VerticalWave"
+VerticalWave.__index = VerticalWave
+VerticalWave.prototype = {}
+VerticalWave.prototype.__index = VerticalWave.prototype
+VerticalWave.prototype.constructor = VerticalWave
+VerticalWave.____super = Wave
+setmetatable(VerticalWave, VerticalWave.____super)
+setmetatable(VerticalWave.prototype, VerticalWave.____super.prototype)
+function VerticalWave.new(...)
+    local self = setmetatable({}, VerticalWave.prototype)
+    self:____constructor(...)
+    return self
+end
+function VerticalWave.prototype.____constructor(self, x, y, amplitude, frequency, direction)
     if x == nil then
-        x = 0;
+        x = 0
     end
     if y == nil then
-        y = 0;
+        y = 0
     end
     if amplitude == nil then
-        amplitude = 0;
+        amplitude = 0
     end
     if frequency == nil then
-        frequency = 0;
+        frequency = 0
     end
     if direction == nil then
-        direction = 1;
+        direction = 1
     end
-    exports.Wave.prototype.____constructor(self, exports.WaveType.Vertical, x, y, amplitude, frequency, direction);
-end;
-return exports;
+    Wave.prototype.____constructor(self, ____exports.WaveType.Vertical, x, y, amplitude, frequency, direction)
+end
+return ____exports

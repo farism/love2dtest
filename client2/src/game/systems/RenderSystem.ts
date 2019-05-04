@@ -1,9 +1,13 @@
 import { System } from '../../ecs/System'
 import { GameObject } from '../components/GameObject'
 import { SystemFlag } from '../flags'
-
-const isShapeType = <T extends Shape>(type: string, shape: Shape): shape is T =>
-  shape.getType() === type
+import {
+  isPolygonShape,
+  isCircleShape,
+  isChainShape,
+  isEdgeShape,
+} from '../utils/shape'
+import { Aspect } from '../../ecs/Aspect'
 
 export class RenderSystem extends System {
   static _id = 'RenderSystem'
@@ -11,6 +15,9 @@ export class RenderSystem extends System {
 
   static _flag = SystemFlag.RenderSystem
   _flag = RenderSystem._flag
+
+  static _aspect = new Aspect([GameObject])
+  _aspect = RenderSystem._aspect
 
   draw = () => {
     this.entities.forEach(entity => {
@@ -23,20 +30,20 @@ export class RenderSystem extends System {
       const body = gameObject.fixture.getBody()
       const shape = gameObject.fixture.getShape()
 
-      if (isShapeType<PolygonShape>('polygon', shape)) {
+      if (isPolygonShape(shape)) {
         love.graphics.polygon(
           'fill',
           ...body.getWorldPoints(...shape.getPoints())
         )
-      } else if (isShapeType<CircleShape>('circle', shape)) {
+      } else if (isCircleShape(shape)) {
         love.graphics.circle(
           'fill',
           body.getX(),
           body.getY(),
           shape.getRadius()
         )
-      } else if (isShapeType<ChainShape>('chain', shape)) {
-      } else if (isShapeType<EdgeShape>('edge', shape)) {
+      } else if (isChainShape(shape)) {
+      } else if (isEdgeShape(shape)) {
       }
     })
   }

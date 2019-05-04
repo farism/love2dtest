@@ -1,99 +1,117 @@
-// local vector = require 'src.vendor.vector'
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Attack = require 'src.game.components.attack'
-// local Fixture = require 'src.game.components.fixture'
-// local Movement = require 'src.game.components.movement'
-// local Position = require 'src.game.components.position'
-// local Waypoint = require 'src.game.components.waypoint'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { Waypoint, Point } from '../components/Waypoint'
+import { Movement, Direction } from '../components/Movement'
+import { Position } from '../components/Position'
+import { GameObject } from '../components/GameObject'
+import { Attack } from '../components/Attack'
 
-// local aspect = Aspect.new({Fixture, Movement, Position, Waypoint}, {Attack})
-// local WaypointMovement = System:new('waypointmovement', aspect)
+enum Axis {
+  X = 'x',
+  Y = 'y',
+}
 
-// local function getNext(waypoint)
-//   if waypoint.current == #waypoint.waypoints then
-//     return waypoint.waypoints[1]
-//   else
-//     return waypoint.waypoints[waypoint.current + 1]
-//   end
-// end
+const shouldAdvance = (
+  axis: Axis,
+  velocity: number,
+  position: Position,
+  next: Point
+) => {
+  if (!next[axis]) {
+    return true
+  } else if (velocity > 0 && position[axis] >= next[axis]) {
+    return true
+  } else {
+    return false
+  }
+}
+const advance = (waypoint: Waypoint) => {
+  if (waypoint.current === waypoint.path.length) {
+    waypoint.current = 0
+  } else {
+    waypoint.current++
+  }
+}
 
-// local function shouldAdvance(axis, velocity, position, next)
-//   if not next[axis] then
-//     return true
-//   elseif
-//     velocity > 0 and position[axis] >= next[axis] or
-//       velocity < 0 and position[axis] <= next[axis] or
-//       -- this is a hacky
-//       math.abs(position[axis] - next[axis]) < 1
-//    then
-//     return true
-//   else
-//     return false
-//   end
-// end
+const getNext = (waypoint: Waypoint) => {
+  const point = waypoint.path.length
+    ? waypoint.path[0]
+    : waypoint.path[waypoint.current + 1]
 
-// local function advance(waypoint)
-//   if waypoint.current == #waypoint.waypoints then
-//     waypoint.current = 1
-//   else
-//     waypoint.current = waypoint.current + 1
-//   end
-// end
+  return point ? point : { x: 0, y: 0 }
+}
 
-// local function update(entity)
-//   local waypoint = entity:as(Waypoint)
-//   local fixture = entity:as(Fixture)
-//   local movement = entity:as(Movement)
-//   local position = entity:as(Position)
-//   local body = fixture.fixture:getBody()
-//   local velocityX, velocityY = body:getLinearVelocity()
-//   local next = getNext(waypoint)
-//   local shouldAdvanceX = shouldAdvance('x', velocityX, position, next)
-//   local shouldAdvanceY = shouldAdvance('y', velocityY, position, next)
-//   local newVelocityX = 0
-//   local newVelocityY = 0
-//   local angle =
-//     math.atan2((next.y or position.y) - position.y, next.x - position.x)
+export class WaypointMovementSystem extends System {
+  static _id = 'WaypointMovement'
+  _id = WaypointMovementSystem._id
 
-//   body:setGravityScale(1)
+  static _flag = SystemFlag.WaypointMovement
+  _flag = WaypointMovementSystem._flag
 
-//   if shouldAdvanceX and shouldAdvanceY then
-//     advance(waypoint)
-//   else
-//     if not shouldAdvanceX then
-//       newVelocityX = math.cos(angle) * waypoint.speed
-//     end
+  static _aspect = new Aspect(
+    [GameObject, Movement, Position, Waypoint],
+    [
+      /*Attack*/
+    ]
+  )
+  _aspect = WaypointMovementSystem._aspect
 
-//     if next.y then
-//       -- if we are moving in the y direction then don't apply gravity
-//       body:setGravityScale(0)
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const waypoint = entity.as(Waypoint)
+      const gameObject = entity.as(GameObject)
+      const movement = entity.as(Movement)
+      const position = entity.as(Position)
 
-//       if not shouldAdvanceY then
-//         newVelocityY = math.sin(angle) * waypoint.speed
-//       end
-//     else
-//       newVelocityY = velocityY
-//     end
-//   end
+      if (!waypoint || !gameObject || !movement || !position) {
+        return
+      }
 
-//   if newVelocityX < 0 then
-//     movement.direction = 'left'
-//   elseif newVelocityX > 0 then
-//     movement.direction = 'right'
-//   end
+      if (!waypoint.active) {
+        return
+      }
 
-//   body:setLinearVelocity(newVelocityX, newVelocityY)
-// end
+      const body = gameObject.fixture.getBody()
+      body.setGravityScale(1)
 
-// function WaypointMovement:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local waypoint = entity:as(Waypoint)
+      const next = getNext(waypoint)
+      const angle = math.atan2(
+        (next.y || position.y) - position.y,
+        next.x - position.x
+      )
+      const [velocityX, velocityY] = body.getLinearVelocity()
+      const shouldAdvanceX = shouldAdvance(Axis.X, velocityX, position, next)
+      const shouldAdvanceY = shouldAdvance(Axis.Y, velocityY, position, next)
 
-//     if waypoint.active then
-//       update(entity)
-//     end
-//   end
-// end
+      let newVelocityX = 0
+      let newVelocityY = 0
 
-// return WaypointMovement
+      if (shouldAdvanceX && shouldAdvanceY) {
+        advance(waypoint)
+      } else {
+        if (!shouldAdvanceX) {
+          newVelocityX = math.cos(angle) * waypoint.speed
+        }
+
+        if (next.y) {
+          body.setGravityScale(0)
+
+          if (!shouldAdvanceY) {
+            newVelocityY = math.sin(angle) * waypoint.speed
+          }
+        } else {
+          newVelocityY = velocityY
+        }
+      }
+
+      if (newVelocityX < 0) {
+        movement.direction = Direction.Left
+      } else if (newVelocityX > 0) {
+        movement.direction = Direction.Right
+      }
+
+      body.setLinearVelocity(newVelocityX, newVelocityY)
+    })
+  }
+}

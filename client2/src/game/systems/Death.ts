@@ -1,52 +1,51 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Fixture = require 'src.game.components.fixture'
-// local Health = require 'src.game.components.health'
-// local Player = require 'src.game.components.player'
-// local Respawn = require 'src.game.components.respawn'
+import { System } from '../../ecs/System'
+import { SystemFlag } from '../flags'
+import { Aspect } from '../../ecs/Aspect'
+import { Health } from '../components/Health'
+import { Respawn } from '../components/Respawn'
+import { Player } from '../components/Player'
+import { Blueprint } from '../utils/factory'
+import { Entity } from '../../ecs/Entity'
 
-// local aspect = Aspect.new({Health})
-// local Death = System:new('death', aspect)
+const deathFunctions: { [key: string]: (entity: Entity) => void } = {
+  [Blueprint.Player]: (entity: Entity) => {
+    const health = entity.as(Health)
+    const player = entity.as(Player)
 
-// local function destroyJoints(entity)
-//   local fixture = entity:as(Fixture)
-//   local joints = fixture.fixture:getBody():getJoints()
-//   for _, joint in pairs(joints) do
-//     local a, b = joint:getBodies()
-//     a:getUserData().entity:destroy()
-//     b:getUserData().entity:destroy()
-//   end
-// end
+    if (!player || !health) {
+      return
+    }
 
-// function Death:container(dt, entity)
-//   entity:destroy()
-// end
+    health.hitpoints = 1
+    player.lives--
 
-// function Death:mob(dt, entity)
-//   destroyJoints(entity)
-//   entity:destroy()
-// end
+    entity.add(new Respawn(3))
+  },
+}
 
-// function Death:player(dt, entity)
-//   local health = entity:as(Health)
-//   local player = entity:as(Player)
+export class DeathSystem extends System {
+  static _id = 'DeathSystem'
+  _id = DeathSystem._id
 
-//   entity:add(Respawn.new(1))
-//   health.hitpoints = 1
-// end
+  static _flag = SystemFlag.Death
+  _flag = DeathSystem._flag
 
-// function Death:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local health = entity:as(Health)
+  static _aspect = new Aspect([Health])
+  _aspect = DeathSystem._aspect
 
-//     if (health.hitpoints <= 0) then
-//       local fn = self[entity.meta.type]
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const health = entity.as(Health)
 
-//       if (fn) then
-//         fn(self, dt, entity)
-//       end
-//     end
-//   end
-// end
+      if (!health) {
+        return
+      }
 
-// return Death
+      if (health.hitpoints <= 0 && entity.userData.blueprint) {
+        const fn = deathFunctions[entity.userData.blueprint]
+
+        fn && fn(entity)
+      }
+    })
+  }
+}

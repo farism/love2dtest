@@ -1,94 +1,100 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
 -- Lua Library inline imports
-__TS__ArrayForEach = function(arr, callbackFn)
+function __TS__ArrayForEach(arr, callbackFn)
     do
-        local i = 0;
-        while i < (#arr) do
-            callbackFn(_G, arr[i + 1], i, arr);
-            i = i + 1;
+        local i = 0
+        while i < #arr do
+            callbackFn(_G, arr[i + 1], i, arr)
+            i = i + 1
         end
     end
-end;
+end
 
-local exports = exports or {};
-local __TSTL_Component = require("ecs.Component");
-local Component = __TSTL_Component.Component;
-local __TSTL_Entity = require("ecs.Entity");
-local Entity = __TSTL_Entity.Entity;
-local flags;
+local ____exports = {}
+local __TSTL_Component = require("ecs.Component")
+local Component = __TSTL_Component.Component
+local __TSTL_Entity = require("ecs.Entity")
+local Entity = __TSTL_Entity.Entity
+local flags
 flags = function(____, components)
-    local flags = 0;
+    local flags = 0
     __TS__ArrayForEach(components, function(____, cmp)
-        flags = bit.bxor(flags, cmp._flag);
-    end);
-    return flags;
-end;
-exports.Aspect = exports.Aspect or {};
-exports.Aspect.__index = exports.Aspect;
-exports.Aspect.prototype = exports.Aspect.prototype or {};
-exports.Aspect.prototype.__index = exports.Aspect.prototype;
-exports.Aspect.prototype.constructor = exports.Aspect;
-exports.Aspect.new = function(...)
-    local self = setmetatable({}, exports.Aspect.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.Aspect.prototype.____constructor = function(self, all, none, one)
+        flags = bit.bxor(flags, cmp._flag)
+    end)
+    return flags
+end
+____exports.Aspect = {}
+local Aspect = ____exports.Aspect
+Aspect.name = "Aspect"
+Aspect.__index = Aspect
+Aspect.prototype = {}
+Aspect.prototype.__index = Aspect.prototype
+Aspect.prototype.constructor = Aspect
+function Aspect.new(...)
+    local self = setmetatable({}, Aspect.prototype)
+    self:____constructor(...)
+    return self
+end
+function Aspect.prototype.____constructor(self, all, none, one)
     self.check = function(____, entity)
-        local all = bit.bor(self.all, entity.components) == entity.components;
-        local none = bit.band(self.none, entity.components) == 0;
-        local one = bit.band(self.one, entity.components) ~= 0;
-        return (one or all) and none;
-    end;
+        local all = bit.bor(self.all, entity.components) == entity.components
+        local none = bit.band(self.none, entity.components) == 0
+        local one = bit.band(self.one, entity.components) ~= 0
+        return (one or all) and none
+    end
     if all == nil then
-        all = {};
+        all = {}
     end
     if none == nil then
-        none = {};
+        none = {}
     end
     if one == nil then
-        one = {};
+        one = {}
     end
-    self.all = flags(nil, all);
-    self.none = flags(nil, none);
-    self.one = flags(nil, one);
-end;
-exports.AlwaysAspect = exports.AlwaysAspect or {};
-exports.AlwaysAspect.__index = exports.AlwaysAspect;
-exports.AlwaysAspect.prototype = exports.AlwaysAspect.prototype or {};
-exports.AlwaysAspect.prototype.__index = exports.AlwaysAspect.prototype;
-exports.AlwaysAspect.prototype.constructor = exports.AlwaysAspect;
-exports.AlwaysAspect.____super = exports.Aspect;
-setmetatable(exports.AlwaysAspect, exports.AlwaysAspect.____super);
-setmetatable(exports.AlwaysAspect.prototype, exports.AlwaysAspect.____super.prototype);
-exports.AlwaysAspect.new = function(...)
-    local self = setmetatable({}, exports.AlwaysAspect.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.AlwaysAspect.prototype.____constructor = function(self, ...)
-    exports.Aspect.prototype.____constructor(self, ...);
+    self.all = flags(nil, all)
+    self.none = flags(nil, none)
+    self.one = flags(nil, one)
+end
+____exports.AlwaysAspect = {}
+local AlwaysAspect = ____exports.AlwaysAspect
+AlwaysAspect.name = "AlwaysAspect"
+AlwaysAspect.__index = AlwaysAspect
+AlwaysAspect.prototype = {}
+AlwaysAspect.prototype.__index = AlwaysAspect.prototype
+AlwaysAspect.prototype.constructor = AlwaysAspect
+AlwaysAspect.____super = Aspect
+setmetatable(AlwaysAspect, AlwaysAspect.____super)
+setmetatable(AlwaysAspect.prototype, AlwaysAspect.____super.prototype)
+function AlwaysAspect.new(...)
+    local self = setmetatable({}, AlwaysAspect.prototype)
+    self:____constructor(...)
+    return self
+end
+function AlwaysAspect.prototype.____constructor(self, ...)
+    Aspect.prototype.____constructor(self, ...)
     self.check = function(____, _)
-        return true;
-    end;
-end;
-exports.NeverAspect = exports.NeverAspect or {};
-exports.NeverAspect.__index = exports.NeverAspect;
-exports.NeverAspect.prototype = exports.NeverAspect.prototype or {};
-exports.NeverAspect.prototype.__index = exports.NeverAspect.prototype;
-exports.NeverAspect.prototype.constructor = exports.NeverAspect;
-exports.NeverAspect.____super = exports.Aspect;
-setmetatable(exports.NeverAspect, exports.NeverAspect.____super);
-setmetatable(exports.NeverAspect.prototype, exports.NeverAspect.____super.prototype);
-exports.NeverAspect.new = function(...)
-    local self = setmetatable({}, exports.NeverAspect.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.NeverAspect.prototype.____constructor = function(self, ...)
-    exports.Aspect.prototype.____constructor(self, ...);
+        return true
+    end
+end
+____exports.NeverAspect = {}
+local NeverAspect = ____exports.NeverAspect
+NeverAspect.name = "NeverAspect"
+NeverAspect.__index = NeverAspect
+NeverAspect.prototype = {}
+NeverAspect.prototype.__index = NeverAspect.prototype
+NeverAspect.prototype.constructor = NeverAspect
+NeverAspect.____super = Aspect
+setmetatable(NeverAspect, NeverAspect.____super)
+setmetatable(NeverAspect.prototype, NeverAspect.____super.prototype)
+function NeverAspect.new(...)
+    local self = setmetatable({}, NeverAspect.prototype)
+    self:____constructor(...)
+    return self
+end
+function NeverAspect.prototype.____constructor(self, ...)
+    Aspect.prototype.____constructor(self, ...)
     self.check = function(____, _)
-        return false;
-    end;
-end;
-return exports;
+        return false
+    end
+end
+return ____exports

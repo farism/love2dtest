@@ -1,6 +1,6 @@
 import { ComponentFlag } from '../flags'
 
-interface Point {
+export interface Point {
   x: number
   y: number
 }
@@ -19,7 +19,7 @@ export class Waypoint {
 
   constructor(active: boolean = true, speed: number = 1, path: Point[]) {
     this.active = active
-    this.current = 1
+    this.current = 0
     this.speed = speed
     this.path = path
   }

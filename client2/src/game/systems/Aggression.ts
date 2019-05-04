@@ -1,73 +1,84 @@
-// local cron = require 'src.vendor.cron'
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Attack = require 'src.game.components.attack'
-// local Aggression = require 'src.game.components.aggression'
-// local Fixture = require 'src.game.components.fixture'
-// local Position = require 'src.game.components.position'
-// local collision = require 'src.game.utils.collision'
+import { Aspect } from '../../ecs/Aspect'
+import { System } from '../../ecs/System'
+import * as Timer from '../utils/timer'
+import { isPolygonShape } from '../utils/shape'
+import { check, hasComponent } from '../utils/collision'
+import { SystemFlag } from '../flags'
+import { Aggression } from '../components/Aggression'
+import { GameObject } from '../components/GameObject'
+import { Position } from '../components/Position'
+import { Player } from '../components/Player'
+import { Attack } from '../components/Attack'
 
-// local aspect = Aspect.new({Aggression, Fixture, Position})
-// local AggressionSystem = System:new('aggression', aspect)
+const isAggression = (fixture: Fixture) => {
+  return fixture.getUserData().isAggression
+}
 
-// function startAttack(origin, target)
-//   origin = collision.entity(origin)
-//   target = collision.entity(target)
-//   origin:add(Attack.new(1, target))
-// end
+export class AggressionSystem extends System {
+  static _id = 'Aggression'
+  _id = AggressionSystem._id
 
-// function stopAttack(origin)
-//   origin = collision.entity(origin)
-//   local aggression = origin:as(Aggression)
-//   local callback = function()
-//     origin:remove(Attack)
-//     aggression.timeout = nil
-//   end
-//   aggression.timeout = cron.after(aggression.duration, callback)
-// end
+  static _flag = SystemFlag.Aggression
+  _flag = AggressionSystem._flag
 
-// function AggressionSystem:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local aggression = entity:as(Aggression)
-//     local fixture = entity:as(Fixture)
+  static _aspect = new Aspect([Aggression, GameObject, Position])
+  _aspect = AggressionSystem._aspect
 
-//     if aggression.timeout then
-//       aggression.timeout:update(dt)
-//     end
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const aggression = entity.as(Aggression)
+      const gameObject = entity.as(GameObject)
 
-//     aggression.fixture:getBody():setPosition(
-//       fixture.fixture:getBody():getPosition()
-//     )
-//   end
-// end
+      if (aggression && gameObject) {
+        const position = gameObject.fixture.getBody().getPosition()
 
-// function AggressionSystem:draw()
-//   for _, entity in pairs(self.entities) do
-//     local aggression = entity:as(Aggression)
-//     local body = aggression.fixture:getBody()
-//     local shape = aggression.fixture:getShape()
-//     local shapeType = shape:getType()
+        aggression.fixture.getBody().setPosition(...position)
+      }
+    })
+  }
 
-//     love.graphics.setColor(255, 0, 0, 0.25)
-//     love.graphics.polygon('fill', body:getWorldPoints(shape:getPoints()))
-//     love.graphics.setColor(255, 255, 255, 1)
-//   end
-// end
+  beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [isAggression, hasComponent(Player)])
 
-// function AggressionSystem:beginContact(a, b, contact)
-//   if collision.is('player', a) and collision.isAggression(b) then
-//     startAttack(b, a)
-//   elseif collision.isAggression(a) and collision.is('player', b) then
-//     startAttack(a, b)
-//   end
-// end
+    if (result) {
+      const [attacker, target] = result
 
-// function AggressionSystem:endContact(a, b, contact)
-//   if collision.is('player', a) and collision.isAggression(b) then
-//     stopAttack(b)
-//   elseif collision.isAggression(a) and collision.is('player', b) then
-//     stopAttack(a)
-//   end
-// end
+      attacker.add(new Attack(target))
+    }
+  }
 
-// return AggressionSystem
+  endContact = (a: Fixture, b: Fixture, contact: Contact) => {
+    const result = check(a, b, [isAggression, hasComponent(Player)])
+
+    if (result) {
+      const [attacker, target] = result
+
+      const aggression = attacker.as(Aggression)
+
+      if (aggression) {
+        Timer.setTimeout(aggression.duration, () => {
+          attacker.remove(Attack)
+        })
+      }
+    }
+  }
+
+  draw = () => {
+    this.entities.forEach(entity => {
+      const aggression = entity.as(Aggression)
+
+      if (aggression) {
+        const body = aggression.fixture.getBody()
+        const shape = aggression.fixture.getShape()
+
+        if (isPolygonShape(shape)) {
+          const points = body.getWorldPoints(...shape.getPoints())
+
+          love.graphics.setColor(255, 0, 0, 0.25)
+          love.graphics.polygon('fill', ...points)
+          love.graphics.setColor(255, 255, 255, 1)
+        }
+      }
+    })
+  }
+}

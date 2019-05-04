@@ -12,13 +12,17 @@ export enum AbilityType {
   Taser = 'taser',
 }
 
-interface AbilityProperties {
+export interface Ability {
+  activated: boolean
+  castspeed: number
   cooldown: number
   duration: number
-  castspeed: number
   enabled: boolean
-  activated: boolean
-  timers: object
+  timers: {
+    castspeed?: number
+    cooldown?: number
+    duration?: number
+  }
 }
 
 const defineAbility = (
@@ -26,13 +30,13 @@ const defineAbility = (
   duration = 0,
   castspeed = 0,
   enabled = true
-): AbilityProperties => {
+): Ability => {
   return {
+    activated: false,
+    castspeed: castspeed,
     cooldown: cooldown,
     duration: duration,
-    castspeed: castspeed,
     enabled: enabled,
-    activated: false,
     timers: {},
   }
 }
@@ -44,13 +48,13 @@ export class Abilities {
   static _flag = ComponentFlag.Abilities
   _flag = ComponentFlag.Abilities
 
-  abilities: { [k: string]: AbilityProperties }
+  abilities: { [key in AbilityType]: Ability }
 
   constructor() {
     this.abilities = {
       // player
       [AbilityType.Throw]: defineAbility(0.5, 0, 0),
-      [AbilityType.Dash]: defineAbility(0.5, 0, 0),
+      [AbilityType.Dash]: defineAbility(1, 0.1, 0),
       [AbilityType.Grapple]: defineAbility(1, 0, 0),
       [AbilityType.Dig]: defineAbility(1, 1, 0),
 
@@ -63,12 +67,7 @@ export class Abilities {
     }
   }
 
-  reset = () => {
-    for (let key in this.abilities) {
-      this.abilities[key].activated = false
-      this.abilities[key].timers = {}
-    }
-  }
+  reset = () => {}
 
   setCooldown = (ability: AbilityType, cooldown: number) => {
     this.abilities[ability].cooldown = cooldown

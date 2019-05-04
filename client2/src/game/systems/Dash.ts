@@ -1,35 +1,50 @@
-// local Aspect = require 'src.ecs.aspect'
-// local System = require 'src.ecs.system'
-// local Dash = require 'src.game.components.dash'
-// local Fixture = require 'src.game.components.fixture'
-// local Movement = require 'src.game.components.movement'
-// local Respawn = require 'src.game.components.respawn'
+import { Aspect } from '../../ecs/Aspect'
+import { Entity } from '../../ecs/Entity'
+import { System } from '../../ecs/System'
+import { Dash } from '../components/Dash'
+import { GameObject } from '../components/GameObject'
+import { Direction, Movement } from '../components/Movement'
+import { SystemFlag } from '../flags'
 
-// local aspect = Aspect.new({Dash, Fixture, Movement}, {Respawn})
-// local DashSystem = System:new('dash', aspect)
+export class DashSystem extends System {
+  static _id = 'Dash'
+  _id = DashSystem._id
 
-// function DashSystem:onAdd(entity)
-//   entity:as(Fixture).fixture:getBody():setGravityScale(0)
-// end
+  static _flag = SystemFlag.Dash
+  _flag = DashSystem._flag
 
-// function DashSystem:onRemove(entity)
-//   entity:as(Fixture).fixture:getBody():setGravityScale(1)
-// end
+  static _aspect = new Aspect([Dash, GameObject, Movement])
+  _aspect = DashSystem._aspect
 
-// function DashSystem:update(dt)
-//   for _, entity in pairs(self.entities) do
-//     local dash = entity:as(Dash)
-//     local fixture = entity:as(Fixture)
-//     local movement = entity:as(Movement)
-//     local body = fixture.fixture:getBody()
-//     local velocityX, velocityY = body:getLinearVelocity()
+  update = (dt: number) => {
+    this.entities.forEach(entity => {
+      const dash = entity.as(Dash)
+      const gameObject = entity.as(GameObject)
+      const movement = entity.as(Movement)
 
-//     if (movement.direction == 'left') then
-//       body:setLinearVelocity(-2000, 0)
-//     elseif movement.direction == 'right' then
-//       body:setLinearVelocity(2000, 0)
-//     end
-//   end
-// end
+      if (!dash || !gameObject || !movement) {
+        return
+      }
 
-// return DashSystem
+      const body = gameObject.fixture.getBody()
+
+      if (movement.direction == Direction.Left) {
+        body.setLinearVelocity(-2000, 0)
+      } else if (movement.direction == Direction.Right) {
+        body.setLinearVelocity(2000, 0)
+      }
+    })
+  }
+
+  onAdd = (entity: Entity) => {
+    const gameObject = entity.as(GameObject)
+
+    gameObject && gameObject.fixture.getBody().setGravityScale(0)
+  }
+
+  onRemove = (entity: Entity) => {
+    const gameObject = entity.as(GameObject)
+
+    gameObject && gameObject.fixture.getBody().setGravityScale(1)
+  }
+}

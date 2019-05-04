@@ -14,7 +14,10 @@ export class InputMovementSystem extends System {
   static _flag = SystemFlag.InputMovement
   _flag = InputMovementSystem._flag
 
-  static _aspect = new Aspect([GameObject, Input, Movement, Position])
+  static _aspect = new Aspect(
+    [GameObject, Input, Movement, Position],
+    [Respawn]
+  )
   _aspect = InputMovementSystem._aspect
 
   update = (dt: number) => {
@@ -42,8 +45,6 @@ export class InputMovementSystem extends System {
         newVelocityY = -1000
         movement.jump = false
         movement.jumpCount++
-
-        print(movement.jumpCount)
       }
 
       body.setLinearVelocity(newVelocityX, newVelocityY)

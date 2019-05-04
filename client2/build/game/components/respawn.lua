@@ -1,25 +1,28 @@
 --[[ Generated with https://github.com/TypeScriptToLua/TypeScriptToLua ]]
-local exports = exports or {};
-local __TSTL_flags = require("game.flags");
-local ComponentFlag = __TSTL_flags.ComponentFlag;
-exports.Respawn = exports.Respawn or {};
-exports.Respawn.__index = exports.Respawn;
-exports.Respawn.prototype = exports.Respawn.prototype or {};
-exports.Respawn.prototype.__index = exports.Respawn.prototype;
-exports.Respawn.prototype.constructor = exports.Respawn;
-exports.Respawn.new = function(...)
-    local self = setmetatable({}, exports.Respawn.prototype);
-    self:____constructor(...);
-    return self;
-end;
-exports.Respawn.prototype.____constructor = function(self, waitTime)
-    self._id = exports.Respawn._id;
-    self._flag = ComponentFlag.Respawn;
-    if waitTime == nil then
-        waitTime = 0;
+local ____exports = {}
+local __TSTL_flags = require("game.flags")
+local ComponentFlag = __TSTL_flags.ComponentFlag
+____exports.Respawn = {}
+local Respawn = ____exports.Respawn
+Respawn.name = "Respawn"
+Respawn.__index = Respawn
+Respawn.prototype = {}
+Respawn.prototype.__index = Respawn.prototype
+Respawn.prototype.constructor = Respawn
+function Respawn.new(...)
+    local self = setmetatable({}, Respawn.prototype)
+    self:____constructor(...)
+    return self
+end
+function Respawn.prototype.____constructor(self, duration)
+    self._id = ____exports.Respawn._id
+    self._flag = ComponentFlag.Respawn
+    self.timer = 0
+    if duration == nil then
+        duration = 0
     end
-    self.waitTime = waitTime;
-end;
-exports.Respawn._id = "Respawn";
-exports.Respawn._flag = ComponentFlag.Respawn;
-return exports;
+    self.duration = duration
+end
+Respawn._id = "Respawn"
+Respawn._flag = ComponentFlag.Respawn
+return ____exports
