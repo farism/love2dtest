@@ -6,12 +6,19 @@ export class Timer {
   id: number = 0
   currentTime: number = 0
   timeout: number = 0
-  callback: () => void
+  onComplete: () => void
+  onUpdate: (currentTime: number) => void
 
-  constructor(id: number, timeout: number, callback: () => void) {
+  constructor(
+    id: number,
+    timeout: number,
+    onComplete: () => void,
+    onUpdate: (currentTime: number) => void = (currentTime: number) => {}
+  ) {
     this.id = id
     this.timeout = timeout
-    this.callback = callback
+    this.onComplete = onComplete
+    this.onUpdate = onUpdate
   }
 
   update = (dt: number) => {
@@ -22,28 +29,43 @@ export class Timer {
     this.currentTime += dt
 
     if (this.currentTime >= this.timeout) {
-      clearTimeout(this.id)
-      this.callback()
+      this.kill()
+      this.onUpdate(this.timeout)
+      this.onComplete()
       return true
+    } else {
+      this.onUpdate(this.currentTime)
     }
 
     return false
   }
+
+  kill = () => {
+    clearTimeout(this.id)
+  }
 }
 
-export const createTimer = (timeout: number, callback: () => void) => {
+export const createTimer = (
+  timeout: number,
+  onComplete: () => void,
+  onUpdate?: (currentTime: number) => void
+) => {
   const id = _nextTimerId++
-  const timer = new Timer(id, timeout, callback)
+  const timer = new Timer(id, timeout, onComplete, onUpdate)
 
   _cache.set(id, timer)
 
   return timer
 }
 
-export const setTimeout = (timeout: number, callback: () => void) => {
+export const setTimeout = (
+  timeout: number,
+  onComplete: () => void,
+  onUpdate?: () => void
+) => {
   const id = _nextTimerId++
 
-  _cache.set(id, new Timer(id, timeout, callback))
+  _cache.set(id, new Timer(id, timeout, onComplete, onUpdate))
 
   return id
 }

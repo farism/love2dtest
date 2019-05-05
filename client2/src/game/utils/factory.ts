@@ -58,6 +58,8 @@ export const createPlayer = (
     new Player(),
     new Position(),
   ])
+
+  return entity
 }
 
 export const createIcicle = (initX: number = 0, initY: number = 0) => (

@@ -2,7 +2,7 @@ import { WINDOW_WIDTH } from '../../conf'
 import { Entity } from '../../ecs/entity'
 import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
-import { Tween } from './tween'
+import * as Tween from './tween'
 
 const LEFT_OFFSET = -WINDOW_WIDTH + 300
 const RIGHT_OFFSET = -200
@@ -14,7 +14,7 @@ export class Camera {
   y: number
   offset: number
   direction: Direction
-  tween?: Tween<any>
+  tween?: Tween.Tween
 
   constructor(initialDirection: Direction) {
     this.x = 0
@@ -35,7 +35,7 @@ export class Camera {
     )
   }
 
-  update = (dt: number, target: Entity) => {
+  update = (target: Entity) => {
     const movement = target.as(Movement)
     const position = target.as(Position)
 
@@ -51,17 +51,21 @@ export class Camera {
       offset = RIGHT_OFFSET
     }
 
-    if (this.direction !== movement.direction) {
-      this.tween = new Tween<{ offset: number }>({
-        duration: 3,
-        target: this,
-        to: {
-          offset: offset,
-        },
-      })
+    if (movement.direction !== this.direction) {
+      if (this.tween) {
+        this.tween.kill()
+      }
 
-      // self.tween = flux.group()
-      // self.tween:to(self, 3, {offset = offset}):ease('quadout')
+      this.tween = Tween.to(
+        this,
+        3,
+        { offset },
+        {
+          onUpdate: (time: number) => {
+            // print(time)
+          },
+        }
+      )
     }
 
     this.x = position.x + this.offset

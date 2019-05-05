@@ -27,7 +27,6 @@ type HUD = any
 
 const initializeBlueprints = (manager: Manager) => {
   const blueprints = [
-    Factory.createPlayer,
     Factory.createGround,
     Factory.createSlope,
     Factory.createIcicle(200, 200),
@@ -40,6 +39,7 @@ export class Game {
   camera: Camera
   hud: HUD
   manager: Manager
+  player: Entity
   state: State
   world: World
 
@@ -85,6 +85,8 @@ export class Game {
       new RenderSystem(),
     ])
 
+    this.player = Factory.createPlayer(this.manager)
+
     initializeBlueprints(this.manager)
   }
 
@@ -113,18 +115,18 @@ export class Game {
       this.world.update(dt)
       this.manager.update(dt)
 
-      // if (player) then
-      //         self.camera:update(dt, player)
-      //       end
+      if (this.player) {
+        this.camera.update(this.player)
+      }
     }
 
     // self.hud:update(dt, player, self)
   }
 
   draw = () => {
-    // this.camera.set()
+    this.camera.set()
     this.manager.draw()
-    // this.camera.clear()
+    this.camera.clear()
 
     // if player then
     //       self.hud:draw(player, self)
