@@ -1,7 +1,7 @@
 import { System } from '../../ecs/System'
 import { SystemFlag } from '../flags'
 import { NeverAspect } from '../../ecs/Aspect'
-import { check, hasComponent, isNotBodyType } from '../utils/collision'
+import { check, hasComponent } from '../utils/collision'
 import { Damage } from '../components/Damage'
 import { Health } from '../components/Health'
 
@@ -29,6 +29,6 @@ export class DamageSystem extends System {
       return
     }
 
-    health.hitpoints = health.armor - damage.hitpoints
+    health.hitpoints = Math.max(0, health.hitpoints - damage.hitpoints)
   }
 }

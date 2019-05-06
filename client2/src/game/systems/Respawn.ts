@@ -9,6 +9,7 @@ import { setTimeout } from '../utils/timer'
 import { Entity } from '../../ecs/Entity'
 import { GameObject } from '../components/GameObject'
 import { Position } from '../components/Position'
+import { Health } from '../components/Health'
 
 const findCheckpoint = (
   index: number,
@@ -29,8 +30,9 @@ const findCheckpoint = (
 
 const resetPosition = (entity: Entity) => {
   const player = entity.as(Player)
+  const health = entity.as(Health)
 
-  if (!player) {
+  if (!player || !health) {
     return
   }
 
@@ -54,8 +56,6 @@ const resetPosition = (entity: Entity) => {
   body.setType('static')
   body.setPosition(position.x, position.y)
   body.setType('dynamic')
-
-  entity.remove(Respawn)
 }
 
 export class RespawnSystem extends System {
@@ -72,14 +72,20 @@ export class RespawnSystem extends System {
     this.entities.forEach(entity => {
       const player = entity.as(Player)
       const respawn = entity.as(Respawn)
+      const health = entity.as(Health)
 
-      if (!player || !respawn) {
+      if (!player || !respawn || !health) {
         return
       }
 
-      respawn.timer = setTimeout(respawn.duration, () => {
-        resetPosition(entity)
-      })
+      if (health.hitpoints === 0) {
+        respawn.timer = setTimeout(respawn.duration, () => {
+          resetPosition(entity)
+          entity.remove(Respawn)
+        })
+      }
+
+      health.hitpoints = 1
     })
   }
 }

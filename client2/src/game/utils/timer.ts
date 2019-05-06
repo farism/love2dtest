@@ -22,7 +22,7 @@ export class Timer {
   }
 
   update = (dt: number) => {
-    if (this.currentTime > this.timeout) {
+    if (this.currentTime >= this.timeout) {
       return false
     }
 
@@ -63,6 +63,10 @@ export const setTimeout = (
   onComplete: () => void,
   onUpdate?: () => void
 ) => {
+  if (timeout === 0) {
+    onComplete()
+  }
+
   const id = _nextTimerId++
 
   _cache.set(id, new Timer(id, timeout, onComplete, onUpdate))

@@ -54,7 +54,7 @@ export class Abilities {
     this.abilities = {
       // player
       [AbilityType.Throw]: defineAbility(0.5, 0, 0),
-      [AbilityType.Dash]: defineAbility(1, 0.1, 0),
+      [AbilityType.Dash]: defineAbility(1, 0.2, 0),
       [AbilityType.Grapple]: defineAbility(1, 0, 0),
       [AbilityType.Dig]: defineAbility(1, 1, 0),
 

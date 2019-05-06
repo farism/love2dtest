@@ -28,12 +28,23 @@ export class System {
     if (this._aspect.check(entity)) {
       if (!this.entities.get(entity.id)) {
         this.onAdd(entity)
+
+        print(
+          `entity (id :${entity.id}) is now being processed by system (id: ${
+            this._id
+          })`
+        )
       }
 
       this.entities.set(entity.id, entity)
     } else {
       if (this.entities.get(entity.id)) {
         this.onRemove(entity)
+        print(
+          `entity (id :${
+            entity.id
+          }) is no longer being processed by system (id: ${this._id})`
+        )
       }
 
       this.entities.delete(entity.id)
@@ -47,7 +58,13 @@ export class System {
     isPressed: boolean
   ) => {}
 
-  mouse = (x: number, y: number, isTouch: boolean) => {}
+  mouse = (
+    x: number,
+    y: number,
+    button: number,
+    isTouch: boolean,
+    isPressed: boolean
+  ) => {}
 
   pause = () => {
     this.paused = true

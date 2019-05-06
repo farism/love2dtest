@@ -27,6 +27,8 @@ export class Manager {
   createEntity = (id?: number): Entity => {
     const entity = new Entity(id || this.getNextId(), this)
 
+    print(`created entity (id: ${entity.id})`)
+
     this.addEntity(entity)
 
     return entity
@@ -40,6 +42,8 @@ export class Manager {
     this.check(entity)
 
     this.entities.set(entity.id, entity)
+
+    print(`added entity (id: ${entity.id})`)
   }
 
   removeEntity = (entity: Entity) => {
@@ -48,6 +52,8 @@ export class Manager {
     this.removeComponents(entity)
     this.components.delete(entity.id)
     this.entities.delete(entity.id)
+
+    print(`removed entity (id: ${entity.id})`)
   }
 
   // managing components
@@ -68,12 +74,18 @@ export class Manager {
     entity.setFlag(component)
     this.setComponent(entity, component, component)
     this.check(entity)
+
+    print(`added component (id: ${component._id}) to entity (id: ${entity.id})`)
   }
 
   removeComponent = (entity: Entity, component: Component) => {
     entity.clearFlag(component)
     this.setComponent(entity, component, null)
     this.check(entity)
+
+    print(
+      `removed component (id: ${component._id}) from entity (id: ${entity.id})`
+    )
   }
 
   removeComponents = (entity: Entity) => {
@@ -95,6 +107,8 @@ export class Manager {
     this.entities.forEach(entity => system.check(entity))
     system.setManager(this)
     this.systems.push(system)
+
+    print(`added system (id: ${system._id})`)
   }
 
   addSystems = <T extends System>(systems: T[]) => {
@@ -105,6 +119,8 @@ export class Manager {
 
   removeSystem = (system: System) => {
     this.systems = this.systems.filter(s => s._id !== system._id)
+
+    print(`removed system (id: ${system._id})`)
   }
 
   check = (entity: Entity) => {
@@ -113,17 +129,20 @@ export class Manager {
 
   // lifecycles
 
-  keyboard = (
-    key: string,
-    scancode: Scancode,
-    isRepeat: boolean,
-    isPressed: boolean
-  ) => {
-    this.systems.forEach(s => s.keyboard(key, scancode, isRepeat, isPressed))
+  keypressed = (key: string, scancode: Scancode, isRepeat: boolean) => {
+    this.systems.forEach(s => s.keyboard(key, scancode, isRepeat, true))
   }
 
-  mouse = (x: number, y: number, isTouch: boolean) => {
-    this.systems.forEach(s => s.mouse(x, y, isTouch))
+  keyreleased = (key: string, scancode: Scancode) => {
+    this.systems.forEach(s => s.keyboard(key, scancode, false, false))
+  }
+
+  mousepressed = (x: number, y: number, button: number, isTouch: boolean) => {
+    this.systems.forEach(s => s.mouse(x, y, button, isTouch, true))
+  }
+
+  mousereleased = (x: number, y: number, button: number, isTouch: boolean) => {
+    this.systems.forEach(s => s.mouse(x, y, button, isTouch, false))
   }
 
   beginContact = (a: Fixture, b: Fixture, contact: Contact) => {

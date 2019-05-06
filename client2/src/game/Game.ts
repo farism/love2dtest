@@ -22,8 +22,8 @@ import { DashSystem } from './systems/Dash'
 import { DeathSystem } from './systems/Death'
 import { RespawnSystem } from './systems/Respawn'
 import { PlatformSystem } from './systems/Platform'
-
-type HUD = any
+import { HUD } from './hud/HUD'
+import { UI } from './utils/ui'
 
 const initializeBlueprints = (manager: Manager) => {
   const blueprints = [
@@ -37,6 +37,7 @@ const initializeBlueprints = (manager: Manager) => {
 
 export class Game {
   camera: Camera
+  ui: UI
   hud: HUD
   manager: Manager
   player: Entity
@@ -55,6 +56,7 @@ export class Game {
         this.manager.endContact(a, b, contact)
       }
     )
+    this.ui = new UI()
     this.camera = new Camera('right')
     this.manager = new Manager(this.world)
     this.manager.addSystems([
@@ -86,6 +88,7 @@ export class Game {
     ])
 
     this.player = Factory.createPlayer(this.manager)
+    this.hud = new HUD(this.player, this.state, this.ui)
 
     initializeBlueprints(this.manager)
   }
@@ -96,17 +99,28 @@ export class Game {
 
   restart = () => {}
 
-  keyboard = (
-    key: string,
-    scancode: Scancode,
-    isRepeat: boolean,
-    isPressed: boolean
-  ) => {
-    this.manager.keyboard(key, scancode, isRepeat, isPressed)
+  keypressed = (...args: [KeyConstant, Scancode, boolean]) => {
+    this.manager.keypressed(...args)
+    this.ui.keypressed(...args)
   }
 
-  mouse = (x: number, y: number, isTouch: boolean) => {
-    this.manager.mouse(x, y, isTouch)
+  keyreleased = (...args: [KeyConstant, Scancode]) => {
+    this.manager.keyreleased(...args)
+    this.ui.keyreleased(...args)
+  }
+
+  mousepressed = (...args: [number, number, number, boolean]) => {
+    this.manager.mousepressed(...args)
+    this.ui.mousepressed(...args)
+  }
+
+  mousereleased = (...args: [number, number, number, boolean]) => {
+    this.manager.mousereleased(...args)
+    this.ui.mousereleased(...args)
+  }
+
+  mousemoved = (...args: [number, number, number, number, boolean]) => {
+    this.ui.mousemoved(...args)
   }
 
   update = (dt: number) => {
@@ -114,13 +128,13 @@ export class Game {
       timer.update(dt)
       this.world.update(dt)
       this.manager.update(dt)
+      this.ui.update(dt)
 
       if (this.player) {
         this.camera.update(this.player)
+        // this.hud.update(dt)
       }
     }
-
-    // self.hud:update(dt, player, self)
   }
 
   draw = () => {
@@ -128,8 +142,8 @@ export class Game {
     this.manager.draw()
     this.camera.clear()
 
-    // if player then
-    //       self.hud:draw(player, self)
-    //     end
+    if (this.player) {
+      this.hud.draw()
+    }
   }
 }

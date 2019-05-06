@@ -16,7 +16,6 @@ const deathFunctions: { [key: string]: (entity: Entity) => void } = {
       return
     }
 
-    health.hitpoints = 1
     player.lives--
 
     entity.add(new Respawn(3))

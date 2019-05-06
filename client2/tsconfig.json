@@ -7,7 +7,7 @@
     "outDir": "build",
     "rootDir": "src",
     "strict": true,
-    "types": ["src/**", "lua-types/jit", "love-typescript-definitions"]
+    "types": ["lua-types/jit", "love-typescript-definitions"]
   },
   "include": ["./src/**/*.ts"],
   "tstl": {

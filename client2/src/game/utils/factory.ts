@@ -79,18 +79,25 @@ export const createIcicle = (initX: number = 0, initY: number = 0) => (
 }
 
 export const createThrowingPick = (
-  user: Entity,
+  origin: Entity,
   initX: number = 0,
   initY: number = 0
 ) => {
-  const manager = user.manager
+  const manager = origin.manager
   const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
   const shape = love.physics.newRectangleShape(8, 8)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
+  body.setGravityScale(0)
   fixture.setFriction(1)
-  fixture.setCategory(CollisionCategory.Player)
-  fixture.setMask(CollisionCategory.Enemy)
+
+  if (origin.has(Player)) {
+    fixture.setCategory(CollisionCategory.PlayerAttack)
+    fixture.setMask(CollisionCategory.Player, CollisionCategory.Aggression)
+  } else {
+    fixture.setCategory(CollisionCategory.EnemyAttack)
+    fixture.setMask(CollisionCategory.Enemy, CollisionCategory.Aggression)
+  }
 
   const entity = manager.createEntity()
   entity.userData = { blueprint: Blueprint.ThrowingPick }
