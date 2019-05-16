@@ -1,29 +1,28 @@
-import * as timer from './utils/timer'
-import * as Factory from './utils/factory'
-import { Camera } from './utils/camera'
+import { Entity } from '../ecs/Entity'
 import { Manager } from '../ecs/manager'
-import { InputSystem } from './systems/InputSystem'
-import { InputMovementSystem } from './systems/InputMovement'
-import { RenderSystem } from './systems/RenderSystem'
-import { ProjectileSystem } from './systems/ProjectileSystem'
+import { Gui } from './gui/Gui'
 import { State } from './State'
-import { JumpResetSystem } from './systems/JumpReset'
-import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
-import { CheckpointSystem } from './systems/Checkpoint'
-import { GameOverSystem } from './systems/GameOver'
-import { DamageSystem } from './systems/Damage'
-import { ContainerSystem } from './systems/Container'
+import { AbilitiesSystem } from './systems/Abilities'
 import { AggressionSystem } from './systems/Aggression'
 import { AnimateSpriteSystem } from './systems/AnimateSprite'
-import { FallDeathSystem } from './systems/FallDeath'
-import { AbilitiesSystem } from './systems/Abilities'
-import { Entity } from '../ecs/Entity'
+import { CheckpointSystem } from './systems/Checkpoint'
+import { ContainerSystem } from './systems/Container'
+import { DamageSystem } from './systems/Damage'
 import { DashSystem } from './systems/Dash'
 import { DeathSystem } from './systems/Death'
-import { RespawnSystem } from './systems/Respawn'
+import { FallDeathSystem } from './systems/FallDeath'
+import { GameOverSystem } from './systems/GameOver'
+import { InputMovementSystem } from './systems/InputMovement'
+import { InputSystem } from './systems/InputSystem'
+import { JumpResetSystem } from './systems/JumpReset'
 import { PlatformSystem } from './systems/Platform'
-import { HUD } from './hud/HUD'
-import { UI } from './utils/ui'
+import { ProjectileSystem } from './systems/ProjectileSystem'
+import { RenderSystem } from './systems/RenderSystem'
+import { RespawnSystem } from './systems/Respawn'
+import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
+import { Camera } from './utils/camera'
+import * as Factory from './utils/factory'
+import * as timer from './utils/timer'
 
 const initializeBlueprints = (manager: Manager) => {
   const blueprints = [
@@ -37,8 +36,7 @@ const initializeBlueprints = (manager: Manager) => {
 
 export class Game {
   camera: Camera
-  ui: UI
-  hud: HUD
+  gui: Gui
   manager: Manager
   player: Entity
   state: State
@@ -56,39 +54,38 @@ export class Game {
         this.manager.endContact(a, b, contact)
       }
     )
-    this.ui = new UI()
     this.camera = new Camera('right')
     this.manager = new Manager(this.world)
     this.manager.addSystems([
       // pre-processors
-      new InputSystem(),
-      new GameOverSystem(),
+      new InputSystem(this.manager),
+      new GameOverSystem(this.manager),
 
       // processors
-      new AbilitiesSystem(),
-      new AggressionSystem(),
-      new DamageSystem(),
-      new DeathSystem(),
-      new CheckpointSystem(),
-      new ContainerSystem(),
-      new FallDeathSystem(),
-      new InputMovementSystem(),
-      new JumpResetSystem(),
-      new PlatformSystem(),
-      new ProjectileSystem(),
-      new DashSystem(),
-      new RespawnSystem(),
+      new AbilitiesSystem(this.manager),
+      new AggressionSystem(this.manager),
+      new DamageSystem(this.manager),
+      new DeathSystem(this.manager),
+      new CheckpointSystem(this.manager),
+      new ContainerSystem(this.manager),
+      new FallDeathSystem(this.manager),
+      new InputMovementSystem(this.manager),
+      new JumpResetSystem(this.manager),
+      new PlatformSystem(this.manager),
+      new ProjectileSystem(this.manager),
+      new DashSystem(this.manager),
+      new RespawnSystem(this.manager),
 
       // post-processors
-      new SyncBodyPositionSystem(),
+      new SyncBodyPositionSystem(this.manager),
 
       // renderers
-      new AnimateSpriteSystem(),
-      new RenderSystem(),
+      new AnimateSpriteSystem(this.manager),
+      new RenderSystem(this.manager),
     ])
 
     this.player = Factory.createPlayer(this.manager)
-    this.hud = new HUD(this.player, this.state, this.ui)
+    this.gui = new Gui(this.player)
 
     initializeBlueprints(this.manager)
   }
@@ -101,38 +98,32 @@ export class Game {
 
   keypressed = (...args: [KeyConstant, Scancode, boolean]) => {
     this.manager.keypressed(...args)
-    this.ui.keypressed(...args)
   }
 
   keyreleased = (...args: [KeyConstant, Scancode]) => {
     this.manager.keyreleased(...args)
-    this.ui.keyreleased(...args)
   }
 
   mousepressed = (...args: [number, number, number, boolean]) => {
     this.manager.mousepressed(...args)
-    this.ui.mousepressed(...args)
   }
 
   mousereleased = (...args: [number, number, number, boolean]) => {
     this.manager.mousereleased(...args)
-    this.ui.mousereleased(...args)
   }
 
-  mousemoved = (...args: [number, number, number, number, boolean]) => {
-    this.ui.mousemoved(...args)
-  }
+  mousemoved = (x: number, y: number, ...args: any) => {}
 
   update = (dt: number) => {
+    this.gui.update(dt, this)
+
     if (this.state === State.PLAYING) {
       timer.update(dt)
       this.world.update(dt)
       this.manager.update(dt)
-      this.ui.update(dt)
 
       if (this.player) {
         this.camera.update(this.player)
-        // this.hud.update(dt)
       }
     }
   }
@@ -143,7 +134,7 @@ export class Game {
     this.camera.clear()
 
     if (this.player) {
-      this.hud.draw()
+      this.gui.draw(this)
     }
   }
 }

@@ -1,4 +1,7 @@
 import { ComponentFlag } from '../flags'
+import { createTimer, Timer } from '../utils/timer'
+
+const emptyTimer = createTimer(0, () => {})
 
 export enum AbilityType {
   Throw = 'throw',
@@ -19,9 +22,9 @@ export interface Ability {
   duration: number
   enabled: boolean
   timers: {
-    castspeed?: number
-    cooldown?: number
-    duration?: number
+    castspeed: Timer
+    cooldown: Timer
+    duration: Timer
   }
 }
 
@@ -37,7 +40,11 @@ const defineAbility = (
     cooldown: cooldown,
     duration: duration,
     enabled: enabled,
-    timers: {},
+    timers: {
+      castspeed: emptyTimer,
+      cooldown: emptyTimer,
+      duration: emptyTimer,
+    },
   }
 }
 

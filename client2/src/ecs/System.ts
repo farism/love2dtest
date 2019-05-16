@@ -14,9 +14,9 @@ export class System {
   manager: Manager
   paused: boolean
 
-  constructor() {
+  constructor(manager: Manager) {
     this.entities = new Map()
-    this.manager = null
+    this.manager = manager
     this.paused = false
   }
 
@@ -76,10 +76,6 @@ export class System {
 
   resume = () => {
     this.paused = false
-  }
-
-  setManager = (manager: Manager) => {
-    this.manager = manager
   }
 
   beginContact = (a: Fixture, b: Fixture, contact: Contact) => {}

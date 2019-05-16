@@ -1,12 +1,15 @@
 const imageCache: Map<string, Image> = new Map()
 const audioCache: Map<string, Source> = new Map()
 
-export const loadImage = (filepath: string) => {
-  if (imageCache.get(filepath)) {
-    return imageCache.get(filepath)
+export const loadImage = (filepath: string): Image => {
+  const cached = imageCache.get(filepath)
+
+  if (cached) {
+    return cached
   } else {
     const image = love.graphics.newImage(filepath)
     image.setWrap('repeat', 'repeat')
+
     imageCache.set(filepath, image)
 
     return image

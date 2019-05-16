@@ -1,17 +1,15 @@
-import { WINDOW_WIDTH, WINDOW_HEIGHT } from '../../conf'
+import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../../conf'
 import { Entity } from '../../ecs/Entity'
-import { Component } from '../../ecs/Component'
 import { Manager } from '../../ecs/Manager'
+import { Abilities } from '../components/Abilities'
+import { Damage } from '../components/Damage'
 import { GameObject } from '../components/GameObject'
+import { Health } from '../components/Health'
+import { Input } from '../components/Input'
+import { Movement } from '../components/Movement'
 import { Player } from '../components/Player'
 import { Position } from '../components/Position'
-import { Input } from '../components/Input'
-import { Health } from '../components/Health'
-import { Abilities } from '../components/Abilities'
-import { Animation } from '../components/Animation'
-import { Movement } from '../components/Movement'
 import { Projectile } from '../components/Projectile'
-import { Damage } from '../components/Damage'
 
 export enum CollisionCategory {
   Static = 1,

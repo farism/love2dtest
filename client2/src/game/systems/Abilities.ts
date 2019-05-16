@@ -1,15 +1,15 @@
 import { Aspect } from '../../ecs/Aspect'
-import { System } from '../../ecs/System'
-import * as Timer from '../utils/timer'
-import * as Factory from '../utils/factory'
-import { SystemFlag } from '../flags'
-import { GameObject } from '../components/GameObject'
-import { Abilities, AbilityType, Ability } from '../components/Abilities'
 import { Entity } from '../../ecs/Entity'
-import { Movement, Direction } from '../components/Movement'
-import { Position } from '../components/Position'
-import { Dash } from '../components/Dash'
+import { System } from '../../ecs/System'
+import { Abilities, Ability, AbilityType } from '../components/Abilities'
 import { Damage } from '../components/Damage'
+import { Dash } from '../components/Dash'
+import { GameObject } from '../components/GameObject'
+import { Direction, Movement } from '../components/Movement'
+import { Position } from '../components/Position'
+import { SystemFlag } from '../flags'
+import * as Factory from '../utils/factory'
+import * as Timer from '../utils/timer'
 
 type AbilityList = {
   [key in AbilityType]: (entity: Entity, ability: Ability) => void
@@ -53,7 +53,7 @@ const abilityFunctions: AbilityList = {
     entity.add(new Dash())
     entity.add(new Damage(1))
 
-    ability.timers.duration = Timer.setTimeout(ability.duration, () => {
+    ability.timers.duration = Timer.createTimer(ability.duration, () => {
       gameObject.fixture.setCategory(2)
 
       entity.remove(Dash)
@@ -98,18 +98,22 @@ export class AbilitiesSystem extends System {
         const key = _key as AbilityType
         const ability = abilities.abilities[key]
 
-        if (ability.activated && !ability.timers.cooldown) {
-          ability.timers.cooldown = Timer.setTimeout(ability.cooldown, () => {
-            delete ability.timers.cooldown
-          })
+        if (ability.activated && ability.timers.cooldown.completed) {
+          ability.timers.cooldown = Timer.createTimer(
+            ability.cooldown,
+            () => {}
+          )
 
-          Timer.clearTimeout(ability.timers.castspeed)
+          if (ability.timers.castspeed) {
+            Timer.clearTimeout(ability.timers.castspeed.id)
+          }
 
-          ability.timers.castspeed = Timer.setTimeout(ability.castspeed, () => {
-            delete ability.timers.castspeed
-
-            abilityFunctions[key](entity, ability)
-          })
+          ability.timers.castspeed = Timer.createTimer(
+            ability.castspeed,
+            () => {
+              abilityFunctions[key](entity, ability)
+            }
+          )
         }
       }
     })

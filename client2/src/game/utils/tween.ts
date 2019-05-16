@@ -1,5 +1,5 @@
 import { easing, TEasing } from './easing'
-import { createTimer, Timer, clearTimeout } from './timer'
+import { createTimer, Timer } from './timer'
 
 const noop = () => {}
 
@@ -80,7 +80,7 @@ export class Tween {
   }
 
   kill = () => {
-    this.timer.kill()
+    this.timer.clear()
   }
 }
 

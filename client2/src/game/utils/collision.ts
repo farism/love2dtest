@@ -1,5 +1,5 @@
-import { Entity } from '../../ecs/Entity'
 import { Component } from '../../ecs/component'
+import { Entity } from '../../ecs/Entity'
 
 const noop = () => {}
 

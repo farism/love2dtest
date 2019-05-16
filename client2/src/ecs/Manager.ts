@@ -1,7 +1,6 @@
 import { Component } from './Component'
 import { Entity } from './Entity'
 import { System } from './System'
-import { Aliasable } from './types'
 
 export class Manager {
   components: Map<number, Map<number, Component>>
@@ -105,7 +104,6 @@ export class Manager {
 
   addSystem = <T extends System>(system: T) => {
     this.entities.forEach(entity => system.check(entity))
-    system.setManager(this)
     this.systems.push(system)
 
     print(`added system (id: ${system._id})`)

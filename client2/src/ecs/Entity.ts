@@ -1,14 +1,7 @@
 import { Component } from './component'
 import { Aliasable } from './types'
 
-interface Manager {
-  world: World
-  createEntity(id?: number): Entity
-  getComponent(e: Entity, c: Component): Component | undefined
-  addComponent(e: Entity, c: Component): void
-  removeComponent(e: Entity, c: Component): void
-  removeEntity(e: Entity): void
-}
+type Manager = any
 
 interface UserData {
   [k: string]: any

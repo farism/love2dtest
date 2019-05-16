@@ -1,5 +1,8 @@
 {
   "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
   "lua.format.lineWidth": 80,
   "lua.format.singleQuote": true,
   "pixelbyte.love2d.path": "/Applications/love 2.app/Contents/MacOS/love",

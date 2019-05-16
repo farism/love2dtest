@@ -1,4 +1,5 @@
 import { Aspect } from './Aspect'
+import { Manager } from './Manager'
 import { System } from './System'
 
 export class IntervalSystem extends System {
@@ -12,8 +13,8 @@ export class IntervalSystem extends System {
   interval: number
   onUpdate: any
 
-  constructor(interval: number, onUpdate: any) {
-    super()
+  constructor(manager: Manager, interval: number, onUpdate: any) {
+    super(manager)
 
     this.interval = interval
     this.elapsed = 0
