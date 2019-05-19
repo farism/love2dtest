@@ -7,6 +7,7 @@ import { GameObject } from '../components/GameObject'
 import { Health } from '../components/Health'
 import { Input } from '../components/Input'
 import { Movement } from '../components/Movement'
+import { Parallax, ParallaxOptions } from '../components/Parallax'
 import { Player } from '../components/Player'
 import { Position } from '../components/Position'
 import { Projectile } from '../components/Projectile'
@@ -170,6 +171,16 @@ export const createSlope = (manager: Manager) => {
   const entity = manager.createEntity()
   entity.userData = { blueprint: Blueprint.Slope }
   entity.addAll([new GameObject(entity, fixture)])
+
+  return entity
+}
+
+export const createParallax = (options: ParallaxOptions) => (
+  manager: Manager
+) => {
+  const entity = manager.createEntity()
+  entity.userData = { blueprint: Blueprint.Ground }
+  entity.add(new Parallax(options))
 
   return entity
 }

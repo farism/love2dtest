@@ -1,28 +1,40 @@
 /// <reference types="node" />
-/// <reference types="lodash" />
 
 import { ChildProcess, spawn } from 'child_process'
+import * as chokidar from 'chokidar'
+import { copy, remove } from 'fs-extra'
 
 let loveProcess: ChildProcess
 
 const startLove = () => {
   if (loveProcess) {
-    loveProcess.kill()
+    loveProcess.kill('SIGINT')
   }
 
   loveProcess = spawn('love', ['build'], { stdio: 'inherit' })
+}
 
-  loveProcess.on('close', (code, signal) => {
-    if (signal === null) {
+const startTstl = () => {
+  const tstlProcess = spawn('tstl', ['-p', 'tsconfig.json', '-w'], {})
+
+  tstlProcess.stdout.on('data', data => {
+    console.log(String(data))
+
+    if (String(data).indexOf('Found 0 errors') >= 0) {
       startLove()
     }
   })
 }
 
-const tstlProcess = spawn('tstl', ['-p', 'tsconfig.json', '-w'], {})
+const startAssetSyncing = () => {
+  chokidar
+    .watch('_assets/**', {})
+    .on('add', path => copy(path, `build/${path}`))
+    .on('change', path => copy(path, `build/${path}`))
+    .on('unlink', path => remove(`build/${path}`))
+    .on('unlinkDir', path => remove(`build/${path}`))
+}
 
-tstlProcess.stdout.on('data', data => {
-  if (String(data).indexOf('Found 0 errors') >= 0) {
-    startLove()
-  }
-})
+startTstl()
+
+startAssetSyncing()

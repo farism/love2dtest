@@ -28,6 +28,7 @@ export enum ComponentFlag {
   Wave = getFlag(22),
   Waypoint = getFlag(23),
   SyncBodyPosition = getFlag(24),
+  Parallax = getFlag(25),
 }
 
 export enum SystemFlag {
@@ -66,4 +67,5 @@ export enum SystemFlag {
   SetCurrentAnimation = getFlag(33),
   WaypointMovement = getFlag(34),
   Death = getFlag(35),
+  ParallaxRender = getFlag(36),
 }

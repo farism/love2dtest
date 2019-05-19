@@ -1,13 +1,13 @@
+import { Aspect } from '../../ecs/Aspect'
 import { System } from '../../ecs/System'
 import { GameObject } from '../components/GameObject'
 import { SystemFlag } from '../flags'
 import {
-  isPolygonShape,
-  isCircleShape,
   isChainShape,
+  isCircleShape,
   isEdgeShape,
+  isPolygonShape,
 } from '../utils/shape'
-import { Aspect } from '../../ecs/Aspect'
 
 export class RenderSystem extends System {
   static _id = 'RenderSystem'
@@ -29,6 +29,8 @@ export class RenderSystem extends System {
 
       const body = gameObject.fixture.getBody()
       const shape = gameObject.fixture.getShape()
+
+      love.graphics.setColor(0.2, 0.2, 0.2, 1)
 
       if (isPolygonShape(shape)) {
         love.graphics.polygon(

@@ -7,7 +7,7 @@ let electronProcess: ChildProcess
 
 const startElectronProcess = () => {
   if (electronProcess) {
-    electronProcess.kill()
+    electronProcess.kill('SIGINT')
   }
 
   electronProcess = spawn('electron', ['.'], { stdio: 'inherit' })

@@ -7,4 +7,5 @@ love.conf = (t: Conf) => {
   t.window.height = WINDOW_HEIGHT
   t.window.highdpi = true
   t.console = true
+  t.window.vsync = 0
 }

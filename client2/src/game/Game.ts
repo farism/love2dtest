@@ -15,6 +15,7 @@ import { GameOverSystem } from './systems/GameOver'
 import { InputMovementSystem } from './systems/InputMovement'
 import { InputSystem } from './systems/InputSystem'
 import { JumpResetSystem } from './systems/JumpReset'
+import { ParallaxRenderSystem } from './systems/ParallaxRender'
 import { PlatformSystem } from './systems/Platform'
 import { ProjectileSystem } from './systems/ProjectileSystem'
 import { RenderSystem } from './systems/RenderSystem'
@@ -29,6 +30,39 @@ const initializeBlueprints = (manager: Manager) => {
     Factory.createGround,
     Factory.createSlope,
     Factory.createIcicle(200, 200),
+    Factory.createParallax({
+      layers: [
+        {
+          imagePath: '_assets/images/sky.png',
+          ratio: 0.1,
+        },
+        {
+          imagePath: '_assets/images/clouds_BG.png',
+          ratio: 0.1,
+          offsetY: -50,
+        },
+        {
+          imagePath: '_assets/images/mountains.png',
+          ratio: 0.125,
+          offsetY: -100,
+        },
+        {
+          imagePath: '_assets/images/clouds_MG_3.png',
+          ratio: 0.3,
+          offsetY: -100,
+        },
+        {
+          imagePath: '_assets/images/clouds_MG_2.png',
+          ratio: 0.5,
+          offsetY: -125,
+        },
+        {
+          imagePath: '_assets/images/clouds_MG_1.png',
+          ratio: 0.6,
+          offsetY: -200,
+        },
+      ],
+    }),
   ]
 
   blueprints.forEach(blueprint => blueprint(manager))
@@ -44,6 +78,7 @@ export class Game {
 
   constructor() {
     this.state = State.PLAYING
+    love.physics.setMeter(1)
     this.world = love.physics.newWorld(0, 9.81, true)
     love.physics.setMeter(256)
     this.world.setCallbacks(
@@ -80,6 +115,7 @@ export class Game {
       new SyncBodyPositionSystem(this.manager),
 
       // renderers
+      new ParallaxRenderSystem(this.manager, this.camera),
       new AnimateSpriteSystem(this.manager),
       new RenderSystem(this.manager),
     ])
