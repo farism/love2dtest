@@ -1,7 +1,7 @@
 module Shape exposing (Shape(..), ShapeMsg(..), decoder, init, shapeTypes, strToType, typeToStr, update)
 
-import Json.Decode as JD
 import Helpers exposing (strToInt)
+import Json.Decode as JD
 import Vertex exposing (Vertex)
 
 

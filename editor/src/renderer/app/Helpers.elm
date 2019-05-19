@@ -1,8 +1,8 @@
 module Helpers exposing (..)
 
 import Dict exposing (Dict)
-import FontAwesome.Solid as Icon
 import FontAwesome.Attributes as Icon
+import FontAwesome.Solid as Icon
 import Html
 import Html.Styled
 import Html.Styled.Attributes

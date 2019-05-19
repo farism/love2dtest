@@ -1,8 +1,8 @@
 module Fixture exposing (Fixture, FixtureMsg(..), decoder, init, update)
 
-import Json.Decode as JD
 import Body exposing (Body, BodyMsg)
 import Helpers exposing (strToFloat)
+import Json.Decode as JD
 import Shape exposing (Shape, ShapeMsg)
 
 

@@ -1,13 +1,13 @@
 module Entity exposing (Entity, decoder, init, encoder)
 
+import Component exposing (Component)
 import Dict exposing (Dict)
 import Draggable
-import Json.Decode.Pipeline as JDE
-import Json.Decode as JD
-import Json.Encode as JE
-import Component exposing (Component)
-import Vertex exposing (Vertex)
 import Helpers exposing (dictEncoder, strToInt)
+import Json.Decode as JD
+import Json.Decode.Pipeline as JDE
+import Json.Encode as JE
+import Vertex exposing (Vertex)
 
 
 type alias Entity =

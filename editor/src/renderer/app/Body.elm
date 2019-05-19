@@ -1,8 +1,8 @@
 module Body exposing (Body, BodyMsg(..), bodyTypes, decoder, init, strToType, typeToStr, update)
 
+import Helpers exposing (strToFloat)
 import Json.Decode as JD
 import List.Extra as List
-import Helpers exposing (strToFloat)
 
 
 type alias Body =

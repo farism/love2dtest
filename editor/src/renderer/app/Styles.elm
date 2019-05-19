@@ -274,7 +274,7 @@ sceneCanvasStyles =
 sceneFrameStyles : Int -> Int -> Attribute msg
 sceneFrameStyles w h =
     css
-        [ border3 (px 1) solid colors.grey9
+        [ border3 (px 1) solid colors.grey8
         , backgroundColor colors.grey0
         , minWidth (px (toFloat w))
         , minHeight (px (toFloat h))

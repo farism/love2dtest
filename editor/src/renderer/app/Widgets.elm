@@ -1,8 +1,8 @@
 module Widgets exposing (button, checkbox, hr, input, select)
 
+import Helpers exposing (onBlur, onEnter, strToInt)
 import Html.Styled exposing (Attribute, Html, styled)
 import Html.Styled.Attributes exposing (css, type_)
-import Helpers exposing (onBlur, onEnter, strToInt)
 import Styles exposing (..)
 
 

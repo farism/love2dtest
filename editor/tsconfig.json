@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "sourceMap": true,
-    "declaration": true,
+    "lib": ["es6", "dom"],
+    "module": "commonjs",
     "moduleResolution": "node",
-    "module": "es6",
-    "target": "es5",
-    "jsx": "react",
-    "jsxFactory": "h",
-    "lib": ["dom", "es6"]
+    "strict": true,
+    "target": "es5"
   }
 }

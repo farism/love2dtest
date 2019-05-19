@@ -1,46 +1,32 @@
-port module App exposing (..)
+module App exposing (..)
 
-import Maybe
+import Body exposing (Body, BodyMsg(..))
 import Browser
 import Browser.Dom
+import Component exposing (Component)
+import Data exposing (availableComponents)
 import Dict exposing (Dict)
 import Draggable exposing (Delta)
 import Draggable.Events exposing (onDragBy)
-import FontAwesome.Solid as Icon
-import FontAwesome.Attributes as Icon
-import Html.Styled.Events exposing (onClick, onInput)
-import Html.Styled.Attributes exposing (checked, css, disabled, fromUnstyled, placeholder, selected, title, value)
-import Html.Styled exposing (Attribute, Html, div, label, li, option, span, text, ul, toUnstyled)
-import Json.Decode as JD
-import List.Extra
-import Numeral
-import Body exposing (Body, BodyMsg(..))
-import Component exposing (Component)
-import Data exposing (availableComponents)
 import Entity exposing (Entity)
 import Fixture exposing (Fixture, FixtureMsg(..))
+import FontAwesome.Attributes as Icon
+import FontAwesome.Solid as Icon
 import Helpers exposing (commaDelimited, onBlur, onEnter, pathKey)
+import Html.Styled exposing (Attribute, Html, div, label, li, option, span, text, ul, toUnstyled)
+import Html.Styled.Attributes exposing (checked, css, disabled, fromUnstyled, placeholder, selected, title, value)
+import Html.Styled.Events exposing (onClick, onInput)
+import Json.Decode as JD
+import List.Extra
+import Maybe
+import Numeral
 import Param exposing (Param, ParamValue(..))
+import Ports
 import Scene exposing (Scene, SceneMsg(..))
 import Shape exposing (Shape(..), ShapeMsg(..))
 import Styles exposing (..)
 import Tree exposing (TreeNode(..))
 import Widgets exposing (button, checkbox, hr, input, select)
-
-
-port selectProjectPathIn : (String -> msg) -> Sub msg
-
-
-port selectProjectPathOut : () -> Cmd msg
-
-
-port loadFileIn : (( String, String ) -> msg) -> Sub msg
-
-
-port loadFileOut : String -> Cmd msg
-
-
-port saveFileOut : ( String, JD.Value ) -> Cmd msg
 
 
 type alias Flags =
@@ -103,8 +89,8 @@ subscriptions model =
     in
         Sub.batch
             (sceneSubscriptions
-                ++ [ selectProjectPathIn SelectProjectPathIn
-                   , loadFileIn LoadFileIn
+                ++ [ Ports.selectProjectPathIn SelectProjectPathIn
+                   , Ports.loadFileIn LoadFileIn
                    ]
             )
 
@@ -146,7 +132,7 @@ update msg model =
         LoadFileOut file ->
             case List.Extra.findIndex (\scene -> scene.file == Just file) model.scenes of
                 Nothing ->
-                    ( model, loadFileOut (file) )
+                    ( model, Ports.loadFileOut (file) )
 
                 Just index ->
                     ( { model | selectedSceneIndex = Just index }, Cmd.none )
@@ -157,7 +143,7 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just scene ->
-                    ( model, saveFileOut ( "", Scene.encode scene ) )
+                    ( model, Ports.saveFileOut ( "", Scene.encode scene ) )
 
         SceneMsg sceneMsg ->
             case selectedScene model of
@@ -183,7 +169,7 @@ update msg model =
                     ( { model | tree = Just tree }, Cmd.none )
 
         SelectProjectPathOut ->
-            ( model, selectProjectPathOut () )
+            ( model, Ports.selectProjectPathOut () )
 
         SelectSceneIndex index ->
             ( { model | selectedSceneIndex = Just index }, Cmd.none )
@@ -810,24 +796,22 @@ tabsListView model =
         )
 
 
+
+-- [ button
+--     [ onClick SelectProjectPathOut ]
+--     [ text "select project" ]
+-- ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ globalStyles
         , div []
-            (case model.tree of
-                Nothing ->
-                    [ button
-                        [ onClick SelectProjectPathOut ]
-                        [ text "select project" ]
-                    ]
-
-                Just tree ->
-                    [ tabsListView model
-                    , treeView model
-                    , entityManagerView model
-                    , componentManagerView model
-                    , sceneView model
-                    ]
-            )
+            [ tabsListView model
+            , treeView model
+            , entityManagerView model
+            , componentManagerView model
+            , sceneView model
+            ]
         ]

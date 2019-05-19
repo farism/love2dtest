@@ -16,16 +16,16 @@ module Scene
         , update
         )
 
+import Component exposing (Component)
 import Dict exposing (Dict)
 import Draggable exposing (Delta)
-import Json.Decode.Pipeline as JDP
-import Json.Decode.Extra as JDE
-import Json.Decode as JD
-import Json.Encode as JE
 import Entity exposing (Entity)
-import Component exposing (Component)
 import Fixture exposing (Fixture, FixtureMsg(..))
 import Helpers exposing (dictEncoder, strToFloat, strToInt)
+import Json.Decode as JD
+import Json.Decode.Extra as JDE
+import Json.Decode.Pipeline as JDP
+import Json.Encode as JE
 import Param exposing (Param, ParamValue(..))
 import Vertex exposing (Vertex)
 

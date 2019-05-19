@@ -1,7 +1,7 @@
 module Data exposing (availableComponents)
 
-import Dict exposing (Dict)
 import Component exposing (Component)
+import Dict exposing (Dict)
 import Fixture exposing (Fixture)
 import Helpers exposing (strHead)
 import Param exposing (Param, ParamValue(..))
