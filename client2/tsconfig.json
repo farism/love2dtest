@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "lib": ["esnext"],
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
     "outDir": "build",
     "rootDir": "src",
     "strict": true,
