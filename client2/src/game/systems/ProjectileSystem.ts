@@ -1,8 +1,9 @@
-import { System } from '../../ecs/System'
-import { SystemFlag } from '../flags'
-import { check, hasComponent, isSensor } from '../utils/collision'
-import { Projectile } from '../components/Projectile'
 import { Aspect } from '../../ecs/Aspect'
+import { System } from '../../ecs/System'
+import { GameObject } from '../components/GameObject'
+import { Projectile } from '../components/Projectile'
+import { SystemFlag } from '../flags'
+import { check, hasComponent } from '../utils/collision'
 
 export class ProjectileSystem extends System {
   static _id = 'ProjectileSystem'
@@ -15,10 +16,15 @@ export class ProjectileSystem extends System {
   _aspect = ProjectileSystem._aspect
 
   beginContact = (a: Fixture, b: Fixture, c: Contact) => {
-    const result = check(a, b, [hasComponent(Projectile), isSensor])
+    const result = check(a, b, [
+      hasComponent(Projectile),
+      hasComponent(GameObject),
+    ])
 
-    if (result) {
-      result[0].destroy()
+    if (result && result[0] && result[1]) {
+      const [projectile] = result
+
+      projectile && projectile.destroy()
     }
   }
 }

@@ -29,6 +29,8 @@ const initializeBlueprints = (manager: Manager) => {
   const blueprints = [
     Factory.createGround,
     Factory.createSlope,
+    Factory.createMob(300, 300),
+    Factory.createShieldMob(200, 300),
     Factory.createIcicle(200, 200),
     Factory.createParallax({
       layers: [

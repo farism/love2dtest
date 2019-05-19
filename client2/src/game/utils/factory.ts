@@ -12,7 +12,7 @@ import { Player } from '../components/Player'
 import { Position } from '../components/Position'
 import { Projectile } from '../components/Projectile'
 
-export enum CollisionCategory {
+export enum Category {
   Static = 1,
   Player = 2,
   PlayerAttack = 3,
@@ -21,6 +21,7 @@ export enum CollisionCategory {
   Container = 6,
   Bomb = 7,
   Aggression = 8,
+  Projectile = 9,
 }
 
 export enum Blueprint {
@@ -30,6 +31,7 @@ export enum Blueprint {
   Slope = 'slope',
   ThrowingPick = 'throwingPick',
   Icicle = 'icicle',
+  Shield = 'shield',
 }
 
 export const createPlayer = (
@@ -42,8 +44,8 @@ export const createPlayer = (
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
   fixture.setFriction(1)
-  fixture.setCategory(CollisionCategory.Player)
-  fixture.setMask(CollisionCategory.Enemy)
+  fixture.setCategory(Category.Player)
+  fixture.setMask(Category.Enemy)
 
   const entity = manager.createEntity()
   entity.userData = { blueprint: Blueprint.Player }
@@ -68,7 +70,7 @@ export const createIcicle = (initX: number = 0, initY: number = 0) => (
   const shape = love.physics.newRectangleShape(64, 64)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
-  fixture.setCategory(CollisionCategory.Static)
+  fixture.setCategory(Category.Static)
 
   const entity = manager.createEntity()
   entity.userData.blueprint = Blueprint.Icicle
@@ -88,14 +90,16 @@ export const createThrowingPick = (
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
   body.setGravityScale(0)
+  body.setMass(0.1)
   fixture.setFriction(1)
+  fixture.setGroupIndex(-Category.Projectile)
 
   if (origin.has(Player)) {
-    fixture.setCategory(CollisionCategory.PlayerAttack)
-    fixture.setMask(CollisionCategory.Player, CollisionCategory.Aggression)
+    fixture.setCategory(Category.PlayerAttack)
+    fixture.setMask(Category.Player)
   } else {
-    fixture.setCategory(CollisionCategory.EnemyAttack)
-    fixture.setMask(CollisionCategory.Enemy, CollisionCategory.Aggression)
+    fixture.setCategory(Category.EnemyAttack)
+    fixture.setMask(Category.Enemy, Category.Aggression)
   }
 
   const entity = manager.createEntity()
@@ -110,16 +114,14 @@ export const createThrowingPick = (
   return entity
 }
 
-export const createMob = (
-  manager: Manager,
-  initX: number = 0,
-  initY: number = 0
+export const createMob = (initX: number = 0, initY: number = 0) => (
+  manager: Manager
 ) => {
   const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
   const shape = love.physics.newRectangleShape(32, 32)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
-  fixture.setCategory(CollisionCategory.Enemy)
+  fixture.setCategory(Category.Enemy)
 
   const entity = manager.createEntity()
   entity.userData.blueprint = Blueprint.Mob
@@ -133,16 +135,15 @@ export const createMob = (
   return entity
 }
 
-export const createSlashMob = (
-  manager: Manager,
-  initX: number = 0,
-  initY: number = 0
+export const createSlashMob = (initX: number = 0, initY: number = 0) => (
+  manager: Manager
 ) => {
   const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
   const shape = love.physics.newRectangleShape(32, 32)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
-  fixture.setCategory(CollisionCategory.Enemy)
+  body.setMass(100)
+  fixture.setCategory(Category.Enemy)
 
   const entity = manager.createEntity()
   entity.userData.blueprint = Blueprint.Mob
@@ -152,6 +153,42 @@ export const createSlashMob = (
     new Movement(),
     new Position(),
   ])
+
+  return entity
+}
+
+export const createShieldMob = (initX: number = 0, initY: number = 0) => (
+  manager: Manager
+) => {
+  const mob = createMob(initX, initY)(manager)
+  const mobFixture = mob.as(GameObject).fixture
+  const shield = createShield(initX, initY)(manager)
+  const shieldFixture = shield.as(GameObject).fixture
+
+  love.physics.newWeldJoint(
+    mobFixture.getBody(),
+    shieldFixture.getBody(),
+    -24,
+    0,
+    0,
+    0,
+    false
+  )
+
+  return mob
+}
+
+const createShield = (initX: number, initY: number) => (manager: Manager) => {
+  const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
+  const shape = love.physics.newRectangleShape(24, 32)
+  const fixture = love.physics.newFixture(body, shape, 1)
+  body.setFixedRotation(true)
+  body.setMass(5)
+  fixture.setCategory(Category.Enemy)
+
+  const entity = manager.createEntity()
+  entity.userData.blueprint = Blueprint.Shield
+  entity.addAll([new GameObject(entity, fixture)])
 
   return entity
 }
