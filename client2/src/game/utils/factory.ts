@@ -237,3 +237,20 @@ export const createGround = (manager: Manager) => {
 
   return entity
 }
+
+export const createPlatform = (
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => (manager: Manager) => {
+  const body = love.physics.newBody(manager.world, x, y, 'kinematic')
+  const shape = love.physics.newRectangleShape(width, height)
+  const fixture = love.physics.newFixture(body, shape, 1)
+
+  const entity = manager.createEntity()
+  entity.userData = { blueprint: Blueprint.Platform }
+  entity.addAll([new GameObject(entity, fixture)])
+
+  return entity
+}
