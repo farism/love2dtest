@@ -2,7 +2,6 @@ import { Aspect } from '../../ecs/Aspect'
 import { Entity } from '../../ecs/Entity'
 import { System } from '../../ecs/System'
 import { Abilities, Ability, AbilityType } from '../components/Abilities'
-import { Damage } from '../components/Damage'
 import { Dash } from '../components/Dash'
 import { GameObject } from '../components/GameObject'
 import { Direction, Movement } from '../components/Movement'
@@ -51,13 +50,13 @@ const abilityFunctions: AbilityList = {
     gameObject.fixture.setCategory(3)
 
     entity.add(new Dash())
-    entity.add(new Damage(1))
+    // entity.add(new Damage(1))
 
     ability.timers.duration = Timer.createTimer(ability.duration, () => {
       gameObject.fixture.setCategory(2)
 
       entity.remove(Dash)
-      entity.remove(Damage)
+      // entity.remove(Damage)
     })
   },
 

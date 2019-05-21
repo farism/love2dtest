@@ -1,5 +1,7 @@
-import { ComponentFlag } from '../flags'
 import { Entity } from '../../ecs/Entity'
+import { ComponentFlag } from '../flags'
+import { Category } from '../utils/collision'
+import * as Timer from '../utils/timer'
 
 export class Aggression {
   static _id = 'Aggression'
@@ -13,6 +15,7 @@ export class Aggression {
   width: number
   height: number
   duration: number
+  durationTimout: number
 
   constructor(
     world: World,
@@ -27,6 +30,7 @@ export class Aggression {
     this.width = width
     this.height = height
     this.duration = duration
+    this.durationTimout = -1
 
     this.fixture = love.physics.newFixture(
       love.physics.newBody(world, x, y, 'kinematic'),
@@ -34,8 +38,14 @@ export class Aggression {
       1
     )
     this.fixture.setSensor(true)
-    this.fixture.setCategory(8)
+    this.fixture.setCategory(Category.Aggression)
     this.fixture.setUserData({ entity: entity, isAggression: true })
+  }
+
+  setDurationTimer = (callback: () => void) => {
+    Timer.clearTimeout(this.durationTimout)
+
+    this.durationTimout = Timer.setTimeout(this.duration, callback)
   }
 
   destroy = () => {

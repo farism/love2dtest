@@ -3,6 +3,18 @@ import { Entity } from '../../ecs/Entity'
 
 const noop = () => {}
 
+export enum Category {
+  Static = 1,
+  Player = 2,
+  PlayerAttack = 3,
+  Enemy = 4,
+  EnemyAttack = 5,
+  Container = 6,
+  Bomb = 7,
+  Aggression = 8,
+  Projectile = 9,
+}
+
 export const getEntity = (fixture: Fixture): Entity => {
   return fixture.getUserData().entity
 }

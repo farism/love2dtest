@@ -72,19 +72,21 @@ export class Manager {
   addComponent = (entity: Entity, component: Component) => {
     entity.setFlag(component)
     this.setComponent(entity, component, component)
-    this.check(entity)
 
     print(`added component (id: ${component._id}) to entity (id: ${entity.id})`)
+
+    this.check(entity)
   }
 
   removeComponent = (entity: Entity, component: Component) => {
     entity.clearFlag(component)
     this.setComponent(entity, component, null)
-    this.check(entity)
 
     print(
       `removed component (id: ${component._id}) from entity (id: ${entity.id})`
     )
+
+    this.check(entity)
   }
 
   removeComponents = (entity: Entity) => {

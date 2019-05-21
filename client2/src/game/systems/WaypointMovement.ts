@@ -1,46 +1,58 @@
-import { System } from '../../ecs/System'
-import { SystemFlag } from '../flags'
 import { Aspect } from '../../ecs/Aspect'
-import { Waypoint, Point } from '../components/Waypoint'
-import { Movement, Direction } from '../components/Movement'
-import { Position } from '../components/Position'
+import { System } from '../../ecs/System'
 import { GameObject } from '../components/GameObject'
-import { Attack } from '../components/Attack'
+import { Direction, Movement } from '../components/Movement'
+import { Position } from '../components/Position'
+import { Point, Waypoint } from '../components/Waypoint'
+import { SystemFlag } from '../flags'
 
-enum Axis {
-  X = 'x',
-  Y = 'y',
-}
+type Axis = 'x' | 'y'
 
 const shouldAdvance = (
   axis: Axis,
   velocity: number,
-  position: Position,
-  next: Point
+  from: Point,
+  to: Partial<Point>
 ) => {
-  if (!next[axis]) {
+  const coordinate = to[axis]
+
+  if (!coordinate) {
     return true
-  } else if (velocity > 0 && position[axis] >= next[axis]) {
-    return true
-  } else {
-    return false
   }
+
+  if (
+    (velocity > 0 && from[axis] >= coordinate) ||
+    (velocity < 0 && from[axis] <= coordinate) ||
+    Math.abs(from[axis] - coordinate) < 1
+  ) {
+    return true
+  }
+
+  return false
 }
+
 const advance = (waypoint: Waypoint) => {
-  if (waypoint.current === waypoint.path.length) {
+  if (waypoint.current + 1 === waypoint.path.length) {
     waypoint.current = 0
   } else {
     waypoint.current++
   }
 }
 
-const getNext = (waypoint: Waypoint) => {
-  const point = waypoint.path.length
-    ? waypoint.path[0]
-    : waypoint.path[waypoint.current + 1]
+const getCurrent = (defaults: Point, waypoint: Waypoint) => {
+  const point = waypoint.path[waypoint.current]
 
-  return point ? point : { x: 0, y: 0 }
+  return {
+    x: point.x || defaults.x,
+    y: point.y || defaults.y,
+  }
 }
+
+const getVelocityX = (angle: number, velocity: number) =>
+  math.cos(angle) * velocity
+
+const getVelocityY = (angle: number, velocity: number) =>
+  math.sin(angle) * velocity
 
 export class WaypointMovementSystem extends System {
   static _id = 'WaypointMovement'
@@ -59,6 +71,7 @@ export class WaypointMovementSystem extends System {
 
   update = (dt: number) => {
     this.entities.forEach(entity => {
+      entity.manager
       const waypoint = entity.as(Waypoint)
       const gameObject = entity.as(GameObject)
       const movement = entity.as(Movement)
@@ -68,40 +81,44 @@ export class WaypointMovementSystem extends System {
         return
       }
 
-      if (!waypoint.active) {
+      if (!waypoint.active || !waypoint.path.length) {
         return
       }
 
-      const body = gameObject.fixture.getBody()
-      body.setGravityScale(1)
+      const point = waypoint.path[waypoint.current]
 
-      const next = getNext(waypoint)
       const angle = math.atan2(
-        (next.y || position.y) - position.y,
-        next.x - position.x
+        (point.y || position.y) - position.y,
+        (point.x || position.x) - position.x
       )
-      const [velocityX, velocityY] = body.getLinearVelocity()
-      const shouldAdvanceX = shouldAdvance(Axis.X, velocityX, position, next)
-      const shouldAdvanceY = shouldAdvance(Axis.Y, velocityY, position, next)
 
-      let newVelocityX = 0
-      let newVelocityY = 0
+      const body = gameObject.fixture.getBody()
+
+      const [velocityX, velocityY] = body.getLinearVelocity()
+
+      const shouldAdvanceX = shouldAdvance('x', velocityX, position, point)
+
+      const shouldAdvanceY = shouldAdvance('y', velocityY, position, point)
+
+      let newVelocityX = velocityX
+
+      let newVelocityY = velocityY
 
       if (shouldAdvanceX && shouldAdvanceY) {
         advance(waypoint)
       } else {
         if (!shouldAdvanceX) {
-          newVelocityX = math.cos(angle) * waypoint.speed
+          newVelocityX = getVelocityX(angle, waypoint.speed)
         }
 
-        if (next.y) {
+        if (point.y === null) {
+          body.setGravityScale(1)
+        } else {
           body.setGravityScale(0)
 
           if (!shouldAdvanceY) {
-            newVelocityY = math.sin(angle) * waypoint.speed
+            newVelocityY = getVelocityY(angle, waypoint.speed)
           }
-        } else {
-          newVelocityY = velocityY
         }
       }
 

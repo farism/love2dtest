@@ -15,9 +15,13 @@ export class Waypoint {
   active: boolean
   current: number
   speed: number
-  path: Point[]
+  path: Partial<Point>[]
 
-  constructor(active: boolean = true, speed: number = 1, path: Point[]) {
+  constructor(
+    active: boolean = true,
+    speed: number = 1,
+    path: Partial<Point>[]
+  ) {
     this.active = active
     this.current = 0
     this.speed = speed

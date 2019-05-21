@@ -5,6 +5,7 @@ import { State } from './State'
 import { AbilitiesSystem } from './systems/Abilities'
 import { AggressionSystem } from './systems/Aggression'
 import { AnimateSpriteSystem } from './systems/AnimateSprite'
+import { AttackSystem } from './systems/Attack'
 import { CheckpointSystem } from './systems/Checkpoint'
 import { ContainerSystem } from './systems/Container'
 import { DamageSystem } from './systems/Damage'
@@ -21,6 +22,7 @@ import { ProjectileSystem } from './systems/ProjectileSystem'
 import { RenderSystem } from './systems/RenderSystem'
 import { RespawnSystem } from './systems/Respawn'
 import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
+import { WaypointMovementSystem } from './systems/WaypointMovement'
 import { Camera } from './utils/camera'
 import * as Factory from './utils/factory'
 import * as timer from './utils/timer'
@@ -29,9 +31,9 @@ const initializeBlueprints = (manager: Manager) => {
   const blueprints = [
     Factory.createGround,
     Factory.createSlope,
-    Factory.createMob(300, 300),
+    // Factory.createMob(300, 300),
     Factory.createShieldMob(200, 300),
-    Factory.createIcicle(200, 200),
+    // Factory.createIcicle(200, 200),
     Factory.createParallax({
       layers: [
         {
@@ -98,26 +100,30 @@ export class Game {
       new InputSystem(this.manager),
       new GameOverSystem(this.manager),
 
+      // pre-renderers
+      new ParallaxRenderSystem(this.manager, this.camera),
+
       // processors
-      new AbilitiesSystem(this.manager),
-      new AggressionSystem(this.manager),
-      new DamageSystem(this.manager),
       new DeathSystem(this.manager),
+      new AbilitiesSystem(this.manager),
+      new DamageSystem(this.manager),
       new CheckpointSystem(this.manager),
       new ContainerSystem(this.manager),
       new FallDeathSystem(this.manager),
       new InputMovementSystem(this.manager),
+      new WaypointMovementSystem(this.manager),
       new JumpResetSystem(this.manager),
       new PlatformSystem(this.manager),
       new ProjectileSystem(this.manager),
       new DashSystem(this.manager),
+      new AggressionSystem(this.manager),
+      new AttackSystem(this.manager),
       new RespawnSystem(this.manager),
 
       // post-processors
       new SyncBodyPositionSystem(this.manager),
 
       // renderers
-      new ParallaxRenderSystem(this.manager, this.camera),
       new AnimateSpriteSystem(this.manager),
       new RenderSystem(this.manager),
     ])

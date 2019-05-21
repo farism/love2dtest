@@ -2,6 +2,7 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../../conf'
 import { Entity } from '../../ecs/Entity'
 import { Manager } from '../../ecs/Manager'
 import { Abilities } from '../components/Abilities'
+import { Aggression } from '../components/Aggression'
 import { Damage } from '../components/Damage'
 import { GameObject } from '../components/GameObject'
 import { Health } from '../components/Health'
@@ -11,18 +12,8 @@ import { Parallax, ParallaxOptions } from '../components/Parallax'
 import { Player } from '../components/Player'
 import { Position } from '../components/Position'
 import { Projectile } from '../components/Projectile'
-
-export enum Category {
-  Static = 1,
-  Player = 2,
-  PlayerAttack = 3,
-  Enemy = 4,
-  EnemyAttack = 5,
-  Container = 6,
-  Bomb = 7,
-  Aggression = 8,
-  Projectile = 9,
-}
+import { Waypoint } from '../components/Waypoint'
+import { Category } from './collision'
 
 export enum Blueprint {
   Ground = 'ground',
@@ -43,6 +34,7 @@ export const createPlayer = (
   const shape = love.physics.newCircleShape(16)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
+  body.setSleepingAllowed(false)
   fixture.setFriction(1)
   fixture.setCategory(Category.Player)
   fixture.setMask(Category.Enemy)
@@ -90,13 +82,12 @@ export const createThrowingPick = (
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
   body.setGravityScale(0)
-  body.setMass(0.1)
   fixture.setFriction(1)
   fixture.setGroupIndex(-Category.Projectile)
 
   if (origin.has(Player)) {
     fixture.setCategory(Category.PlayerAttack)
-    fixture.setMask(Category.Player)
+    fixture.setMask(Category.Player, Category.Aggression)
   } else {
     fixture.setCategory(Category.EnemyAttack)
     fixture.setMask(Category.Enemy, Category.Aggression)
@@ -175,6 +166,15 @@ export const createShieldMob = (initX: number = 0, initY: number = 0) => (
     false
   )
 
+  mob.addAll([
+    new Aggression(manager.world, mob, initX, initY, 300, 100, 5),
+    new Waypoint(true, 50, [
+      { x: initX },
+      { x: initX - 200 },
+      { x: initX + 300 },
+    ]),
+  ])
+
   return mob
 }
 
@@ -183,7 +183,6 @@ const createShield = (initX: number, initY: number) => (manager: Manager) => {
   const shape = love.physics.newRectangleShape(24, 32)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
-  body.setMass(5)
   fixture.setCategory(Category.Enemy)
 
   const entity = manager.createEntity()

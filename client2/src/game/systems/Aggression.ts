@@ -1,14 +1,13 @@
 import { Aspect } from '../../ecs/Aspect'
 import { System } from '../../ecs/System'
-import * as Timer from '../utils/timer'
-import { isPolygonShape } from '../utils/shape'
-import { check, hasComponent } from '../utils/collision'
-import { SystemFlag } from '../flags'
 import { Aggression } from '../components/Aggression'
-import { GameObject } from '../components/GameObject'
-import { Position } from '../components/Position'
-import { Player } from '../components/Player'
 import { Attack } from '../components/Attack'
+import { GameObject } from '../components/GameObject'
+import { Player } from '../components/Player'
+import { Position } from '../components/Position'
+import { SystemFlag } from '../flags'
+import { check, hasComponent } from '../utils/collision'
+import { isPolygonShape } from '../utils/shape'
 
 const isAggression = (fixture: Fixture) => {
   return fixture.getUserData().isAggression
@@ -55,8 +54,12 @@ export class AggressionSystem extends System {
 
       const aggression = attacker.as(Aggression)
 
+      if (!aggression) {
+        return
+      }
+
       if (aggression) {
-        Timer.setTimeout(aggression.duration, () => {
+        aggression.setDurationTimer(() => {
           attacker.remove(Attack)
         })
       }
