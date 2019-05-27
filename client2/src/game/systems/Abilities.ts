@@ -4,7 +4,7 @@ import { System } from '../../ecs/System'
 import { Abilities, Ability, AbilityType } from '../components/Abilities'
 import { Dash } from '../components/Dash'
 import { GameObject } from '../components/GameObject'
-import { Direction, Movement } from '../components/Movement'
+import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
 import { SystemFlag } from '../flags'
 import * as Factory from '../utils/factory'
@@ -32,7 +32,7 @@ const abilityFunctions: AbilityList = {
     if (gameObject) {
       const body = gameObject.fixture.getBody()
 
-      if (movement.direction == Direction.Left) {
+      if (movement.direction == 'left') {
         body.setLinearVelocity(-1500, 0)
       } else {
         body.setLinearVelocity(1500, 0)

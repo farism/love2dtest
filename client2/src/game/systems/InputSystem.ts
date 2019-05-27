@@ -2,7 +2,7 @@ import { Aspect } from '../../ecs/Aspect'
 import { System } from '../../ecs/System'
 import { Abilities, AbilityType } from '../components/Abilities'
 import { Input } from '../components/Input'
-import { Direction, Movement } from '../components/Movement'
+import { Movement } from '../components/Movement'
 import { SystemFlag } from '../flags'
 
 enum Keymap {
@@ -48,13 +48,13 @@ export class InputSystem extends System {
       if (key === Keymap.Left) {
         movement.left = isPressed
 
-        isPressed && (movement.direction = Direction.Left)
+        isPressed && (movement.direction = 'left')
       }
 
       if (key === Keymap.Right) {
         movement.right = isPressed
 
-        isPressed && (movement.direction = Direction.Right)
+        isPressed && (movement.direction = 'right')
       }
 
       movement.jump = key === Keymap.Jump && isPressed && movement.jumpCount < 2

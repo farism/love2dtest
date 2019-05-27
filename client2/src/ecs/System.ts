@@ -10,6 +10,7 @@ export class System {
   static _aspect = new Aspect()
   _aspect = System._aspect
 
+  debug: boolean = false
   entities: Map<number, Entity>
   manager: Manager
   paused: boolean
@@ -18,6 +19,14 @@ export class System {
     this.entities = new Map()
     this.manager = manager
     this.paused = false
+  }
+
+  setDebug = (debug: boolean) => {
+    this.debug = debug
+  }
+
+  log = (...args: any[]) => {
+    this.debug && print(...args)
   }
 
   add = (entity: Entity) => {
@@ -29,7 +38,7 @@ export class System {
       if (!this.entities.get(entity.id)) {
         this.onAdd(entity)
 
-        print(
+        this.log(
           `entity (id :${entity.id}) is now being processed by system (id: ${
             this._id
           })`
@@ -40,7 +49,7 @@ export class System {
     } else {
       if (this.entities.get(entity.id)) {
         this.onRemove(entity)
-        print(
+        this.log(
           `entity (id :${
             entity.id
           }) is no longer being processed by system (id: ${this._id})`

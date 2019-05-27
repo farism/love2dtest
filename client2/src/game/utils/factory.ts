@@ -23,6 +23,7 @@ export enum Blueprint {
   ThrowingPick = 'throwingPick',
   Icicle = 'icicle',
   Shield = 'shield',
+  Platform = 'platform',
 }
 
 export const createPlayer = (
@@ -80,8 +81,10 @@ export const createThrowingPick = (
   const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
   const shape = love.physics.newRectangleShape(8, 8)
   const fixture = love.physics.newFixture(body, shape, 1)
+  body.setBullet(true)
   body.setFixedRotation(true)
   body.setGravityScale(0)
+  body.setMass(0.0001)
   fixture.setFriction(1)
   fixture.setGroupIndex(-Category.Projectile)
 
@@ -133,7 +136,6 @@ export const createSlashMob = (initX: number = 0, initY: number = 0) => (
   const shape = love.physics.newRectangleShape(32, 32)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
-  body.setMass(100)
   fixture.setCategory(Category.Enemy)
 
   const entity = manager.createEntity()
@@ -167,11 +169,11 @@ export const createShieldMob = (initX: number = 0, initY: number = 0) => (
   )
 
   mob.addAll([
-    new Aggression(manager.world, mob, initX, initY, 300, 100, 5),
+    new Aggression(manager.world, mob, initX, initY, 300, 64, 10),
     new Waypoint(true, 50, [
       { x: initX },
-      { x: initX - 200 },
-      { x: initX + 300 },
+      { x: initX - 50 },
+      { x: initX + 75 },
     ]),
   ])
 
@@ -180,7 +182,7 @@ export const createShieldMob = (initX: number = 0, initY: number = 0) => (
 
 const createShield = (initX: number, initY: number) => (manager: Manager) => {
   const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
-  const shape = love.physics.newRectangleShape(24, 32)
+  const shape = love.physics.newRectangleShape(4, 32)
   const fixture = love.physics.newFixture(body, shape, 1)
   body.setFixedRotation(true)
   fixture.setCategory(Category.Enemy)
@@ -225,9 +227,10 @@ export const createGround = (manager: Manager) => {
   const body = love.physics.newBody(
     manager.world,
     WINDOW_WIDTH / 2,
-    WINDOW_HEIGHT - 15,
+    WINDOW_HEIGHT - 16,
     'static'
   )
+  body.setGravityScale(0)
   const shape = love.physics.newRectangleShape(WINDOW_WIDTH * 10, 30)
   const fixture = love.physics.newFixture(body, shape, 1)
 
@@ -244,7 +247,7 @@ export const createPlatform = (
   width: number,
   height: number
 ) => (manager: Manager) => {
-  const body = love.physics.newBody(manager.world, x, y, 'kinematic')
+  const body = love.physics.newBody(manager.world, x, y, 'static')
   const shape = love.physics.newRectangleShape(width, height)
   const fixture = love.physics.newFixture(body, shape, 1)
 

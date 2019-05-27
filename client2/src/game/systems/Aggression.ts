@@ -1,16 +1,26 @@
 import { Aspect } from '../../ecs/Aspect'
+import { Entity } from '../../ecs/Entity'
 import { System } from '../../ecs/System'
 import { Aggression } from '../components/Aggression'
 import { Attack } from '../components/Attack'
 import { GameObject } from '../components/GameObject'
 import { Player } from '../components/Player'
 import { Position } from '../components/Position'
+import { Waypoint } from '../components/Waypoint'
 import { SystemFlag } from '../flags'
 import { check, hasComponent } from '../utils/collision'
-import { isPolygonShape } from '../utils/shape'
+import { isPolygonShape } from '../utils/fixture'
 
 const isAggression = (fixture: Fixture) => {
   return fixture.getUserData().isAggression
+}
+
+const setWaypointActive = (active: boolean, entity: Entity) => {
+  const waypoint = entity.as(Waypoint)
+
+  if (waypoint) {
+    waypoint.active = active
+  }
 }
 
 export class AggressionSystem extends System {
@@ -39,31 +49,47 @@ export class AggressionSystem extends System {
   beginContact = (a: Fixture, b: Fixture, contact: Contact) => {
     const result = check(a, b, [isAggression, hasComponent(Player)])
 
-    if (result) {
-      const [attacker, target] = result
-
-      attacker.add(new Attack(target))
+    if (!result) {
+      return
     }
+
+    const [attacker, target] = result
+
+    const aggression = attacker.as(Aggression)
+
+    if (!aggression) {
+      return
+    }
+
+    aggression.clearDurationTimer()
+
+    attacker.add(new Attack(target))
+
+    setWaypointActive(false, attacker)
   }
 
   endContact = (a: Fixture, b: Fixture, contact: Contact) => {
     const result = check(a, b, [isAggression, hasComponent(Player)])
 
-    if (result) {
-      const [attacker, target] = result
-
-      const aggression = attacker.as(Aggression)
-
-      if (!aggression) {
-        return
-      }
-
-      if (aggression) {
-        aggression.setDurationTimer(() => {
-          attacker.remove(Attack)
-        })
-      }
+    if (!result) {
+      return
     }
+
+    const [attacker, target] = result
+
+    const aggression = attacker.as(Aggression)
+
+    if (!aggression) {
+      return
+    }
+
+    aggression.setDurationTimer(() => {
+      print('here')
+
+      attacker.remove(Attack)
+
+      setWaypointActive(true, attacker)
+    })
   }
 
   draw = () => {

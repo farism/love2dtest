@@ -18,3 +18,15 @@ export const isChainShape = (shape: Shape): shape is ChainShape => {
 export const isEdgeShape = (shape: Shape): shape is EdgeShape => {
   return isShapeType<EdgeShape>('edge', shape)
 }
+
+export const isDynamic = (fixture: Fixture) => {
+  return fixture.getBody().getType() === 'dynamic'
+}
+
+export const isKinematic = (fixture: Fixture) => {
+  return fixture.getBody().getType() === 'kinematic'
+}
+
+export const isStatic = (fixture: Fixture) => {
+  return fixture.getBody().getType() === 'static'
+}

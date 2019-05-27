@@ -94,6 +94,7 @@ Each map has a set of levels. Levels increase in difficulty as a map progresses.
 - Mercenary with melee pick
 - Mercenary with melee pick and riot shield
 - Mercenary with taser and riot shield
+- Mercenary with gun and riot shield
 - Mercenary with gun
 - Mercenary on snowmobile with grenade
 - Mercenary in lift with grenade

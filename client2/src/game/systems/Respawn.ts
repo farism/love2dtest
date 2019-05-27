@@ -1,15 +1,15 @@
-import { System } from '../../ecs/System'
-import { Manager } from '../../ecs/manager'
-import { SystemFlag } from '../flags'
 import { Aspect } from '../../ecs/Aspect'
-import { Player } from '../components/Player'
-import { Respawn } from '../components/Respawn'
-import { Checkpoint } from '../components/Checkpoint'
-import { setTimeout } from '../utils/timer'
 import { Entity } from '../../ecs/Entity'
+import { Manager } from '../../ecs/manager'
+import { System } from '../../ecs/System'
+import { Checkpoint } from '../components/Checkpoint'
 import { GameObject } from '../components/GameObject'
-import { Position } from '../components/Position'
 import { Health } from '../components/Health'
+import { Player } from '../components/Player'
+import { Position } from '../components/Position'
+import { Respawn } from '../components/Respawn'
+import { SystemFlag } from '../flags'
+import { setTimeout } from '../utils/timer'
 
 const findCheckpoint = (
   index: number,

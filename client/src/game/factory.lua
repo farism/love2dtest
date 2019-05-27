@@ -228,7 +228,7 @@ local function Factory(world, manager)
 
       merge(
         {
-          Aggression.new(1, world, entity, x, y, 300, 100, 2),
+          Aggression.new(1, world, entity, x, y, 300, 20, 2),
           Waypoint.new(
             1,
             50,

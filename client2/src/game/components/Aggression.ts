@@ -48,6 +48,10 @@ export class Aggression {
     this.durationTimout = Timer.setTimeout(this.duration, callback)
   }
 
+  clearDurationTimer = () => {
+    Timer.clearTimeout(this.durationTimout)
+  }
+
   destroy = () => {
     this.fixture.getBody().destroy()
   }

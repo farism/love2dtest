@@ -3,7 +3,7 @@ import { Entity } from '../../ecs/Entity'
 import { System } from '../../ecs/System'
 import { Dash } from '../components/Dash'
 import { GameObject } from '../components/GameObject'
-import { Direction, Movement } from '../components/Movement'
+import { Movement } from '../components/Movement'
 import { SystemFlag } from '../flags'
 
 export class DashSystem extends System {
@@ -28,9 +28,9 @@ export class DashSystem extends System {
 
       const body = gameObject.fixture.getBody()
 
-      if (movement.direction == Direction.Left) {
+      if (movement.direction == 'left') {
         body.setLinearVelocity(-2000, 0)
-      } else if (movement.direction == Direction.Right) {
+      } else if (movement.direction == 'right') {
         body.setLinearVelocity(2000, 0)
       }
     })

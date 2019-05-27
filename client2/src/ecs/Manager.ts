@@ -4,13 +4,15 @@ import { System } from './System'
 
 export class Manager {
   components: Map<number, Map<number, Component>>
+  debug: boolean
   entities: Map<number, Entity>
   nextId: number
   systems: System[]
   world: World
 
-  constructor(world: World) {
+  constructor(world: World, debug: boolean = false) {
     this.components = new Map()
+    this.debug = debug
     this.entities = new Map()
     this.nextId = 0
     this.systems = []
@@ -19,6 +21,10 @@ export class Manager {
 
   // managing entities
 
+  log = (...args: any[]) => {
+    this.debug && print(...args)
+  }
+
   getNextId = () => {
     return this.nextId++
   }
@@ -26,7 +32,7 @@ export class Manager {
   createEntity = (id?: number): Entity => {
     const entity = new Entity(id || this.getNextId(), this)
 
-    print(`created entity (id: ${entity.id})`)
+    this.log(`created entity (id: ${entity.id})`)
 
     this.addEntity(entity)
 
@@ -42,7 +48,7 @@ export class Manager {
 
     this.entities.set(entity.id, entity)
 
-    print(`added entity (id: ${entity.id})`)
+    this.log(`added entity (id: ${entity.id})`)
   }
 
   removeEntity = (entity: Entity) => {
@@ -52,7 +58,7 @@ export class Manager {
     this.components.delete(entity.id)
     this.entities.delete(entity.id)
 
-    print(`removed entity (id: ${entity.id})`)
+    this.log(`removed entity (id: ${entity.id})`)
   }
 
   // managing components
@@ -73,7 +79,9 @@ export class Manager {
     entity.setFlag(component)
     this.setComponent(entity, component, component)
 
-    print(`added component (id: ${component._id}) to entity (id: ${entity.id})`)
+    this.log(
+      `added component (id: ${component._id}) to entity (id: ${entity.id})`
+    )
 
     this.check(entity)
   }
@@ -82,7 +90,7 @@ export class Manager {
     entity.clearFlag(component)
     this.setComponent(entity, component, null)
 
-    print(
+    this.log(
       `removed component (id: ${component._id}) from entity (id: ${entity.id})`
     )
 
@@ -108,7 +116,9 @@ export class Manager {
     this.entities.forEach(entity => system.check(entity))
     this.systems.push(system)
 
-    print(`added system (id: ${system._id})`)
+    system.setDebug(this.debug)
+
+    this.log(`added system (id: ${system._id})`)
   }
 
   addSystems = <T extends System>(systems: T[]) => {
@@ -120,7 +130,7 @@ export class Manager {
   removeSystem = (system: System) => {
     this.systems = this.systems.filter(s => s._id !== system._id)
 
-    print(`removed system (id: ${system._id})`)
+    this.log(`removed system (id: ${system._id})`)
   }
 
   check = (entity: Entity) => {

@@ -16,6 +16,7 @@ import { GameOverSystem } from './systems/GameOver'
 import { InputMovementSystem } from './systems/InputMovement'
 import { InputSystem } from './systems/InputSystem'
 import { JumpResetSystem } from './systems/JumpReset'
+import { MovementValidationSystem } from './systems/MovementValidation'
 import { ParallaxRenderSystem } from './systems/ParallaxRender'
 import { PlatformSystem } from './systems/Platform'
 import { ProjectileSystem } from './systems/ProjectileSystem'
@@ -31,6 +32,7 @@ const initializeBlueprints = (manager: Manager) => {
   const blueprints = [
     Factory.createGround,
     Factory.createSlope,
+    Factory.createPlatform(200, 300, 400, 20),
     // Factory.createMob(300, 300),
     Factory.createShieldMob(200, 300),
     // Factory.createIcicle(200, 200),
@@ -82,9 +84,9 @@ export class Game {
 
   constructor() {
     this.state = State.PLAYING
-    love.physics.setMeter(1)
-    this.world = love.physics.newWorld(0, 9.81, true)
-    love.physics.setMeter(256)
+    love.physics.setMeter(30)
+    this.world = love.physics.newWorld(0, 2000, true)
+    // love.physics.setMeter(256)
     this.world.setCallbacks(
       (a: Fixture, b: Fixture, contact: Contact) => {
         this.manager.beginContact(a, b, contact)
@@ -111,13 +113,14 @@ export class Game {
       new ContainerSystem(this.manager),
       new FallDeathSystem(this.manager),
       new InputMovementSystem(this.manager),
-      new WaypointMovementSystem(this.manager),
       new JumpResetSystem(this.manager),
+      new WaypointMovementSystem(this.manager),
       new PlatformSystem(this.manager),
       new ProjectileSystem(this.manager),
       new DashSystem(this.manager),
       new AggressionSystem(this.manager),
       new AttackSystem(this.manager),
+      new MovementValidationSystem(this.manager),
       new RespawnSystem(this.manager),
 
       // post-processors

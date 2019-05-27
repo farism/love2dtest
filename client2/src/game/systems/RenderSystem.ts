@@ -7,7 +7,7 @@ import {
   isCircleShape,
   isEdgeShape,
   isPolygonShape,
-} from '../utils/shape'
+} from '../utils/fixture'
 
 export class RenderSystem extends System {
   static _id = 'RenderSystem'

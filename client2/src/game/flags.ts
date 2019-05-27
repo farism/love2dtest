@@ -68,4 +68,5 @@ export enum SystemFlag {
   WaypointMovement = getFlag(34),
   Death = getFlag(35),
   ParallaxRender = getFlag(36),
+  MovementValidation = getFlag(37),
 }

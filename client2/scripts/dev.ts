@@ -15,7 +15,7 @@ const startLove = () => {
 }
 
 const startTstl = () => {
-  const tstlProcess = spawn('tstl', ['-p', 'tsconfig.json', '-w'], {})
+  const tstlProcess = spawn('tstl', ['-w', '-p', 'tsconfig.json'], {})
 
   tstlProcess.stdout.on('data', data => {
     console.log(String(data))
@@ -26,9 +26,9 @@ const startTstl = () => {
   })
 }
 
-const startAssetSyncing = () => {
+const startAssetSyncing = (pattern: string) => {
   chokidar
-    .watch('_assets/**', {})
+    .watch(pattern, {})
     .on('add', path => copy(path, `build/${path}`))
     .on('change', path => copy(path, `build/${path}`))
     .on('unlink', path => remove(`build/${path}`))
@@ -37,4 +37,7 @@ const startAssetSyncing = () => {
 
 startTstl()
 
-startAssetSyncing()
+startAssetSyncing('audio/**')
+startAssetSyncing('images/**')
+startAssetSyncing('levels/**')
+startAssetSyncing('lib/**')

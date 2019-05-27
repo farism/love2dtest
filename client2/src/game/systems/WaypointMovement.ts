@@ -1,7 +1,7 @@
 import { Aspect } from '../../ecs/Aspect'
 import { System } from '../../ecs/System'
 import { GameObject } from '../components/GameObject'
-import { Direction, Movement } from '../components/Movement'
+import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
 import { Point, Waypoint } from '../components/Waypoint'
 import { SystemFlag } from '../flags'
@@ -36,15 +36,6 @@ const advance = (waypoint: Waypoint) => {
     waypoint.current = 0
   } else {
     waypoint.current++
-  }
-}
-
-const getCurrent = (defaults: Point, waypoint: Waypoint) => {
-  const point = waypoint.path[waypoint.current]
-
-  return {
-    x: point.x || defaults.x,
-    y: point.y || defaults.y,
   }
 }
 
@@ -123,10 +114,12 @@ export class WaypointMovementSystem extends System {
       }
 
       if (newVelocityX < 0) {
-        movement.direction = Direction.Left
+        movement.direction = 'left'
       } else if (newVelocityX > 0) {
-        movement.direction = Direction.Right
+        movement.direction = 'right'
       }
+
+      // print(movement.direction)
 
       body.setLinearVelocity(newVelocityX, newVelocityY)
     })

@@ -4,7 +4,11 @@
     "outDir": "build",
     "rootDir": "src",
     "strict": true,
-    "types": ["lua-types/jit", "love-typescript-definitions"]
+    "types": [
+      "lua-types/jit",
+      "love-typescript-definitions",
+      "./src/@types/global"
+    ]
   },
   "include": ["./src/**/*.ts"],
   "tstl": {

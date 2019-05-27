@@ -38,9 +38,9 @@ export class Entity {
   }
 
   clearFlag = (component: Component) => {
-    // if (!this.has(component)) {
-    //   print(`entity ${this.id} does not have component ${component._flag}`)
-    // }
+    if (!this.has(component)) {
+      print(`entity ${this.id} does not have component ${component._flag}`)
+    }
 
     this.components = bit.band(this.components, bit.bnot(component._flag))
   }
@@ -58,10 +58,10 @@ export class Entity {
   }
 
   setFlag = (component: Component) => {
-    // if (this.has(component)) {
-    //   print(`entity ${this.id} already has component ${this.id}`)
-    //   return
-    // }
+    if (this.has(component)) {
+      print(`entity ${this.id} already has component ${this.id}`)
+      return
+    }
 
     this.components = bit.bxor(this.components, component._flag)
   }

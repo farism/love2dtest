@@ -1,9 +1,6 @@
 import { ComponentFlag } from '../flags'
 
-export enum Direction {
-  Left = 'left',
-  Right = 'right',
-}
+type Direction = 'left' | 'right'
 
 export class Movement {
   static _id = 'Movement'
@@ -12,7 +9,7 @@ export class Movement {
   static _flag = ComponentFlag.Movement
   _flag = ComponentFlag.Movement
 
-  direction: Direction = Direction.Right
+  direction: Direction = 'right'
   left: boolean = false
   right: boolean = false
   jump: boolean = false

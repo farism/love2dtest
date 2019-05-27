@@ -1,11 +1,11 @@
-import { System } from '../../ecs/System'
-import { SystemFlag } from '../flags'
 import { Aspect } from '../../ecs/Aspect'
+import { System } from '../../ecs/System'
 import { GameObject } from '../components/GameObject'
 import { Input } from '../components/Input'
 import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
 import { Respawn } from '../components/Respawn'
+import { SystemFlag } from '../flags'
 
 export class InputMovementSystem extends System {
   static _id = 'InputMovement'
@@ -42,7 +42,7 @@ export class InputMovementSystem extends System {
       }
 
       if (movement.jump && movement.jumpCount < 2) {
-        newVelocityY = -1000
+        newVelocityY = -900
         movement.jump = false
         movement.jumpCount++
       }
