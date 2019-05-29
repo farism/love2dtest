@@ -149,7 +149,7 @@ export const createShootMob = (initX: number = 0, initY: number = 0) => (
 
   mob.addAll([
     new Abilities({
-      [AbilityType.Shoot]: defineAbility(4, 0, 0.5),
+      [AbilityType.Shoot]: defineAbility(5, 0, 2),
     }),
     new Aggression(manager.world, mob, initX, initY, 600, 32, 2, 300, 30),
   ])

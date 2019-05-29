@@ -83,7 +83,11 @@ export class AttackSystem extends System {
 
         if (abilities) {
           for (let key in abilities.abilities) {
-            abilities.setActivated(key as AbilityType, true)
+            const ability = abilities.abilities[key as AbilityType]
+
+            if (ability) {
+              ability.activated = true
+            }
           }
         }
       } else {

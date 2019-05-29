@@ -23,36 +23,30 @@ export class Timer {
     this.onUpdate = onUpdate
 
     if (this.timeout === 0) {
-      this.complete()
+      this.completed = true
     }
-  }
-
-  private complete = () => {
-    this.completed = true
-    this.clear()
-    this.onComplete()
   }
 
   update = (dt: number) => {
     if (this.currentTime >= this.timeout) {
-      return false
+      return
     }
 
     this.currentTime += dt
     this.currentPercent = Math.min(1, this.currentTime / this.timeout)
 
+    // print(this.currentPercent)
+
     if (this.currentTime >= this.timeout) {
+      this.kill()
       this.onUpdate(this.timeout)
-      this.complete()
-      return true
+      this.onComplete()
     } else {
       this.onUpdate(this.currentTime)
     }
-
-    return false
   }
 
-  clear = () => {
+  kill = () => {
     clearTimeout(this.id)
   }
 }
@@ -78,16 +72,12 @@ export const setTimeout = (
   return createTimer(timeout, onComplete, onUpdate).id
 }
 
-export const clearTimeout = (timerId: number | undefined) => {
-  if (typeof timerId === 'number') {
-    _cache.delete(timerId)
-  }
+export const clearTimeout = (timerId: number) => {
+  _cache.delete(timerId)
 }
 
 export const update = (dt: number) => {
   _cache.forEach(timer => {
-    if (timer.update(dt)) {
-      clearTimeout(timer.id)
-    }
+    timer.update(dt)
   })
 }

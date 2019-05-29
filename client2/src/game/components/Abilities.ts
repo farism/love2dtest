@@ -34,14 +34,15 @@ export const defineAbility = (
   cooldown = 0,
   duration = 0,
   castspeed = 0,
-  enabled = true
+  enabled = true,
+  activated = false
 ): Ability => {
   return {
-    activated: false,
-    castspeed: castspeed,
-    cooldown: cooldown,
-    duration: duration,
-    enabled: enabled,
+    activated,
+    castspeed,
+    cooldown,
+    duration,
+    enabled,
     timers: {
       castspeed: emptyTimer,
       cooldown: emptyTimer,
@@ -66,8 +67,17 @@ export class Abilities {
   setActivated = (abilityType: AbilityType, activated: boolean) => {
     const ability = this.abilities[abilityType]
 
-    ability && (ability.activated = activated)
+    if (ability) {
+      ability.activated = activated
+    }
   }
 
-  reset = () => {}
+  reset = () => {
+    Object.values(this.abilities).forEach(ability => {
+      if (ability) {
+        // ability.timers.castspeed.kill()
+        // ability.activated = false
+      }
+    })
+  }
 }

@@ -8,6 +8,6 @@ love.conf = (t: Conf) => {
   t.window.width = WINDOW_WIDTH
   t.window.height = WINDOW_HEIGHT
   t.window.highdpi = true
-  t.window.borderless = true
+  // t.window.borderless = true
   t.console = true
 }

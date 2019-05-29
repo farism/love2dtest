@@ -7,11 +7,36 @@ import { GameObject } from '../components/GameObject'
 import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
 import { SystemFlag } from '../flags'
+import { hexToRGB, RGB } from '../utils/color'
 import * as Factory from '../utils/factory'
 import * as Timer from '../utils/timer'
 
 type AbilityList = {
   [key in AbilityType]: (entity: Entity, ability: Ability) => void
+}
+
+const progress = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  progress: number,
+  fill: RGB
+) => {
+  const color = love.graphics.getColor()
+
+  // print(progress)
+
+  love.graphics.rectangle('fill', x - width / 2, y - height / 2, width, height)
+  love.graphics.setColor(...fill)
+  love.graphics.rectangle(
+    'fill',
+    x + 1 - width / 2,
+    y + 1 - height / 2,
+    Math.max(0, progress * width - 2),
+    Math.max(0, height - 2)
+  )
+  love.graphics.setColor(color)
 }
 
 const abilityFunctions: AbilityList = {
@@ -120,30 +145,60 @@ export class AbilitiesSystem extends System {
         const key = _key as AbilityType
         const ability = abilities.abilities[key]
 
-        if (!ability) {
+        if (!ability || !ability.activated || !ability.enabled) {
           return
         }
 
-        if (ability.activated && ability.timers.cooldown.completed) {
-          ability.activated = false
+        if (ability.timers.castspeed) {
+          ability.timers.castspeed.kill()
+        }
 
-          ability.timers.cooldown = Timer.createTimer(
-            ability.cooldown,
-            () => {}
+        ability.enabled = false
+
+        ability.timers.castspeed = Timer.createTimer(ability.castspeed, () => {
+          ability.timers.cooldown = Timer.createTimer(ability.cooldown, () => {
+            ability.enabled = true
+            print('cooldown completed')
+          })
+
+          abilityFunctions[key](entity, ability)
+        })
+      }
+    })
+  }
+
+  draw = () => {
+    this.entities.forEach(entity => {
+      const abilities = entity.as(Abilities)
+      const position = entity.as(Position)
+
+      if (!abilities || !position) {
+        return
+      }
+
+      Object.values(abilities.abilities).forEach(ability => {
+        if (ability) {
+          progress(
+            position.x,
+            position.y - 32,
+            100,
+            10,
+            ability.timers.castspeed.currentPercent,
+            hexToRGB('#0f0')
           )
 
-          if (ability.timers.castspeed) {
-            Timer.clearTimeout(ability.timers.castspeed.id)
-          }
+          // print(ability.timers.castspeed.currentPercent)
 
-          ability.timers.castspeed = Timer.createTimer(
-            ability.castspeed,
-            () => {
-              abilityFunctions[key](entity, ability)
-            }
+          progress(
+            position.x,
+            position.y - 43,
+            100,
+            10,
+            ability.timers.cooldown.currentPercent,
+            hexToRGB('#f00')
           )
         }
-      }
+      })
     })
   }
 }
