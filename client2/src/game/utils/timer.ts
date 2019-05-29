@@ -21,14 +21,10 @@ export class Timer {
     this.timeout = timeout
     this.onComplete = onComplete
     this.onUpdate = onUpdate
-
-    if (this.timeout === 0) {
-      this.completed = true
-    }
   }
 
   update = (dt: number) => {
-    if (this.currentTime >= this.timeout) {
+    if (this.currentTime >= this.timeout && this.completed) {
       return
     }
 
@@ -39,6 +35,7 @@ export class Timer {
 
     if (this.currentTime >= this.timeout) {
       this.kill()
+      this.completed = true
       this.onUpdate(this.timeout)
       this.onComplete()
     } else {

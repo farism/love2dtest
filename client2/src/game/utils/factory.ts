@@ -45,13 +45,13 @@ export const createPlayer = (
   entity.addAll([
     // new Animation()
     new Abilities({
-      [AbilityType.Throw]: defineAbility(0.5, 0, 0),
+      [AbilityType.Throw]: defineAbility(0.5, 0, 0.2),
       [AbilityType.Dash]: defineAbility(1, 0.2, 0),
-      [AbilityType.Grapple]: defineAbility(1, 0, 0),
-      [AbilityType.Dig]: defineAbility(1, 1, 0),
+      // [AbilityType.Grapple]: defineAbility(1, 0, 0),
+      // [AbilityType.Dig]: defineAbility(1, 1, 0),
     }),
     new GameObject(entity, fixture),
-    new Health(),
+    new Health(10, 1),
     new Input(),
     new Movement(),
     new Player(),
@@ -126,7 +126,7 @@ export const createMob = (initX: number = 0, initY: number = 0) => (
   entity.userData.blueprint = Blueprint.Mob
   entity.addAll([
     new GameObject(entity, fixture),
-    new Health(1, 0),
+    new Health(5, 0),
     new Movement(),
     new Position(),
   ])

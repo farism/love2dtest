@@ -4,6 +4,7 @@ import { System } from '../../ecs/System'
 import { Abilities, Ability, AbilityType } from '../components/Abilities'
 import { Dash } from '../components/Dash'
 import { GameObject } from '../components/GameObject'
+import { Health } from '../components/Health'
 import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
 import { SystemFlag } from '../flags'
@@ -43,7 +44,6 @@ const abilityFunctions: AbilityList = {
   throw: (entity: Entity, ability: Ability) => {
     const movement = entity.as(Movement)
     const position = entity.as(Position)
-
     if (!movement || !position) {
       return
     }
@@ -141,7 +141,7 @@ export class AbilitiesSystem extends System {
         return
       }
 
-      for (let _key in abilities.abilities) {
+      Object.keys(abilities.abilities).forEach(_key => {
         const key = _key as AbilityType
         const ability = abilities.abilities[key]
 
@@ -163,7 +163,7 @@ export class AbilitiesSystem extends System {
 
           abilityFunctions[key](entity, ability)
         })
-      }
+      })
     })
   }
 
@@ -171,27 +171,30 @@ export class AbilitiesSystem extends System {
     this.entities.forEach(entity => {
       const abilities = entity.as(Abilities)
       const position = entity.as(Position)
+      const health = entity.as(Health)
 
       if (!abilities || !position) {
         return
       }
 
+      const offset = { x: 0, y: 0 }
+
       Object.values(abilities.abilities).forEach(ability => {
         if (ability) {
+          offset.y += 11
           progress(
             position.x,
-            position.y - 32,
+            position.y - offset.y,
             100,
             10,
             ability.timers.castspeed.currentPercent,
             hexToRGB('#0f0')
           )
 
-          // print(ability.timers.castspeed.currentPercent)
-
+          offset.y += 11
           progress(
             position.x,
-            position.y - 43,
+            position.y - offset.y,
             100,
             10,
             ability.timers.cooldown.currentPercent,
@@ -199,6 +202,18 @@ export class AbilitiesSystem extends System {
           )
         }
       })
+
+      const hpPercent = health ? health.hitpoints / 10 : 0
+
+      offset.y += 11
+      progress(
+        position.x,
+        position.y - offset.y,
+        100,
+        10,
+        hpPercent,
+        hexToRGB('#00f')
+      )
     })
   }
 }
