@@ -8,9 +8,13 @@ export class Attack {
   static _flag = ComponentFlag.Attack
   _flag = ComponentFlag.Attack
 
+  followDistance: number
+  followVelocity: number
   target: Entity
 
-  constructor(target: Entity) {
+  constructor(followDistance: number, followVelocity: number, target: Entity) {
+    this.followDistance = followDistance
+    this.followVelocity = followVelocity
     this.target = target
   }
 }

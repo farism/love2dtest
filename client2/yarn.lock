@@ -204,10 +204,10 @@ ts-node@8.1.0:
     source-map-support "^0.5.6"
     yn "^3.0.0"
 
-typescript-to-lua@0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/typescript-to-lua/-/typescript-to-lua-0.20.0.tgz#03bd342e5813eb33678bfd5f502240a7e9dcb36f"
-  integrity sha512-JivMFrRlV1/tpvanh+JJg9YBGx7z02yb0mDPLCNRvMPKXZefLT0HuCHPeKHtbcNsMH5Z2nQdtwlokZKdcXuxJA==
+typescript-to-lua@0.21.0:
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/typescript-to-lua/-/typescript-to-lua-0.21.0.tgz#7daa67efd27bc9657a5ac968f9cb46b04f702009"
+  integrity sha512-qCMNNp0OO2tVfxmznGs8xfarWoROXye9emC8Z3SkE8t7chp9/X+wpGa5jMW9FguU2knG7Z9wo+LsUl+qx8VTwQ==
   dependencies:
     source-map "^0.7.3"
     typescript "^3.4.5"

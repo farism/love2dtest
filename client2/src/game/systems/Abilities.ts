@@ -66,7 +66,30 @@ const abilityFunctions: AbilityList = {
 
   dig: (entity: Entity, ability: Ability) => {},
 
-  shoot: (entity: Entity, ability: Ability) => {},
+  shoot: (entity: Entity, ability: Ability) => {
+    const movement = entity.as(Movement)
+    const position = entity.as(Position)
+
+    if (!movement || !position) {
+      return
+    }
+
+    const x = position.x
+    const y = position.y
+    const projectile = Factory.createThrowingPick(entity, x, y)
+
+    const gameObject = projectile.as(GameObject)
+
+    if (gameObject) {
+      const body = gameObject.fixture.getBody()
+
+      if (movement.direction == 'left') {
+        body.setLinearVelocity(-1500, 0)
+      } else {
+        body.setLinearVelocity(1500, 0)
+      }
+    }
+  },
 
   slash: (entity: Entity, ability: Ability) => {},
 
@@ -97,7 +120,13 @@ export class AbilitiesSystem extends System {
         const key = _key as AbilityType
         const ability = abilities.abilities[key]
 
+        if (!ability) {
+          return
+        }
+
         if (ability.activated && ability.timers.cooldown.completed) {
+          ability.activated = false
+
           ability.timers.cooldown = Timer.createTimer(
             ability.cooldown,
             () => {}

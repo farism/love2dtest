@@ -1,16 +1,15 @@
 import { Aspect } from '../../ecs/Aspect'
 import { Entity } from '../../ecs/Entity'
 import { System } from '../../ecs/System'
-import { Abilities } from '../components/Abilities'
+import { Abilities, AbilityType } from '../components/Abilities'
 import { Attack } from '../components/Attack'
 import { GameObject } from '../components/GameObject'
 import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
-import { Point } from '../components/Waypoint'
 import { SystemFlag } from '../flags'
 import { sign } from '../utils/math'
 
-const targetDistance = (entity: Entity): Point => {
+const getDistanceToTarget = (entity: Entity): number => {
   const attack = entity.as(Attack)
   const pos1 = entity.as(Position)
 
@@ -18,35 +17,41 @@ const targetDistance = (entity: Entity): Point => {
     const pos2 = attack.target.as(Position)
 
     if (pos2) {
-      return {
-        x: pos2.x - pos1.x,
-        y: pos2.y - pos1.y,
-      }
+      return pos2.x - pos1.x
     }
   }
 
-  return {
-    x: 0,
-    y: 0,
-  }
+  return 0
 }
 
-const track = (maxDistance: number, velocity: number, entity: Entity) => {
+const follow = (
+  followDistance: number,
+  followVelocity: number,
+  entity: Entity
+) => {
   const gameObject = entity.as(GameObject)
+  const movement = entity.as(Movement)
 
-  if (!gameObject) {
-    return
+  if (!gameObject || !movement) {
+    return false
   }
 
+  const x = getDistanceToTarget(entity)
+
   const body = gameObject.fixture.getBody()
+
   const [velocityX, velocityY] = body.getLinearVelocity()
-  const delta = targetDistance(entity)
-  const x = delta.x || 0
 
-  let newVelocityX = sign(x) * velocity
+  let newVelocityX = sign(x) * followVelocity
 
-  if (Math.abs(x) < maxDistance) {
+  if (Math.abs(x) < followDistance) {
     newVelocityX = 0
+  }
+
+  if (newVelocityX < 0) {
+    movement.direction = 'left'
+  } else {
+    movement.direction = 'right'
   }
 
   body.setLinearVelocity(newVelocityX, velocityY)
@@ -64,7 +69,26 @@ export class AttackSystem extends System {
 
   update = (dt: number) => {
     this.entities.forEach(entity => {
-      track(50, 100, entity)
+      const attack = entity.as(Attack)
+      const gameObject = entity.as(GameObject)
+
+      if (!attack || !gameObject) {
+        return
+      }
+
+      const dx = getDistanceToTarget(entity)
+
+      if (Math.abs(dx) < attack.followDistance) {
+        const abilities = entity.as(Abilities)
+
+        if (abilities) {
+          for (let key in abilities.abilities) {
+            abilities.setActivated(key as AbilityType, true)
+          }
+        }
+      } else {
+        follow(attack.followDistance, attack.followVelocity, entity)
+      }
     })
   }
 

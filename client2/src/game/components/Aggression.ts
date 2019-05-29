@@ -11,11 +11,13 @@ export class Aggression {
   _flag = ComponentFlag.Aggression
 
   active: boolean
-  fixture: Fixture
-  width: number
-  height: number
   duration: number
   durationTimout: number
+  fixture: Fixture
+  followDistance: number
+  followVelocity: number
+  height: number
+  width: number
 
   constructor(
     world: World,
@@ -24,14 +26,17 @@ export class Aggression {
     y: number = 0,
     width: number = 0,
     height: number = 0,
-    duration: number = 0
+    duration: number = 0,
+    followDistance: number = 0,
+    followVelocity: number = 0
   ) {
     this.active = false
     this.width = width
     this.height = height
     this.duration = duration
     this.durationTimout = -1
-
+    this.followDistance = followDistance
+    this.followVelocity = followVelocity
     this.fixture = love.physics.newFixture(
       love.physics.newBody(world, x, y, 'kinematic'),
       love.physics.newRectangleShape(width, height),

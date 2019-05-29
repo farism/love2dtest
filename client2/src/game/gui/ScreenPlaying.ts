@@ -29,8 +29,13 @@ const arc = (x: number, y: number, percent: number) => {
 }
 
 const drawCooldowns = (abilities: Abilities) => {
-  const throwPct = abilities.abilities.throw.timers.cooldown.currentPercent
-  const dashPct = abilities.abilities.dash.timers.cooldown.currentPercent
+  const throwPct = abilities.abilities.throw
+    ? abilities.abilities.throw.timers.cooldown.currentPercent
+    : 0
+
+  const dashPct = abilities.abilities.dash
+    ? abilities.abilities.dash.timers.cooldown.currentPercent
+    : 0
 
   love.graphics.setColor(0, 0, 0, 0.5)
   arc(w - 24 - 10, h - 64 - 24 - 48, throwPct)

@@ -42,7 +42,7 @@ export class InputMovementSystem extends System {
       }
 
       if (movement.jump && movement.jumpCount < 2) {
-        newVelocityY = -900
+        newVelocityY = -1000
         movement.jump = false
         movement.jumpCount++
       }

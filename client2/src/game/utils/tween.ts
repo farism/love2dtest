@@ -76,7 +76,7 @@ export class Tween {
       this.target[key] = from + diff * t
     })
 
-    // this.onUpdate()
+    this.onUpdate(currentTime)
   }
 
   kill = () => {

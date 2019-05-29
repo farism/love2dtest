@@ -1,7 +1,7 @@
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../../conf'
 import { Entity } from '../../ecs/Entity'
 import { Manager } from '../../ecs/Manager'
-import { Abilities } from '../components/Abilities'
+import { Abilities, AbilityType, defineAbility } from '../components/Abilities'
 import { Aggression } from '../components/Aggression'
 import { Damage } from '../components/Damage'
 import { GameObject } from '../components/GameObject'
@@ -44,7 +44,12 @@ export const createPlayer = (
   entity.userData = { blueprint: Blueprint.Player }
   entity.addAll([
     // new Animation()
-    new Abilities(),
+    new Abilities({
+      [AbilityType.Throw]: defineAbility(0.5, 0, 0),
+      [AbilityType.Dash]: defineAbility(1, 0.2, 0),
+      [AbilityType.Grapple]: defineAbility(1, 0, 0),
+      [AbilityType.Dig]: defineAbility(1, 1, 0),
+    }),
     new GameObject(entity, fixture),
     new Health(),
     new Input(),
@@ -132,35 +137,42 @@ export const createMob = (initX: number = 0, initY: number = 0) => (
 export const createSlashMob = (initX: number = 0, initY: number = 0) => (
   manager: Manager
 ) => {
-  const body = love.physics.newBody(manager.world, initX, initY, 'dynamic')
-  const shape = love.physics.newRectangleShape(32, 32)
-  const fixture = love.physics.newFixture(body, shape, 1)
-  body.setFixedRotation(true)
-  fixture.setCategory(Category.Enemy)
+  const mob = createMob(initX, initY)(manager)
 
-  const entity = manager.createEntity()
-  entity.userData.blueprint = Blueprint.Mob
-  entity.addAll([
-    new GameObject(entity, fixture),
-    new Health(1, 0),
-    new Movement(),
-    new Position(),
+  return mob
+}
+
+export const createShootMob = (initX: number = 0, initY: number = 0) => (
+  manager: Manager
+) => {
+  const mob = createMob(initX, initY)(manager)
+
+  mob.addAll([
+    new Abilities({
+      [AbilityType.Shoot]: defineAbility(4, 0, 0.5),
+    }),
+    new Aggression(manager.world, mob, initX, initY, 600, 32, 2, 300, 30),
   ])
 
-  return entity
+  return mob
 }
 
 export const createShieldMob = (initX: number = 0, initY: number = 0) => (
   manager: Manager
 ) => {
   const mob = createMob(initX, initY)(manager)
-  const mobFixture = mob.as(GameObject).fixture
   const shield = createShield(initX, initY)(manager)
-  const shieldFixture = shield.as(GameObject).fixture
+
+  const mobGameObject = mob.as(GameObject)
+  const shieldGameObject = shield.as(GameObject)
+
+  if (!mobGameObject || !shieldGameObject) {
+    return
+  }
 
   love.physics.newWeldJoint(
-    mobFixture.getBody(),
-    shieldFixture.getBody(),
+    mobGameObject.fixture.getBody(),
+    shieldGameObject.fixture.getBody(),
     -24,
     0,
     0,
@@ -169,7 +181,7 @@ export const createShieldMob = (initX: number = 0, initY: number = 0) => (
   )
 
   mob.addAll([
-    new Aggression(manager.world, mob, initX, initY, 300, 64, 10),
+    new Aggression(manager.world, mob, initX, initY, 300, 64, 10, 50, 100),
     new Waypoint(true, 50, [
       { x: initX },
       { x: initX - 50 },

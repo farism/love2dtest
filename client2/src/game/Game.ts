@@ -34,7 +34,8 @@ const initializeBlueprints = (manager: Manager) => {
     Factory.createSlope,
     Factory.createPlatform(200, 300, 400, 20),
     // Factory.createMob(300, 300),
-    Factory.createShieldMob(200, 300),
+    // Factory.createShieldMob(200, 300),
+    Factory.createShootMob(350, 300),
     // Factory.createIcicle(200, 200),
     Factory.createParallax({
       layers: [
@@ -83,10 +84,7 @@ export class Game {
   world: World
 
   constructor() {
-    this.state = State.PLAYING
-    love.physics.setMeter(30)
-    this.world = love.physics.newWorld(0, 2000, true)
-    // love.physics.setMeter(256)
+    this.world = love.physics.newWorld(0, 9.81 * 30 * 8, true)
     this.world.setCallbacks(
       (a: Fixture, b: Fixture, contact: Contact) => {
         this.manager.beginContact(a, b, contact)
@@ -135,6 +133,8 @@ export class Game {
     this.gui = new Gui(this.player)
 
     initializeBlueprints(this.manager)
+
+    this.state = State.PLAYING
   }
 
   setState = (state: State) => {

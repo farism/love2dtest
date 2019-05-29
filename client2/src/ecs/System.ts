@@ -1,7 +1,6 @@
 import { Aspect } from './Aspect'
 import { Entity } from './Entity'
-
-type Manager = any
+import { Manager } from './Manager'
 
 export class System {
   static _id = 'System'

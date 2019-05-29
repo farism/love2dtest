@@ -28,7 +28,9 @@ export interface Ability {
   }
 }
 
-const defineAbility = (
+export type AbilitiesMap = { [key in AbilityType]?: Ability }
+
+export const defineAbility = (
   cooldown = 0,
   duration = 0,
   castspeed = 0,
@@ -55,44 +57,17 @@ export class Abilities {
   static _flag = ComponentFlag.Abilities
   _flag = ComponentFlag.Abilities
 
-  abilities: { [key in AbilityType]: Ability }
+  abilities: AbilitiesMap
 
-  constructor() {
-    this.abilities = {
-      // player
-      [AbilityType.Throw]: defineAbility(0.5, 0, 0),
-      [AbilityType.Dash]: defineAbility(1, 0.2, 0),
-      [AbilityType.Grapple]: defineAbility(1, 0, 0),
-      [AbilityType.Dig]: defineAbility(1, 1, 0),
+  constructor(abilities: AbilitiesMap) {
+    this.abilities = abilities
+  }
 
-      // npc
-      [AbilityType.Shoot]: defineAbility(3, 0, 1.5, false),
-      [AbilityType.Slash]: defineAbility(3, 0, 1, false),
-      [AbilityType.Stab]: defineAbility(3, 0, 1, false),
-      [AbilityType.Ambush]: defineAbility(3, 0, 1, false),
-      [AbilityType.Taser]: defineAbility(3, 0, 1, false),
-    }
+  setActivated = (abilityType: AbilityType, activated: boolean) => {
+    const ability = this.abilities[abilityType]
+
+    ability && (ability.activated = activated)
   }
 
   reset = () => {}
-
-  setCooldown = (ability: AbilityType, cooldown: number) => {
-    this.abilities[ability].cooldown = cooldown
-  }
-
-  setDuration = (ability: AbilityType, duration: number) => {
-    this.abilities[ability].duration = duration
-  }
-
-  setCastspeed = (ability: AbilityType, castspeed: number) => {
-    this.abilities[ability].castspeed = castspeed
-  }
-
-  setEnabled = (ability: AbilityType, enabled: boolean) => {
-    this.abilities[ability].enabled = enabled
-  }
-
-  setActivated = (ability: AbilityType, activated: boolean) => {
-    this.abilities[ability].activated = activated
-  }
 }

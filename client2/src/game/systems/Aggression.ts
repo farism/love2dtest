@@ -38,11 +38,13 @@ export class AggressionSystem extends System {
       const aggression = entity.as(Aggression)
       const gameObject = entity.as(GameObject)
 
-      if (aggression && gameObject) {
-        const position = gameObject.fixture.getBody().getPosition()
-
-        aggression.fixture.getBody().setPosition(...position)
+      if (!aggression || !gameObject) {
+        return
       }
+
+      const position = gameObject.fixture.getBody().getPosition()
+
+      aggression.fixture.getBody().setPosition(...position)
     })
   }
 
@@ -63,7 +65,9 @@ export class AggressionSystem extends System {
 
     aggression.clearDurationTimer()
 
-    attacker.add(new Attack(target))
+    attacker.add(
+      new Attack(aggression.followDistance, aggression.followVelocity, target)
+    )
 
     setWaypointActive(false, attacker)
   }
@@ -84,8 +88,6 @@ export class AggressionSystem extends System {
     }
 
     aggression.setDurationTimer(() => {
-      print('here')
-
       attacker.remove(Attack)
 
       setWaypointActive(true, attacker)

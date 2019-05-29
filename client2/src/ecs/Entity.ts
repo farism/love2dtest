@@ -1,7 +1,11 @@
-import { Component } from './component'
-import { Aliasable } from './types'
+import { Component } from './Component'
+import { Manager } from './Manager'
 
-type Manager = any
+export interface Aliasable<T> {
+  new (...args: any[]): T
+  _id: string
+  _flag: number
+}
 
 interface UserData {
   [k: string]: any
