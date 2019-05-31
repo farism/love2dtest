@@ -7,54 +7,17 @@ import { GameObject } from '../components/GameObject'
 import { Movement } from '../components/Movement'
 import { Position } from '../components/Position'
 import { SystemFlag } from '../flags'
-import { sign } from '../utils/math'
+import * as math from '../utils/math'
 
-const getDistanceToTarget = (entity: Entity): number => {
-  const attack = entity.as(Attack)
-  const pos1 = entity.as(Position)
+const getDistanceToTarget = (target: Entity, entity: Entity): number => {
+  const targetPosition = target.as(Position)
+  const entityPosition = entity.as(Position)
 
-  if (attack && pos1) {
-    const pos2 = attack.target.as(Position)
-
-    if (pos2) {
-      return pos2.x - pos1.x
-    }
+  if (targetPosition && entityPosition) {
+    return targetPosition.x - entityPosition.x
   }
 
   return 0
-}
-
-const follow = (
-  followDistance: number,
-  followVelocity: number,
-  entity: Entity
-) => {
-  const gameObject = entity.as(GameObject)
-  const movement = entity.as(Movement)
-
-  if (!gameObject || !movement) {
-    return false
-  }
-
-  const x = getDistanceToTarget(entity)
-
-  const body = gameObject.fixture.getBody()
-
-  const [velocityX, velocityY] = body.getLinearVelocity()
-
-  let newVelocityX = sign(x) * followVelocity
-
-  if (Math.abs(x) < followDistance) {
-    newVelocityX = 0
-  }
-
-  if (newVelocityX < 0) {
-    movement.direction = 'left'
-  } else {
-    movement.direction = 'right'
-  }
-
-  body.setLinearVelocity(newVelocityX, velocityY)
 }
 
 export class AttackSystem extends System {
@@ -71,14 +34,16 @@ export class AttackSystem extends System {
     this.entities.forEach(entity => {
       const attack = entity.as(Attack)
       const gameObject = entity.as(GameObject)
+      const movement = entity.as(Movement)
 
-      if (!attack || !gameObject) {
+      if (!attack || !gameObject || !movement) {
         return
       }
 
-      const dx = getDistanceToTarget(entity)
+      const dx = getDistanceToTarget(attack.target, entity)
 
       if (Math.abs(dx) < attack.followDistance) {
+        // in range, activate abilities
         const abilities = entity.as(Abilities)
 
         if (abilities) {
@@ -91,7 +56,25 @@ export class AttackSystem extends System {
           }
         }
       } else {
-        follow(attack.followDistance, attack.followVelocity, entity)
+        // not in range, follow target
+        const body = gameObject.fixture.getBody()
+
+        let [velocityX, velocityY] = body.getLinearVelocity()
+
+        velocityX = 0
+
+        if (Math.abs(dx) > attack.followDistance) {
+          velocityX = math.sign(dx) * attack.followVelocity
+        }
+
+        body.setLinearVelocity(velocityX, velocityY)
+      }
+
+      // make sure attacker is facing the target
+      if (dx < 0) {
+        movement.direction = 'left'
+      } else if (dx > 0) {
+        movement.direction = 'right'
       }
     })
   }

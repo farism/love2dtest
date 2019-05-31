@@ -30,24 +30,21 @@ export class InputMovementSystem extends System {
       }
 
       const body = gameObject.fixture.getBody()
-      const [velocityX, velocityY] = body.getLinearVelocity()
-
-      let newVelocityX = 0
-      let newVelocityY = velocityY
+      let [velocityX, velocityY] = body.getLinearVelocity()
 
       if (movement.left) {
-        newVelocityX = -300
+        velocityX = -300
       } else if (movement.right) {
-        newVelocityX = 300
+        velocityX = 300
       }
 
       if (movement.jump && movement.jumpCount < 2) {
-        newVelocityY = -1000
+        velocityY = -1000
         movement.jump = false
         movement.jumpCount++
       }
 
-      body.setLinearVelocity(newVelocityX, newVelocityY)
+      body.setLinearVelocity(velocityX, velocityY)
     })
   }
 }

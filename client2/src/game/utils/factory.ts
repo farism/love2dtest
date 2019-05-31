@@ -45,7 +45,7 @@ export const createPlayer = (
   entity.addAll([
     // new Animation()
     new Abilities({
-      [AbilityType.Throw]: defineAbility(0.5, 0, 0.2),
+      [AbilityType.Throw]: defineAbility(0.5, 0, 0.1),
       [AbilityType.Dash]: defineAbility(1, 0.2, 0),
       // [AbilityType.Grapple]: defineAbility(1, 0, 0),
       // [AbilityType.Dig]: defineAbility(1, 1, 0),
@@ -149,7 +149,7 @@ export const createShootMob = (initX: number = 0, initY: number = 0) => (
 
   mob.addAll([
     new Abilities({
-      [AbilityType.Shoot]: defineAbility(5, 0, 2),
+      [AbilityType.Shoot]: defineAbility(3, 0, 0.5),
     }),
     new Aggression(manager.world, mob, initX, initY, 600, 32, 2, 300, 30),
   ])

@@ -23,6 +23,7 @@ import { ProjectileSystem } from './systems/ProjectileSystem'
 import { RenderSystem } from './systems/RenderSystem'
 import { RespawnSystem } from './systems/Respawn'
 import { SyncBodyPositionSystem } from './systems/SyncBodyPosition'
+import { SyncDirectionSystem } from './systems/SyncDirection'
 import { WaypointMovementSystem } from './systems/WaypointMovement'
 import { Camera } from './utils/camera'
 import * as Factory from './utils/factory'
@@ -123,6 +124,7 @@ export class Game {
 
       // post-processors
       new SyncBodyPositionSystem(this.manager),
+      new SyncDirectionSystem(this.manager),
 
       // renderers
       new AnimateSpriteSystem(this.manager),

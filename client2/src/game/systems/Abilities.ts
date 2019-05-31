@@ -77,7 +77,7 @@ const abilityFunctions: AbilityList = {
     entity.add(new Dash())
     // entity.add(new Damage(1))
 
-    ability.timers.duration = Timer.createTimer(ability.duration, () => {
+    ability.timers.duration = Timer.setTimeout(ability.duration, () => {
       gameObject.fixture.setCategory(2)
 
       entity.remove(Dash)
@@ -150,15 +150,14 @@ export class AbilitiesSystem extends System {
         }
 
         if (ability.timers.castspeed) {
-          ability.timers.castspeed.kill()
+          Timer.clearTimeout(ability.timers.castspeed.id)
         }
 
         ability.enabled = false
 
-        ability.timers.castspeed = Timer.createTimer(ability.castspeed, () => {
-          ability.timers.cooldown = Timer.createTimer(ability.cooldown, () => {
+        ability.timers.castspeed = Timer.setTimeout(ability.castspeed, () => {
+          ability.timers.cooldown = Timer.setTimeout(ability.cooldown, () => {
             ability.enabled = true
-            print('cooldown completed')
           })
 
           abilityFunctions[key](entity, ability)

@@ -1,4 +1,5 @@
 import { ComponentFlag } from '../flags'
+import { Timer } from '../utils/timer'
 
 export class Platform {
   static _id = 'Platform'
@@ -7,17 +8,20 @@ export class Platform {
   static _flag = ComponentFlag.Platform
   _flag = ComponentFlag.Platform
 
-  duration: number
   initialX: number
   initialY: number
-  timer?: number
+  resetDuration: number
+  stableDuration: number
+  timer?: Timer
 
   constructor(
-    duration: number = 0,
+    stableDuration: number = 0,
+    resetDuration: number = 0,
     initialX: number = 0,
     initialY: number = 0
   ) {
-    this.duration = duration
+    this.stableDuration = stableDuration
+    this.resetDuration = resetDuration
     this.initialX = initialX
     this.initialY = initialY
   }

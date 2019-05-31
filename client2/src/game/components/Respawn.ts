@@ -1,4 +1,5 @@
 import { ComponentFlag } from '../flags'
+import { Timer } from '../utils/timer'
 
 export class Respawn {
   static _id = 'Respawn'
@@ -8,7 +9,7 @@ export class Respawn {
   _flag = ComponentFlag.Respawn
 
   duration: number
-  timer: number = 0
+  timer?: Timer
 
   constructor(duration: number = 0) {
     this.duration = duration

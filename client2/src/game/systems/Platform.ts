@@ -1,61 +1,13 @@
-import { System } from '../../ecs/System'
-import * as Timer from '../utils/timer'
-import { SystemFlag } from '../flags'
 import { NeverAspect } from '../../ecs/Aspect'
-import { hasComponent, check } from '../utils/collision'
-import { Player } from '../components/Player'
-import { Platform } from '../components/Platform'
-import { Entity } from '../../ecs/Entity'
-import { Position } from '../components/Position'
+import { System } from '../../ecs/System'
 import { GameObject } from '../components/GameObject'
+import { Platform } from '../components/Platform'
+import { Player } from '../components/Player'
+import { Position } from '../components/Position'
 import { Waypoint } from '../components/Waypoint'
-
-const reset = (
-  gameObject: GameObject,
-  platform: Platform,
-  waypoint: Waypoint
-) => () => {
-  const body = gameObject.fixture.getBody()
-  body.setType('static')
-  body.setPosition(platform.initialX, platform.initialY)
-  body.setGravityScale(0)
-  body.setType('kinematic')
-
-  waypoint.active = true
-
-  delete platform.timer
-}
-
-const startFalling = (entity: Entity) => () => {
-  const gameObject = entity.as(GameObject)
-  const platform = entity.as(Platform)
-  const waypoint = entity.as(Waypoint)
-
-  if (!gameObject || !platform || !waypoint) {
-    return
-  }
-
-  const body = gameObject.fixture.getBody()
-  body.setType('dynamic')
-  body.setGravityScale(1)
-
-  waypoint.active = false
-
-  platform.timer = Timer.setTimeout(3, reset(gameObject, platform, waypoint))
-}
-
-const fall = (entity: Entity) => {
-  const platform = entity.as(Platform)
-  const position = entity.as(Position)
-
-  if (!position || !platform) {
-    return
-  }
-
-  platform.initialX = position.x
-  platform.initialY = position.y
-  platform.timer = Timer.setTimeout(platform.duration, startFalling(entity))
-}
+import { SystemFlag } from '../flags'
+import { check, hasComponent } from '../utils/collision'
+import * as Timer from '../utils/timer'
 
 export class PlatformSystem extends System {
   static _id = 'Platform'
@@ -75,10 +27,36 @@ export class PlatformSystem extends System {
     }
 
     const entity = result[0]
+    const gameObject = entity.as(GameObject)
     const platform = entity.as(Platform)
+    const position = entity.as(Position)
+    const waypoint = entity.as(Waypoint)
 
-    if (platform && platform.duration > 0 && !platform.timer) {
-      fall(entity)
+    if (!gameObject || !position || !platform) {
+      return
+    }
+
+    const body = gameObject.fixture.getBody()
+
+    if (platform && platform.stableDuration > 0) {
+      Timer.setTimeout(platform.stableDuration, () => {
+        body.setGravityScale(1)
+        body.setType('dynamic')
+
+        if (waypoint) {
+          waypoint.active = false
+        }
+
+        Timer.setTimeout(platform.resetDuration, () => {
+          body.setGravityScale(0)
+          body.setPosition(platform.initialX, platform.initialY)
+          body.setType('kinematic')
+
+          if (waypoint) {
+            waypoint.active = true
+          }
+        })
+      })
     }
   }
 }

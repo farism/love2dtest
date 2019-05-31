@@ -1,7 +1,7 @@
 import { ComponentFlag } from '../flags'
-import { createTimer, Timer } from '../utils/timer'
+import * as Timer from '../utils/timer'
 
-const emptyTimer = createTimer(0, () => {})
+const emptyTimer = Timer.setTimeout(0, () => {})
 
 export enum AbilityType {
   Throw = 'throw',
@@ -22,9 +22,9 @@ export interface Ability {
   duration: number
   enabled: boolean
   timers: {
-    castspeed: Timer
-    cooldown: Timer
-    duration: Timer
+    castspeed: Timer.Timer
+    cooldown: Timer.Timer
+    duration: Timer.Timer
   }
 }
 
@@ -75,8 +75,8 @@ export class Abilities {
   reset = () => {
     Object.values(this.abilities).forEach(ability => {
       if (ability) {
-        // ability.timers.castspeed.kill()
-        // ability.activated = false
+        ability.timers.castspeed = emptyTimer
+        ability.activated = false
       }
     })
   }

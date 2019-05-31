@@ -65,10 +65,9 @@ export class WaypointMovementSystem extends System {
       entity.manager
       const waypoint = entity.as(Waypoint)
       const gameObject = entity.as(GameObject)
-      const movement = entity.as(Movement)
       const position = entity.as(Position)
 
-      if (!waypoint || !gameObject || !movement || !position) {
+      if (!waypoint || !gameObject || !position) {
         return
       }
 
@@ -85,21 +84,17 @@ export class WaypointMovementSystem extends System {
 
       const body = gameObject.fixture.getBody()
 
-      const [velocityX, velocityY] = body.getLinearVelocity()
+      let [velocityX, velocityY] = body.getLinearVelocity()
 
       const shouldAdvanceX = shouldAdvance('x', velocityX, position, point)
 
       const shouldAdvanceY = shouldAdvance('y', velocityY, position, point)
 
-      let newVelocityX = velocityX
-
-      let newVelocityY = velocityY
-
       if (shouldAdvanceX && shouldAdvanceY) {
         advance(waypoint)
       } else {
         if (!shouldAdvanceX) {
-          newVelocityX = getVelocityX(angle, waypoint.speed)
+          velocityX = getVelocityX(angle, waypoint.speed)
         }
 
         if (point.y === null) {
@@ -108,20 +103,12 @@ export class WaypointMovementSystem extends System {
           body.setGravityScale(0)
 
           if (!shouldAdvanceY) {
-            newVelocityY = getVelocityY(angle, waypoint.speed)
+            velocityY = getVelocityY(angle, waypoint.speed)
           }
         }
       }
 
-      if (newVelocityX < 0) {
-        movement.direction = 'left'
-      } else if (newVelocityX > 0) {
-        movement.direction = 'right'
-      }
-
-      // print(movement.direction)
-
-      body.setLinearVelocity(newVelocityX, newVelocityY)
+      body.setLinearVelocity(velocityX, velocityY)
     })
   }
 }

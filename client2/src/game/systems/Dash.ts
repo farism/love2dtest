@@ -39,12 +39,21 @@ export class DashSystem extends System {
   onAdd = (entity: Entity) => {
     const gameObject = entity.as(GameObject)
 
-    gameObject && gameObject.fixture.getBody().setGravityScale(0)
+    if (!gameObject) {
+      return
+    }
+
+    gameObject.fixture.getBody().setGravityScale(0)
   }
 
   onRemove = (entity: Entity) => {
     const gameObject = entity.as(GameObject)
 
-    gameObject && gameObject.fixture.getBody().setGravityScale(1)
+    if (!gameObject) {
+      return
+    }
+
+    gameObject.fixture.getBody().setGravityScale(1)
+    gameObject.fixture.getBody().setLinearVelocity(0, 0)
   }
 }

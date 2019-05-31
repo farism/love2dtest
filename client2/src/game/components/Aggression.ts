@@ -50,7 +50,7 @@ export class Aggression {
   setDurationTimer = (callback: () => void) => {
     Timer.clearTimeout(this.durationTimout)
 
-    this.durationTimout = Timer.setTimeout(this.duration, callback)
+    this.durationTimout = Timer.setTimeout(this.duration, callback).id
   }
 
   clearDurationTimer = () => {

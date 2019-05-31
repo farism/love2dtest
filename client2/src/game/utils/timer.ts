@@ -2,79 +2,64 @@ const _cache: Map<number, Timer> = new Map()
 
 let _nextTimerId = 0
 
-export class Timer {
-  id: number = 0
-  completed: boolean = false
-  currentTime: number = 0
-  currentPercent: number = 0
-  timeout: number = 0
-  onComplete: () => void
-  onUpdate: (currentTime: number) => void
+type TimerId = number
 
-  constructor(
-    id: number,
-    timeout: number,
-    onComplete: () => void,
-    onUpdate: (currentTime: number) => void = (currentTime: number) => {}
-  ) {
-    this.id = id
-    this.timeout = timeout
-    this.onComplete = onComplete
-    this.onUpdate = onUpdate
-  }
+type OnCompleteCallback = () => void
 
-  update = (dt: number) => {
-    if (this.currentTime >= this.timeout && this.completed) {
-      return
-    }
+type OnUpdateCallback = (currentTime: number) => void
 
-    this.currentTime += dt
-    this.currentPercent = Math.min(1, this.currentTime / this.timeout)
-
-    // print(this.currentPercent)
-
-    if (this.currentTime >= this.timeout) {
-      this.kill()
-      this.completed = true
-      this.onUpdate(this.timeout)
-      this.onComplete()
-    } else {
-      this.onUpdate(this.currentTime)
-    }
-  }
-
-  kill = () => {
-    clearTimeout(this.id)
-  }
+export interface Timer {
+  completed: boolean
+  currentTime: number
+  currentPercent: number
+  id: TimerId
+  onComplete: OnCompleteCallback
+  onUpdate: OnUpdateCallback
+  timeout: number
 }
 
-export const createTimer = (
+export const clearTimeout = (id: TimerId) => {
+  _cache.delete(id)
+}
+
+export const setTimeout = (
   timeout: number,
-  onComplete: () => void,
-  onUpdate?: (currentTime: number) => void
+  onComplete: OnCompleteCallback,
+  onUpdate: OnUpdateCallback = () => {}
 ): Timer => {
-  const id = _nextTimerId++
-  const timer = new Timer(id, timeout, onComplete, onUpdate)
+  const id = ++_nextTimerId
+
+  const timer = {
+    completed: false,
+    currentTime: 0,
+    currentPercent: 0,
+    id,
+    onComplete,
+    onUpdate,
+    timeout,
+  }
 
   _cache.set(id, timer)
 
   return timer
 }
 
-export const setTimeout = (
-  timeout: number,
-  onComplete: () => void,
-  onUpdate?: () => void
-): number => {
-  return createTimer(timeout, onComplete, onUpdate).id
-}
-
-export const clearTimeout = (timerId: number) => {
-  _cache.delete(timerId)
-}
-
 export const update = (dt: number) => {
   _cache.forEach(timer => {
-    timer.update(dt)
+    if (timer.currentTime >= timer.timeout && timer.completed) {
+      return
+    }
+
+    timer.currentTime += dt
+    timer.currentPercent = Math.min(1, timer.currentTime / timer.timeout)
+
+    if (timer.currentTime >= timer.timeout) {
+      clearTimeout(timer.id)
+      timer.completed = true
+      timer.onUpdate(timer.timeout)
+      timer.onComplete()
+    } else {
+      timer.onUpdate(timer.currentTime)
+    }
   })
 }

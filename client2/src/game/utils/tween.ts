@@ -1,5 +1,5 @@
 import { easing, TEasing } from './easing'
-import { clearTimeout, createTimer, Timer } from './timer'
+import { clearTimeout, setTimeout, Timer } from './timer'
 
 const noop = () => {}
 
@@ -54,12 +54,12 @@ export class Tween {
       this.target[key] = this.from[key]
     }
 
-    this.timer = createTimer(
+    this.timer = setTimeout(
       this.duration,
       () => {
         this.onComplete()
       },
-      currentTime => {
+      (currentTime: number) => {
         this.update(currentTime)
       }
     )
