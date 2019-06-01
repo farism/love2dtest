@@ -1,9 +1,9 @@
-import * as path from 'path'
+const path = require('path')
 
 const mode =
   process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
-export default {
+module.exports = {
   mode,
   entry: {
     main: ['./src/index.ts'],

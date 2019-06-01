@@ -3,9 +3,10 @@
     "declaration": true,
     "jsx": "react",
     "lib": ["es6", "dom"],
-    "module": "commonjs",
+    "module": "es6",
     "moduleResolution": "node",
+    "outDir": "dist/types",
     "strict": true,
-    "target": "es5"
+    "target": "es6"
   }
 }
