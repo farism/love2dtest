@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "scripts": {
+    "clean": "lerna run clean",
+    "dev": "lerna run dev",
+    "precommit": "lerna run lint-staged",
+    "pretty": "lerna run pretty",
+    "test": "lerna run test"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "husky": "2.3.0",
+    "lerna": "3.14.1"
+  }
+}
