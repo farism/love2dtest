@@ -1,22 +1,21 @@
 import * as React from 'react'
 import { radioButtonStyles } from './RadioButton.style'
 
-interface IRadioButtonProps extends React.HTMLAttributes<HTMLInputElement> {
+interface RadioButtonProps extends React.HTMLAttributes<HTMLInputElement> {
   children?: React.ReactNode
 }
 
-export const RadioButton = React.forwardRef<
-  HTMLInputElement,
-  IRadioButtonProps
->(function RadioButton({ children, ...props }: IRadioButtonProps, ref) {
-  const theme = {}
+export const RadioButton = React.forwardRef<HTMLInputElement, RadioButtonProps>(
+  function RadioButton({ children, ...props }: RadioButtonProps, ref) {
+    const theme = {}
 
-  const className = radioButtonStyles(theme)
+    const className = radioButtonStyles(theme)
 
-  return (
-    <label className={className.radio}>
-      <input {...props} ref={ref} type="radio" className={className.input} />
-      <span className={className.label}>{children}</span>
-    </label>
-  )
-})
+    return (
+      <label className={className.radio}>
+        <input {...props} ref={ref} type="radio" className={className.input} />
+        <span className={className.label}>{children}</span>
+      </label>
+    )
+  }
+)

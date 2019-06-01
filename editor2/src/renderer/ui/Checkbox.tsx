@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { checkboxStyles } from './Checkbox.style'
 
-interface ICheckboxProps extends React.HTMLAttributes<HTMLInputElement> {
+interface CheckboxProps extends React.HTMLAttributes<HTMLInputElement> {
   children?: React.ReactNode
 }
 
-export const Checkbox = React.forwardRef<HTMLInputElement, ICheckboxProps>(
-  function Checkbox({ children, ...props }: ICheckboxProps, ref) {
+export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  function Checkbox({ children, ...props }: CheckboxProps, ref) {
     const theme = {}
 
     const className = checkboxStyles(theme)

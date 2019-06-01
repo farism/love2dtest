@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { iconStyles } from './Icon.style'
 
-interface IIconProps extends React.HTMLAttributes<HTMLSpanElement> {
+interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   children?: React.ReactNode
 }
 
-export const Icon = React.forwardRef<HTMLSpanElement, IIconProps>(function Icon(
-  { children, ...props }: IIconProps,
+export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(
+  { children, ...props }: IconProps,
   ref
 ) {
   const theme = {}

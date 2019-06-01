@@ -18,7 +18,7 @@ const setMenu = () => {
 
 const createWindow = () => {
   win = new BrowserWindow({
-    backgroundColor: '#333',
+    backgroundColor: '#fff',
     width: 1280,
     height: 768,
     title: `client${new Date().getTime()}`,

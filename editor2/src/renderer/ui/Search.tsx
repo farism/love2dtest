@@ -1,21 +1,17 @@
 import * as React from 'react'
 import { searchStyles } from './Search.style'
 
-interface ISearchProps extends React.HTMLAttributes<HTMLInputElement> {
-  children?: React.ReactNode
-}
+interface SearchProps extends React.HTMLAttributes<HTMLInputElement> {}
 
-export const Search = React.forwardRef<HTMLInputElement, ISearchProps>(
-  function Search({ children, ...props }: ISearchProps, ref) {
+export const Search = React.forwardRef<HTMLInputElement, SearchProps>(
+  function Search({ ...props }: SearchProps, ref) {
     const theme = {}
 
     const className = searchStyles(theme)
 
     return (
       <div className={className.search}>
-        <input {...props} ref={ref}>
-          <span>{children}</span>
-        </input>
+        <input {...props} ref={ref} />
       </div>
     )
   }

@@ -1,20 +1,14 @@
 import * as React from 'react'
 import { textareaStyles } from './TextArea.style'
 
-interface ITextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
-  children?: React.ReactNode
-}
+interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {}
 
-export const TextArea = React.forwardRef<HTMLTextAreaElement, ITextAreaProps>(
-  function TextArea({ children, ...props }: ITextAreaProps, ref) {
+export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  function TextArea({ ...props }: TextAreaProps, ref) {
     const theme = {}
 
     const className = textareaStyles(theme)
 
-    return (
-      <textarea {...props} ref={ref} className={className.textarea}>
-        <span>{children}</span>
-      </textarea>
-    )
+    return <textarea {...props} ref={ref} className={className.textarea} />
   }
 )
