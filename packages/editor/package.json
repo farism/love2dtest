@@ -7,6 +7,7 @@
     "build": "yarn clean && NODE_ENV=production ts-node scripts/build.ts",
     "clean": "rimraf build",
     "dev": "NODE_ENV=development ts-node scripts/dev.ts",
+    "lint-staged": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Faris Mustafa <farismmk@gmail.com>",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
+    "lint-staged": "8.1.7",
     "@babel/preset-env": "7.4.5",
     "@babel/register": "7.4.4",
     "@types/react": "16.8.19",

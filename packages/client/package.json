@@ -6,6 +6,7 @@
     "build": "ts-node scripts/build.ts",
     "dev": "ts-node scripts/dev.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint-staged": "lint-staged",
     "tstl": "tstl -w -p tsconfig.json"
   },
   "author": "",
@@ -13,6 +14,7 @@
   "devDependencies": {
     "@types/fs-extra": "7.0.0",
     "@types/node": "12.0.2",
+    "lint-staged": "8.1.7",
     "chokidar": "3.0.0",
     "fs-extra": "8.0.1",
     "love-typescript-definitions": "0.10.0",

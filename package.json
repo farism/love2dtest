@@ -8,6 +8,7 @@
     "test": "lerna run test"
   },
   "workspaces": [
+    "docs/*",
     "packages/*"
   ],
   "devDependencies": {

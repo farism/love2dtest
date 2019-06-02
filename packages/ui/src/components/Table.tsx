@@ -11,6 +11,10 @@ export const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     const className = tableStyles(theme)
 
-    return <table {...props} ref={ref} className={className.table} />
+    return (
+      <table {...props} ref={ref} className={className.table}>
+        {children}
+      </table>
+    )
   }
 )

@@ -1,0 +1,39 @@
+{
+  "name": "@icepicker/docs-ui",
+  "private": true,
+  "description": "",
+  "version": "0.1.0",
+  "author": "Faris Mustafa <faris.mustafa@gmail.com>",
+  "dependencies": {
+    "@mdx-js/mdx": "1.0.20",
+    "@mdx-js/react": "1.0.20",
+    "gatsby": "2.8.2",
+    "gatsby-image": "2.1.2",
+    "gatsby-plugin-manifest": "2.1.1",
+    "gatsby-plugin-offline": "2.1.1",
+    "gatsby-plugin-react-helmet": "3.0.12",
+    "gatsby-plugin-sharp": "2.1.3",
+    "gatsby-source-filesystem": "2.0.38",
+    "gatsby-transformer-sharp": "2.1.21",
+    "prism-react-renderer": "^0.1.6",
+    "prop-types": "15.7.2",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-helmet": "5.2.1",
+    "react-live": "^2.1.2"
+  },
+  "devDependencies": {
+    "prettier": "1.17.1"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "dev": "gatsby develop",
+    "format": "prettier --write src/**/*.{js,jsx}",
+    "serve": "gatsby serve",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+  }
+}
