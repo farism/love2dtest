@@ -1,37 +1,47 @@
-import Highlight, { defaultProps, Language } from 'prism-react-renderer'
-import React from 'react'
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live'
+import { Language } from "prism-react-renderer";
+import * as React from "react";
+import { CodeLive } from "./CodeLive";
+import { CodeStatic } from "./CodeStatic";
 
-export function Code(scope: any) {
-  return function Code({ children, className, live }) {
-    const language = className.replace(/language-/, '') as Language
+interface Scope {
+  [k: string]: any;
+}
 
-    if (live === 'true') {
+interface CodeProps {
+  children: string;
+  className: string;
+  inline?: string;
+  live?: string;
+  vertical?: string;
+}
+
+export function Code(scope: Scope) {
+  return function Code({
+    children,
+    className,
+    inline,
+    live,
+    vertical
+  }: CodeProps) {
+    const language = className.replace(/language-/, "");
+
+    const props = {
+      language: language as Language,
+      scope
+    };
+
+    if (typeof live !== "undefined") {
       return (
-        <div style={{ marginTop: '40px' }}>
-          <LiveProvider code={children} scope={scope}>
-            <LivePreview />
-            <LiveEditor />
-            <LiveError />
-          </LiveProvider>
-        </div>
-      )
+        <CodeLive
+          {...props}
+          noInline={typeof inline === "undefined"}
+          vertical={typeof vertical !== "undefined"}
+        >
+          {children}
+        </CodeLive>
+      );
     }
 
-    return (
-      <Highlight {...defaultProps} code={children} language={language}>
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className} style={{ ...style, padding: '20px' }}>
-            {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
-                {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
-                ))}
-              </div>
-            ))}
-          </pre>
-        )}
-      </Highlight>
-    )
-  }
+    return <CodeStatic {...props}>{children}</CodeStatic>;
+  };
 }

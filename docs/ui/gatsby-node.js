@@ -13,7 +13,7 @@ exports.createPages = ({ graphql, actions }) => {
                 node {
                   id
                   frontmatter {
-                    slug
+                    link
                   }
                 }
               }
@@ -28,8 +28,8 @@ exports.createPages = ({ graphql, actions }) => {
 
         result.data.allMdx.edges.forEach(({ node }) => {
           createPage({
-            path: node.frontmatter.slug,
-            component: path.resolve(`./src/components/Layout.tsx`),
+            path: node.frontmatter.link,
+            component: path.resolve(`./src/components/Page.tsx`),
             context: { id: node.id },
           })
         })

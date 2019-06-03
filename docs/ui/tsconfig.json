@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "importHelpers": true,
     "jsx": "react",
-    "lib": ["es6", "dom"],
+    "lib": ["es6"],
     "module": "es6",
     "moduleResolution": "node",
-    "outDir": "dist",
-    "skipLibCheck": true,
     "strict": true,
     "target": "es6"
   }

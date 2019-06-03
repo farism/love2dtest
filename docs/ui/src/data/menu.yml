@@ -1,0 +1,65 @@
+- title: Home
+  link: /
+  items:
+    - title: Introduction
+      link: /introduction/
+      items:
+        - title: Objectives
+          link: /introduction/objectives/
+    - title: Components Overview
+      link: /components/
+      items:
+        - title: Anchor
+          link: /components/anchor/
+        - title: Avatar
+          link: /components/avatar/
+        - title: Badge
+          link: /components/badge/
+        - title: Banner
+          link: /components/banner/
+        - title: Box
+          link: /components/box/
+        - title: Button
+          link: /components/button/
+        - title: Checkbox
+          link: /components/checkbox/
+        - title: Dialog
+          link: /components/dialog/
+        - title: Icon
+          link: /components/icon/
+        - title: Input
+          link: /components/input/
+        - title: Link
+          link: /components/link/
+        - title: Modal
+          link: /components/modal/
+        - title: Panel
+          link: /components/panel/
+        - title: Popover
+          link: /components/popover/
+        - title: Progress
+          link: /components/progress/
+        - title: RadioButton
+          link: /components/radiobutton/
+        - title: RichText
+          link: /components/rich-text/
+        - title: Search
+          link: /components/search/
+        - title: Slider
+          link: /components/slider
+        - title: Spinner
+          link: /components/spinner/
+        - title: Switch
+          link: /components/switch/
+        - title: Table
+          link: /components/table/
+        - title: Tabs
+          link: /components/tabs/
+        - title: TextArea
+          link: /components/textarea/
+        - title: Toast
+          link: /components/toast/
+        - title: Token
+          link: /components/token/
+        - title: Tooltip
+          link: /components/tooltip/
