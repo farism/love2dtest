@@ -1,11 +1,11 @@
-import { graphql } from "gatsby";
-import * as React from "react";
-import { classes } from "typestyle";
-import { Content } from "./Content";
-import { SEO } from "./SEO";
-import { Sidebar } from "./Sidebar";
-import { page, pageContent, pageSidebar } from "./styles";
-import "./styles.css";
+import { graphql } from 'gatsby'
+import * as React from 'react'
+import { classes } from 'typestyle'
+import { Content } from './Content'
+import { SEO } from './SEO'
+import { Sidebar } from './Sidebar'
+import { page, pageContent, pageSidebar } from './styles'
+import './styles.css'
 
 export function Page({ data }: any) {
   return (
@@ -18,7 +18,7 @@ export function Page({ data }: any) {
         <Content>{data.mdx.code.body}</Content>
       </div>
     </div>
-  );
+  )
 }
 
 export const pageQuery = graphql`
@@ -34,6 +34,6 @@ export const pageQuery = graphql`
       }
     }
   }
-`;
+`
 
-export default Page;
+export default Page

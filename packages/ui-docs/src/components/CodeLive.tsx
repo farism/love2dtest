@@ -1,18 +1,14 @@
-import { Language } from "prism-react-renderer";
-import * as React from "react";
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
+import * as React from 'react'
+import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live'
+import { CodeStaticProps } from './CodeStatic'
 
 interface Scope {
-  [k: string]: any;
+  [k: string]: any
 }
 
-interface CodeLiveProps {
-  children: string;
-  className?: string;
-  language: Language;
-  noInline: boolean;
-  scope?: Scope;
-  vertical: boolean;
+interface CodeLiveProps extends CodeStaticProps {
+  noInline: boolean
+  vertical: boolean
 }
 
 export function CodeLive({
@@ -20,7 +16,7 @@ export function CodeLive({
   noInline,
   language,
   scope = {},
-  vertical
+  vertical,
 }: CodeLiveProps) {
   return (
     <LiveProvider
@@ -33,5 +29,5 @@ export function CodeLive({
       <LivePreview />
       <LiveError />
     </LiveProvider>
-  );
+  )
 }
