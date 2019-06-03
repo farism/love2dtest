@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
+    "build": "lerna run build",
     "clean": "lerna run clean",
-    "dev": "lerna run dev",
     "pretty": "lerna run pretty",
     "test": "lerna run test"
   },
