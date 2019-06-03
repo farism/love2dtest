@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function tabsStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    tabs: selector,
-  }
-}
+export const tabs = style({});

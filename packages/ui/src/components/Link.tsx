@@ -1,5 +1,5 @@
 import * as React from "react";
-import { linkStyles } from "./Link.style";
+import * as styles from "./Link.style";
 
 interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   children?: React.ReactNode;
@@ -7,12 +7,8 @@ interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
 
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   function Link({ children, ...props }: LinkProps, ref) {
-    const theme = {};
-
-    const className = linkStyles(theme);
-
     return (
-      <a {...props} ref={ref} className={className.link}>
+      <a {...props} ref={ref} className={styles.link}>
         {children}foo
       </a>
     );

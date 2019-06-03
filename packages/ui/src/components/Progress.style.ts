@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function progressStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    progress: selector,
-  }
-}
+export const progress = style({});

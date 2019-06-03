@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function popoverStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    popover: selector,
-  }
-}
+export const popover = style({});

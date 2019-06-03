@@ -1,18 +1,16 @@
-import * as React from 'react'
-import { avatarStyles } from './Avatar.style'
+import * as React from "react";
+import * as styles from "./Avatar.style";
 
 interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
   function Avatar({ children, ...props }: AvatarProps, ref) {
-    const className = avatarStyles({})
-
     return (
-      <div {...props} ref={ref} className={className.avatar}>
+      <div {...props} ref={ref} className={styles.avatar}>
         {children}
       </div>
-    )
+    );
   }
-)
+);

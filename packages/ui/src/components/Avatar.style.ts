@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function avatarStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    avatar: selector,
-  }
-}
+export const avatar = style({});

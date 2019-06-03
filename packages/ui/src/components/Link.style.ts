@@ -1,13 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function linkStyles(theme: Theme) {
-  const selector = Typestyle.style({
-    color: 'blue',
-  })
-
-  return {
-    link: selector,
-  }
-}
+export const link = style({});

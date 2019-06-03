@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function textareaStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    textarea: selector,
-  }
-}
+export const textarea = style({});

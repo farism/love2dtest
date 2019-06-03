@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function anchorStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    anchor: selector,
-  }
-}
+export const anchor = style({});

@@ -1,18 +1,16 @@
-import * as React from 'react'
-import { badgeStyles } from './Badge.style'
+import * as React from "react";
+import * as styles from "./Badge.style";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   function Badge({ children, ...props }: BadgeProps, ref) {
-    const className = badgeStyles({})
-
     return (
-      <div {...props} ref={ref} className={className.badge}>
+      <div {...props} ref={ref} className={styles.badge}>
         {children}
       </div>
-    )
+    );
   }
-)
+);

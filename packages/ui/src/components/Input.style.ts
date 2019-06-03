@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function inputStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    input: selector,
-  }
-}
+export const input = style({});

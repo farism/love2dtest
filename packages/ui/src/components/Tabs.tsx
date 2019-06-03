@@ -1,19 +1,17 @@
-import * as React from 'react'
-import { tabsStyles } from './Tabs.style'
+import * as React from "react";
+import * as styles from "./Tabs.style";
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   { children, ...props }: TabsProps,
   ref
 ) {
-  const className = tabsStyles({})
-
   return (
-    <div {...props} ref={ref} className={className.tabs}>
+    <div {...props} ref={ref} className={styles.tabs}>
       {children}
     </div>
-  )
-})
+  );
+});

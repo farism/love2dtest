@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function tokenStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    token: selector,
-  }
-}
+export const token = style({});

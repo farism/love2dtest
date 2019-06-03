@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function spinnerStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    spinner: selector,
-  }
-}
+export const spinner = style({});

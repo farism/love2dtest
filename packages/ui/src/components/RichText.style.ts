@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function richTextStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    richText: selector,
-  }
-}
+export const richText = style({});

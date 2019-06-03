@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function modalStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    modal: selector,
-  }
-}
+export const modal = style({});

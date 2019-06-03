@@ -1,21 +1,17 @@
-import * as React from 'react'
-import { iconStyles } from './Icon.style'
+import * as React from "react";
+import * as styles from "./Icon.style";
 
 interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(function Icon(
   { children, ...props }: IconProps,
   ref
 ) {
-  const theme = {}
-
-  const className = iconStyles(theme)
-
   return (
-    <span {...props} ref={ref} className={className.icon}>
+    <span {...props} ref={ref} className={styles.icon}>
       {children}
     </span>
-  )
-})
+  );
+});

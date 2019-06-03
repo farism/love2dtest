@@ -1,11 +1,3 @@
-import * as Typestyle from 'typestyle'
+import { style } from "typestyle";
 
-interface Theme {}
-
-export function boxStyles(theme: Theme) {
-  const selector = Typestyle.style({})
-
-  return {
-    box: selector,
-  }
-}
+export const box = style({});

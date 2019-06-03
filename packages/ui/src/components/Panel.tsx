@@ -1,20 +1,16 @@
-import * as React from 'react'
-import { panelStyles } from './Panel.style'
+import * as React from "react";
+import * as styles from "./Panel.style";
 
 interface PanelProps extends React.HTMLAttributes<HTMLDivElement> {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
 
 export const Panel = React.forwardRef<HTMLDivElement, PanelProps>(
   function Panel({ children, ...props }: PanelProps, ref) {
-    const theme = {}
-
-    const className = panelStyles(theme)
-
     return (
-      <div {...props} ref={ref} className={className.panel}>
+      <div {...props} ref={ref} className={styles.panel}>
         {children}
       </div>
-    )
+    );
   }
-)
+);
