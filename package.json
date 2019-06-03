@@ -8,15 +8,13 @@
     "test": "lerna run test"
   },
   "workspaces": [
-    "docs/*",
     "packages/*"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "@commitlint/config-lerna-scopes": "^8.0.0",
     "husky": "2.3.0",
     "lerna": "3.14.1"
-  },
-  "resolutions": {
-    "@types/react": "16.8.19",
-    "@types/react-dom": "16.8.4"
   }
 }
