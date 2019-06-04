@@ -3,3 +3,4 @@ lua_modules
 node_modules
 .save
 android
+*.log
