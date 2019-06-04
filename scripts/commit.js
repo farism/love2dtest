@@ -1,6 +1,6 @@
 const { execSync } = require('child_process')
 
-console.log(process.process.npm_config_argv)
+console.log(process.env.npm_config_argv)
 
 execSync('exec < /dev/tty && git cz --hook --colors', { stdio: 'inherit' })
 
