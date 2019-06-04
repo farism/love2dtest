@@ -2327,10 +2327,12 @@ elm-webpack-loader@5.0.0:
     node-elm-compiler "^5.0.0"
     yargs "^6.5.0"
 
-elm@0.19.0-no-deps:
-  version "0.19.0-no-deps"
-  resolved "https://registry.yarnpkg.com/elm/-/elm-0.19.0-no-deps.tgz#4754b658c424771823ee91bd5bf6387647954add"
-  integrity sha512-tOlSeo5Bt0Rkrt/aBjL+/a+TmAFdfeqjrOlThrhgKOoGeHt1hU7/hJ+HFMlHiODf09AQh7Anl64o7V6thzmRHw==
+elm@0.19.0, elm@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/elm/-/elm-0.19.0.tgz#c6ad86afea9e971424ebe75e36c9d03412a787fa"
+  integrity sha512-CYgewByRByMOilPk5/yrW1mtflaS/vp+026gwb0EEX6aqUl+TGYoTSTW+uf44XB/FOKgUauV3TDH3Bl0IHZ8Ag==
+  dependencies:
+    binwrap "0.1.4"
 
 elm@^0.18.0:
   version "0.18.0"
@@ -2341,12 +2343,6 @@ elm@^0.18.0:
     promise "7.1.1"
     request "2.74.0"
     tar "2.2.1"
-
-elm@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/elm/-/elm-0.19.0.tgz#c6ad86afea9e971424ebe75e36c9d03412a787fa"
-  dependencies:
-    binwrap "0.1.4"
 
 emojis-list@^2.0.0:
   version "2.1.0"
