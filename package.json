@@ -14,7 +14,7 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lerna run lint-staged",
-      "prepare-commit-msg": "node scripts/commit.js"
+      "prepare-commit-msg": "node scripts/commit2.js"
     }
   },
   "commitlint": {

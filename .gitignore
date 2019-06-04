@@ -5,3 +5,4 @@ node_modules
 android
 *.log
 scripts/commit.js
+scripts/commit2.js
