@@ -18,6 +18,7 @@
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
   },
   "dependencies": {
+    "@icepicker/ui": "0.1.0",
     "@mdx-js/mdx": "1.0.20",
     "@mdx-js/react": "1.0.20",
     "@probablyup/react-live": "1.11.1",
