@@ -721,7 +721,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/node-ipc@^9.1.1":
+"@types/node-ipc@9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@types/node-ipc/-/node-ipc-9.1.1.tgz#81eb93874b5c7a8e0bd0ca3265a6661bd2b3a52b"
   integrity sha512-0NoDCXvNJagYdg0SnXw7aDuxJyzy1cQevRVlCdTM4q0xAQ7Tg5VbQ9jpreKGOaLyql8r9T60hy/wA/QDIk1+Lg==
@@ -750,7 +750,7 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/webpack@^4.4.31":
+"@types/webpack@4.4.31":
   version "4.4.31"
   resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.4.31.tgz#f59b9d8210cf4d2fd254fe6d1f5ba86e557867f5"
   integrity sha512-WNALmv/wxy2+OoF7A5GD8BVotXnkuMHlojVWKj/neFHU3Ut2Azbu1A7Yi2Vr6eX3z+31XgR/dJ5NpX4pQZ7ieQ==
@@ -2290,7 +2290,7 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-elm-typescript-interop@^0.0.15:
+elm-typescript-interop@0.0.15:
   version "0.0.15"
   resolved "https://registry.yarnpkg.com/elm-typescript-interop/-/elm-typescript-interop-0.0.15.tgz#d0c64bc5aab10f471cc4967d0a8dc05915189c70"
   integrity sha512-tCcpLiKt7X4GbOWZdtkbLp2kDc/ivt0FzQoDVOC9Delo081OtFmh50oVe1XQC9WV/WtK2rtJX/wkatsxz7cmUg==
@@ -5336,7 +5336,7 @@ rimraf@2, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2:
   dependencies:
     glob "^7.0.5"
 
-rimraf@^2.6.3:
+rimraf@2.6.3, rimraf@^2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.3.tgz#b2d104fe0d8fb27cf9e0a1cda8262dd3833c6cab"
   integrity sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
@@ -6445,7 +6445,7 @@ webpack-dev-server@3.3.1:
     webpack-log "^2.0.0"
     yargs "12.0.5"
 
-webpack-format-messages@^2.0.5:
+webpack-format-messages@2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/webpack-format-messages/-/webpack-format-messages-2.0.5.tgz#399d0e3b774892ec03a51f09ff5e00e8a25aef18"
   integrity sha512-URo5MWlxsYNFjyKmK5RUjrmr45JBMs/juWPIxOkDU2bcTwCblyn0zTUw+ZWASBJCnJBgWZ4SOeGWFfCBYLarpA==
