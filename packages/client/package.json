@@ -20,7 +20,7 @@
     "lint-staged": "8.1.7",
     "love-typescript-definitions": "0.11.1",
     "prettier": "1.17.1",
-    "ts-node": "8.1.0",
+    "ts-node": "8.2.0",
     "typescript": "3.5.1",
     "typescript-to-lua": "0.21.0"
   }
