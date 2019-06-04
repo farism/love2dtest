@@ -1,15 +1,11 @@
 const { execSync } = require('child_process')
 
-console.log(process.env.npm_config_argv)
+const argv = process.env.npm_config_argv || {}
+const original = argv.original || []
 
-execSync('exec < /dev/tty && git cz --hook --colors', { stdio: 'inherit' })
-
-// child_process.execSync('npm init', {stdio: 'inherit'});
-
-// exec('exec < /dev/tty && git cz --hook --colors', (code, stdout, stderr) => {
-//   console.log('Exit code:', code)
-//   console.log('Program output:', stdout)
-//   console.log('Program stderr:', stderr)
-
-//   // process.stdout.write(stdout)
-// })
+if (original[0] === 'lerna' && original[1] === 'publish') {
+} else {
+  execSync('exec < /dev/tty && git cz --hook --colors', {
+    stdio: 'inherit',
+  })
+}
