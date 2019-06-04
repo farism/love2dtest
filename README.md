@@ -8,7 +8,7 @@ You play as a burned secret agent who was stranded at the top of a mountain ridg
 
 ### Maps
 
-Maps introduce different monsters and environmental hazards
+Maps introduce different monsters and environmental hazards.
 
 ###
 
