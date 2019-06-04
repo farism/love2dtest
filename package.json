@@ -13,8 +13,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lerna run lint-staged",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook"
+      "pre-commit": "lerna run lint-staged && node scripts/commit"
     }
   },
   "commitlint": {
@@ -32,7 +31,8 @@
     "cz-conventional-changelog": "2.1.0",
     "cz-lerna-changelog": "2.0.2",
     "husky": "2.3.0",
-    "lerna": "3.14.1"
+    "lerna": "3.14.1",
+    "shelljs": "^0.8.3"
   },
   "config": {
     "commitizen": {
