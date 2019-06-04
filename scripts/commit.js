@@ -3,7 +3,7 @@ const { execSync } = require('child_process')
 const argv = process.env.npm_config_argv || {}
 const original = argv.original || []
 
-console.log(original, origial[0], original[1])
+console.log(original, original[0], original[1])
 
 if (original[0] === 'lerna' && original[1] === 'publish') {
 } else {
