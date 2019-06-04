@@ -1,14 +1,14 @@
-import { graphql, Link, useStaticQuery } from "gatsby";
-import * as React from "react";
+import { graphql, Link, useStaticQuery } from 'gatsby'
+import * as React from 'react'
 
 interface Item {
-  title: string;
-  link: string;
-  items: Item[];
+  title: string
+  link: string
+  items: Item[]
 }
 
 interface MenuProps {
-  item: Item;
+  item: Item
 }
 
 function Menu({ item }: MenuProps) {
@@ -25,7 +25,7 @@ function Menu({ item }: MenuProps) {
         </ul>
       )}
     </li>
-  );
+  )
 }
 
 export function Sidebar({}) {
@@ -46,15 +46,15 @@ export function Sidebar({}) {
         }
       }
     }
-  `);
+  `)
 
   return (
     <div>
       <ul>
         {allMenuYaml.nodes.map((item: Item) => {
-          return <Menu key={item.title} item={item} />;
+          return <Menu key={item.title} item={item} />
         })}
       </ul>
     </div>
-  );
+  )
 }

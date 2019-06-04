@@ -1,21 +1,21 @@
-import { graphql, useStaticQuery } from "gatsby";
-import * as React from "react";
-import Helmet from "react-helmet";
+import { graphql, useStaticQuery } from 'gatsby'
+import * as React from 'react'
+import Helmet from 'react-helmet'
 
 interface SEOProps {
-  description?: string;
-  keywords?: string[];
-  lang?: string;
-  meta?: any[];
-  title?: string;
+  description?: string
+  keywords?: string[]
+  lang?: string
+  meta?: any[]
+  title?: string
 }
 
 export function SEO({
-  description = "",
+  description = '',
   keywords = [],
-  lang = "en",
+  lang = 'en',
   meta = [],
-  title = ""
+  title = '',
 }: SEOProps) {
   const { site } = useStaticQuery(graphql`
     query DefaultSEOQuery {
@@ -27,44 +27,44 @@ export function SEO({
         }
       }
     }
-  `);
+  `)
 
-  const metaDescription = description || site.siteMetadata.description;
+  const metaDescription = description || site.siteMetadata.description
 
   return (
     <Helmet
       htmlAttributes={{
-        lang
+        lang,
       }}
       title={title}
       titleTemplate={`%s | ${site.siteMetadata.title}`}
       meta={[
         {
-          name: "description",
-          content: metaDescription
+          name: 'description',
+          content: metaDescription,
         },
         {
-          property: "og:title",
-          content: title
+          property: 'og:title',
+          content: title,
         },
         {
-          property: "og:description",
-          content: metaDescription
+          property: 'og:description',
+          content: metaDescription,
         },
         {
-          property: "og:type",
-          content: "website"
-        }
+          property: 'og:type',
+          content: 'website',
+        },
       ]
         .concat(
           keywords.length > 0
             ? {
-                name: "keywords",
-                content: keywords.join(", ")
+                name: 'keywords',
+                content: keywords.join(', '),
               }
             : []
         )
         .concat(meta)}
     />
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import * as React from "react";
+import * as React from 'react'
 
 interface CodeInlineProps {
-  children: string;
-  className?: string;
+  children: string
+  className?: string
 }
 
 export function CodeInline({ children }: CodeInlineProps) {
-  return <span>{children}</span>;
+  return <span>{children}</span>
 }
