@@ -53,7 +53,7 @@
     "@types/react": "16.8.19",
     "@types/react-dom": "16.8.4",
     "@types/react-helmet": "5.0.8",
-    "@types/styled-components": "4.1.15",
+    "@types/styled-components": "4.1.16",
     "lint-staged": "8.1.7",
     "prettier": "1.17.1",
     "rimraf": "2.6.3"
