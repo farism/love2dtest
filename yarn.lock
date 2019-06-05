@@ -15296,10 +15296,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript-to-lua@0.21.0:
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/typescript-to-lua/-/typescript-to-lua-0.21.0.tgz#7daa67efd27bc9657a5ac968f9cb46b04f702009"
-  integrity sha512-qCMNNp0OO2tVfxmznGs8xfarWoROXye9emC8Z3SkE8t7chp9/X+wpGa5jMW9FguU2knG7Z9wo+LsUl+qx8VTwQ==
+typescript-to-lua@0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/typescript-to-lua/-/typescript-to-lua-0.21.1.tgz#32b75cf00b536b72a3ae566926e86f0f69356476"
+  integrity sha512-CvqkEmPYhOIl6q2FibV2QYdadM2CPyO/QIY4BEdSkiyhgSYMqWReRk9rrUMwD2P5dg7MX/VAZw9kIwjF4/pn9g==
   dependencies:
     source-map "^0.7.3"
     typescript "^3.4.5"
