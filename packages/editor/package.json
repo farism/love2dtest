@@ -14,7 +14,7 @@
   "author": "Faris Mustafa <farismmk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.8.2",
+    "@fortawesome/fontawesome-free": "5.9.0",
     "@icepicker/ui": "^0.2.0",
     "@types/node": "12.0.4",
     "directory-tree": "2.2.3",
