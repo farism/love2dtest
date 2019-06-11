@@ -1,4 +1,3 @@
 {
-  "extends": ["config:base"],
-  "semanticCommitType": "chore(deps)"
+  "extends": [":semanticCommitTypeAll(chore)", "config:base"]
 }
