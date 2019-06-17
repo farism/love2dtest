@@ -10069,12 +10069,12 @@ loud-rejection@^1.0.0, loud-rejection@^1.2.0:
     currently-unhandled "^0.4.1"
     signal-exit "^3.0.0"
 
-love-typescript-definitions@0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/love-typescript-definitions/-/love-typescript-definitions-0.11.1.tgz#43eb8a7d7f2b33b536dd7fdbc312ecf881017453"
-  integrity sha512-1R3dZsSyRP9C1Z+9/hQeswrZQDbUTOzUkUuMnNkHCeHr2Hs9DI7f5FZguPYn57B555RYqKz9wdOxnjACKjxXNw==
+love-typescript-definitions@0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/love-typescript-definitions/-/love-typescript-definitions-0.11.2.tgz#810a94da545b79c43c7f4279b31fdd150d13cb52"
+  integrity sha512-iQMDrvCZldlL46/gtqtc13YM+sufMLtFjfTznkFESNQgBeNXVE11qxwaKI0gmDovM0fC4oA6WryunoGikq6hOw==
   dependencies:
-    lua-types "^2.4.0"
+    lua-types "^2.5.1"
 
 lower-case-first@^1.0.0:
   version "1.0.2"
@@ -10136,10 +10136,10 @@ ltcdr@^2.2.1:
   resolved "https://registry.yarnpkg.com/ltcdr/-/ltcdr-2.2.1.tgz#5ab87ad1d4c1dab8e8c08bbf037ee0c1902287cf"
   integrity sha1-Wrh60dTB2rjowIu/A37gwZAih88=
 
-lua-types@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/lua-types/-/lua-types-2.4.0.tgz#7cff8d8f01976616de866bb30efaf4ca57e8a17c"
-  integrity sha512-fYSVxVM+t3Sz9DRA+qao1WSZ/vW8eSNWvkvZsLNfgUJFmRIoyTEEaOWN17LUqt4euIe3fROPhyO0CZzAQd6mmA==
+lua-types@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/lua-types/-/lua-types-2.5.1.tgz#57e491739d40c0c18f5d7b84fd0ed67b999b605a"
+  integrity sha512-Rkxfo0in965tniAdCoUTK+iv1B3MrnS5KWbdm5+P+P5gWCUUYbFzkk4tcuu+qMVw4hrLBzyvYXWnLoQxcvnHJg==
 
 macos-release@^2.2.0:
   version "2.2.0"
