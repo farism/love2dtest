@@ -1,7 +1,11 @@
 {
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    // "source.organizeImports": true
+  },
+  "dart.flutterHotReloadOnSave": true,
+  "dart.env": {
+    "ENABLE_FLUTTER_DESKTOP": true
   },
   "lua.format.lineWidth": 80,
   "lua.format.singleQuote": true,

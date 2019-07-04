@@ -1,7 +1,7 @@
 {
   "configurations": [
     {
-      "name": "Dart",
+      "name": "Flutter",
       "program": "packages/client2/lib/main.dart",
       "request": "launch",
       "type": "dart"

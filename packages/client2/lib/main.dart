@@ -1,35 +1,21 @@
-import 'dart:ui';
-
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
-import 'package:flame/position.dart';
-import 'package:flame/text_config.dart';
-import 'package:flutter/gestures.dart';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
 
+import 'game/game.dart';
+
 void main() {
-  final game = MyGame();
-  runApp(game.widget);
+  debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
 
-  Flame.util.addGestureRecognizer(
-      TapGestureRecognizer()..onTapDown = (TapDownDetails evt) {});
-}
+  MyGame game = MyGame();
 
-class MyGame extends BaseGame {
-  final TextConfig fpsTextConfig = TextConfig(color: const Color(0xFFFFFFFF));
+  runApp(
+    MaterialApp(
+      home: Stack(children: [
+        game.widget,
+      ]),
+    ),
+  );
 
-  @override
-  bool debugMode() => true;
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-
-    fpsTextConfig.render(canvas, fps(120).toString(), Position(0, 10));
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-  }
+  game.addGestures();
 }
