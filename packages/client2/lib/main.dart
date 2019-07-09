@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 // import 'package:window_size/window_size.dart' show setWindowFrame;
 
 import './game/bashem.dart';
@@ -36,7 +37,7 @@ class CustomTabBarView extends StatelessWidget {
             },
             onPanEnd: (DragEndDetails details) {},
             child: Container(
-              child: game.widget,
+              // child: game.widget,
               color: Color(0xFF222222),
               constraints: BoxConstraints.expand(),
             ),
@@ -92,6 +93,17 @@ class CustomTabBar extends StatelessWidget {
   }
 }
 
+class Pos extends StatelessWidget {
+  final BashEm game;
+
+  Pos(this.game);
+
+  Widget build(BuildContext context) {
+    // print(game.game.manager.components);
+    return Text(game.game.manager.components.length.toString());
+  }
+}
+
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
 
@@ -101,14 +113,40 @@ void main() {
 
   final game = BashEm();
 
-  runApp(MaterialApp(
-    home: DefaultTabController(
-      length: 4,
-      initialIndex: 1,
-      child: Scaffold(
-        body: CustomTabBarView(),
-        bottomNavigationBar: CustomTabBar(),
+  final app = MaterialApp(
+    home: Material(
+      type: MaterialType.transparency,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Stack(children: [
+          GestureDetector(
+            onPanStart: (DragStartDetails details) {
+              print(details);
+            },
+            onPanUpdate: (DragUpdateDetails details) {
+              print(details);
+            },
+            onPanEnd: (DragEndDetails details) {},
+            child: Container(
+              child: game.widget,
+              color: Color(0xFF222222),
+              constraints: BoxConstraints.expand(),
+            ),
+          ),
+          Pos(game)
+        ]),
       ),
     ),
-  ));
+  );
+
+  runApp(app);
 }
+
+// home: DefaultTabController(
+//   length: 4,
+//   initialIndex: 1,
+//   child: Scaffold(
+//     body: CustomTabBarView(),
+//     bottomNavigationBar: CustomTabBar(),
+//   ),
+// ),

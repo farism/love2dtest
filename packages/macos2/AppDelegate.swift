@@ -13,17 +13,13 @@
 // limitations under the License.
 
 import Cocoa
-import FlutterMacOS
 
-class ExampleWindow: NSWindow {
-  @IBOutlet weak var flutterViewController: FLEViewController!
+@NSApplicationMain
+class AppDelegate: NSObject, NSApplicationDelegate {
+  @IBOutlet weak var window: NSWindow!
 
-  override func awakeFromNib() {
-    RegisterGeneratedPlugins(registry: flutterViewController)
-
-    flutterViewController.launchEngine(with: nil)
-
-    super.awakeFromNib()
+  func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+    return true
   }
 }
 

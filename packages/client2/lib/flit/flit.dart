@@ -69,7 +69,6 @@ class Game {
 
   void lifecycle(AppLifecycleState state) {}
 
-  // add this widget to the widget tree
   Widget get widget {
     return Directionality(
       textDirection: TextDirection.ltr,

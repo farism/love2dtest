@@ -99,7 +99,9 @@ class BashEm {
 
     createPlayer(game, 0, 0);
 
-    createPlayer(game, 1, -5);
+    Future.delayed(Duration(milliseconds: 2000), () {
+      createPlayer(game, 1, -5);
+    });
   }
 
   Widget get widget {
