@@ -1,9 +1,8 @@
-import 'component.dart';
-import 'entity.dart';
+import './entity.dart';
 
-int flags(List<Component> components) {
-  return components.fold(0, (acc, cmp) {
-    return acc ^ cmp.flag;
+int flags(List<int> components) {
+  return components.fold(0, (acc, flag) {
+    return acc ^ flag;
   });
 }
 
@@ -13,9 +12,9 @@ class Aspect {
   int one = 0;
 
   Aspect({
-    List<Component> all = const [],
-    List<Component> none = const [],
-    List<Component> one = const [],
+    List<int> all = const [],
+    List<int> none = const [],
+    List<int> one = const [],
   }) {
     this.all = flags(all);
     this.none = flags(none);

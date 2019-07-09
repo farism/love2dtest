@@ -18,9 +18,12 @@ environment:
 
 dependencies:
   flame: ^0.12.0
+  box2d_flame: ^0.4.3
   flutter:
     sdk: flutter
   screen: ^0.0.5
+  # window_size:
+  #   path: ../window_size
 dev_dependencies:
   flutter_test:
     sdk: flutter
