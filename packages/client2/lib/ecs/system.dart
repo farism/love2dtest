@@ -1,4 +1,5 @@
 import './entity_tracker.dart';
+import './manager.dart';
 
 abstract class ISystem {
   int flag;
@@ -6,7 +7,7 @@ abstract class ISystem {
 }
 
 abstract class System extends EntityTracker implements ISystem {
-  bool paused = false;
+  System(Manager manager) : super(manager);
 
   void update(double dt) {}
 }

@@ -1,18 +1,19 @@
 import 'dart:collection';
 import 'dart:ui';
 
-import '../flit.dart';
+import './component.dart';
+import './entity.dart';
+import './renderer.dart';
+import './system.dart';
 
 class Manager {
   HashMap<int, HashMap<String, Component>> components = HashMap();
   HashMap<int, Entity> entities = HashMap();
-  Game game;
   int nextId = 0;
   List<System> systems = [];
   List<Renderer> renderers = [];
 
-  Manager(
-    this.game, {
+  Manager({
     List<Renderer> renderers = const [],
     List<System> systems = const [],
   }) {
@@ -150,7 +151,7 @@ class Manager {
     systems.forEach((system) => system.update(dt));
   }
 
-  void render(Canvas canvas, Camera camera) {
-    renderers.forEach((renderer) => renderer.render(canvas, camera));
+  void render(Canvas canvas) {
+    renderers.forEach((renderer) => renderer.render(canvas));
   }
 }

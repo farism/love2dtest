@@ -5,19 +5,18 @@ import './entity.dart';
 import './manager.dart';
 
 abstract class IEntityTracker {
-  Aspect _aspect;
+  Aspect aspect;
 }
 
 abstract class EntityTracker implements IEntityTracker {
   HashMap<int, Entity> entities = HashMap();
   Manager manager;
+  bool paused = false;
 
-  EntityTracker();
+  EntityTracker(this.manager);
 
-  Aspect get aspect => _aspect;
-
-  set aspect(Aspect aspect) {
-    _aspect = aspect;
+  set setAspect(Aspect aspect) {
+    aspect = aspect;
 
     checkAll();
   }

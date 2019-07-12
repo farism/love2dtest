@@ -1,15 +1,21 @@
-// import { ComponentFlag } from '../flags'
+import '../../ecs/component.dart';
+import '../flags.dart';
 
-// export class Snare {
-//   static _id = 'Snare'
-//   _id = Snare._id
+class Snare extends Component {
+  static const int Flag = ComponentFlags.Snare;
+  int flag = Snare.Flag;
 
-//   static _flag = ComponentFlag.Snare
-//   _flag = ComponentFlag.Snare
+  static const String Id = 'Snare';
+  String id = Snare.Id;
 
-//   strength: number
+  String strength;
 
-//   constructor(strength: number = 0) {
-//     this.strength = strength
-//   }
-// }
+  Snare({
+    this.strength = '',
+  });
+
+  @override
+  String toString() {
+    return 'Snare (strength: $strength)';
+  }
+}

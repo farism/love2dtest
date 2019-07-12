@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import '../rendering/camera.dart';
 import './entity_tracker.dart';
+import './manager.dart';
 
 abstract class IRenderer {
   int flag;
@@ -9,5 +9,7 @@ abstract class IRenderer {
 }
 
 abstract class Renderer extends EntityTracker implements IRenderer {
-  void render(Canvas canvas, Camera camera) {}
+  Renderer(Manager manager) : super(manager);
+
+  void render(Canvas canvas) {}
 }

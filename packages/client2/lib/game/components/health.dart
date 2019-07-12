@@ -1,17 +1,27 @@
-// import { ComponentFlag } from '../flags'
+import '../../ecs/component.dart';
+import '../flags.dart';
 
-// export class Health {
-//   static _id = 'Health'
-//   _id = Health._id
+class Health extends Component {
+  static const int Flag = ComponentFlags.Health;
+  int flag = Health.Flag;
 
-//   static _flag = ComponentFlag.Health
-//   _flag = ComponentFlag.Health
+  static const String Id = 'Health';
+  String id = Health.Id;
 
-//   hitpoints: number
-//   armor: number
+  int armor;
+  int hitpoints;
+  int maxArmor;
+  int maxHitpoints;
 
-//   constructor(hitpoints: number = 1, armor: number = 0) {
-//     this.hitpoints = hitpoints
-//     this.armor = armor
-//   }
-// }
+  Health({
+    this.armor = 0,
+    this.hitpoints = 0,
+    this.maxArmor = 0,
+    this.maxHitpoints = 0,
+  });
+
+  @override
+  String toString() {
+    return 'Health (hp: $hitpoints / $maxHitpoints, armor: $armor / $maxArmor)';
+  }
+}

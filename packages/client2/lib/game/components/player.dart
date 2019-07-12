@@ -1,29 +1,21 @@
-// import { ComponentFlag } from '../flags'
+import '../../ecs/component.dart';
+import '../flags.dart';
 
-// export class Player {
-//   static _id = 'Player'
-//   _id = Player._id
+class Player extends Component {
+  static const int Flag = ComponentFlags.Player;
+  int flag = Player.Flag;
 
-//   static _flag = ComponentFlag.Player
-//   _flag = ComponentFlag.Player
+  static const String Id = 'Player';
+  String id = Player.Id;
 
-//   alias: string
-//   money: number
-//   lives: number
-//   documents: number
-//   checkpoint: number
+  String alias;
 
-//   constructor(
-//     alias: string = '',
-//     money: number = 0,
-//     lives: number = 0,
-//     documents: number = 0,
-//     checkpoint: number = 0
-//   ) {
-//     this.alias = alias
-//     this.money = money
-//     this.lives = lives
-//     this.documents = documents
-//     this.checkpoint = checkpoint
-//   }
-// }
+  Player({
+    this.alias = '',
+  });
+
+  @override
+  String toString() {
+    return 'Player (alias: $alias)';
+  }
+}

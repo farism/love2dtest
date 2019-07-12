@@ -1,37 +1,21 @@
-// import { ComponentFlag } from '../flags'
-// import { loadImage } from '../utils/asset'
+import '../../ecs/component.dart';
+import '../flags.dart';
 
-// export class Sprite {
-//   static _id = 'Sprite'
-//   _id = Sprite._id
+class Sprite extends Component {
+  static const int Flag = ComponentFlags.Sprite;
+  int flag = Sprite.Flag;
 
-//   static _flag = ComponentFlag.Sprite
-//   _flag = ComponentFlag.Sprite
+  static const String Id = 'Sprite';
+  String id = Sprite.Id;
 
-//   filepath: string
-//   image?: Image
-//   x: number
-//   y: number
-//   width: number
-//   height: number
-//   frame: Quad
+  String image;
 
-//   constructor(
-//     filepath: string = '',
-//     x: number = 0,
-//     y: number = 0,
-//     width: number = 32,
-//     height: number = 32
-//   ) {
-//     this.filepath = filepath
-//     this.x = x
-//     this.y = y
-//     this.width = width
-//     this.height = height
-//     this.image = loadImage(filepath)
+  Sprite({
+    this.image = '',
+  });
 
-//     const [sw, sh] = this.image ? this.image.getDimensions() : [32, 32]
-
-//     this.frame = love.graphics.newQuad(x, y, width, height, sw, sh)
-//   }
-// }
+  @override
+  String toString() {
+    return 'Sprite (image: $image)';
+  }
+}

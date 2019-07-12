@@ -1,15 +1,21 @@
-// import { ComponentFlag } from '../flags'
+import '../../ecs/component.dart';
+import '../flags.dart';
 
-// export class Damage {
-//   static _id = 'Damage'
-//   _id = Damage._id
+class Damage extends Component {
+  static const int Flag = ComponentFlags.Damage;
+  int flag = Damage.Flag;
 
-//   static _flag = ComponentFlag.Damage
-//   _flag = ComponentFlag.Damage
+  static const String Id = 'Damage';
+  String id = Damage.Id;
 
-//   hitpoints: number
+  int hitpoints;
 
-//   constructor(hitpoints: number = 0) {
-//     this.hitpoints = hitpoints
-//   }
-// }
+  Damage({
+    this.hitpoints,
+  });
+
+  @override
+  String toString() {
+    return 'Damage (hp: $hitpoints)';
+  }
+}
