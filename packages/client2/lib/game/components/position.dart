@@ -11,7 +11,10 @@ class Position extends Component {
   double x = 0;
   double y = 0;
 
-  Position(this.x, this.y);
+  Position({
+    this.x,
+    this.y,
+  });
 
   @override
   String toString() {

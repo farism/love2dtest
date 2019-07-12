@@ -1,24 +1,29 @@
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:box2d_flame/box2d.dart';
+
+import './collision_system.dart';
 import './component.dart';
 import './entity.dart';
-import './renderer.dart';
 import './system.dart';
+import './processing_system.dart';
+import './rendering_system.dart';
 
 class Manager {
   HashMap<int, HashMap<String, Component>> components = HashMap();
   HashMap<int, Entity> entities = HashMap();
   int nextId = 0;
-  List<System> systems = [];
-  List<Renderer> renderers = [];
+  HashMap<SystemType, List<System>> systems = HashMap()
+    ..addAll({
+      SystemType.collision: [],
+      SystemType.processing: [],
+      SystemType.rendering: [],
+    });
 
   Manager({
-    List<Renderer> renderers = const [],
     List<System> systems = const [],
   }) {
-    addRenderers(renderers);
-
     addSystems(systems);
   }
 
@@ -47,7 +52,9 @@ class Manager {
   }
 
   void removeEntity(Entity entity) {
-    systems.forEach((system) => system.remove(entity));
+    systems.values.forEach((List<System> _systems) {
+      _systems.forEach((system) => system.remove(entity));
+    });
 
     components.remove(entity.id);
 
@@ -98,27 +105,6 @@ class Manager {
 
   void removeComponents(Entity entity) {}
 
-  // managing renderers
-
-  void addRenderers<T extends Renderer>(List<T> renderers) {
-    renderers.forEach((renderer) => addRenderer(renderer));
-  }
-
-  void addRenderer(Renderer renderer) {
-    entities.values.forEach((Entity entity) => renderer.check(entity));
-
-    renderer.manager = this;
-
-    renderers.add(renderer);
-
-    print('added renderer -> $renderer');
-  }
-
-  void removeRenderer(String id) {
-    renderers.removeWhere((s) => s.id == id);
-
-    print('removed renderer ->  $id');
-  }
   // managing systems
 
   void addSystems<T extends System>(List<T> systems) {
@@ -128,30 +114,55 @@ class Manager {
   void addSystem(System system) {
     entities.values.forEach((Entity entity) => system.check(entity));
 
-    system.manager = this;
-
-    systems.add(system);
+    systems[system.getSystemType()].add(system);
 
     print('added system -> $system');
   }
 
   void removeSystem(String id) {
-    systems.removeWhere((s) => s.id == id);
+    systems.values.forEach((List<System> _systems) {
+      _systems.removeWhere((system) => system.id == id);
+    });
 
     print('removed system ->  $id');
   }
 
   void check(Entity entity) {
-    systems.forEach((system) => system.check(entity));
-
-    renderers.forEach((renderer) => renderer.check(entity));
+    systems.values.forEach((List<System> _systems) {
+      _systems.forEach((system) => system.check(entity));
+    });
   }
 
-  void update(double dt) {
-    systems.forEach((system) => system.update(dt));
+  // lifecycles
+  void beginContact(Contact contact) {
+    systems[SystemType.processing].forEach((System system) {
+      CollisionSystem _system = system;
+
+      _system.beginContact(contact);
+    });
+  }
+
+  void endContact(Contact contact) {
+    systems[SystemType.collision].forEach((System system) {
+      CollisionSystem _system = system;
+
+      _system.endContact(contact);
+    });
   }
 
   void render(Canvas canvas) {
-    renderers.forEach((renderer) => renderer.render(canvas));
+    systems[SystemType.rendering].forEach((System system) {
+      RenderingSystem _system = system;
+
+      _system.render(canvas);
+    });
+  }
+
+  void update(double dt) {
+    systems[SystemType.processing].forEach((System system) {
+      ProcessingSystem _system = system;
+
+      _system.update(dt);
+    });
   }
 }

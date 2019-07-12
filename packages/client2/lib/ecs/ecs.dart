@@ -1,7 +1,8 @@
 export './aspect.dart';
+export './collision_system.dart';
 export './component.dart';
 export './entity.dart';
-export './entity_tracker.dart';
 export './manager.dart';
-export './renderer.dart';
+export './processing_system.dart';
+export './rendering_system.dart';
 export './system.dart';

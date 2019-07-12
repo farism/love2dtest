@@ -1,7 +1,7 @@
 import '../../ecs/ecs.dart';
 import '../flags.dart';
 
-class Input implements Component {
+class Input extends Component {
   static const int Flag = ComponentFlags.Input;
   int flag = Input.Flag;
 

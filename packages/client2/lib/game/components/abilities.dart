@@ -14,7 +14,10 @@ class Ability extends Component {
   int cooldown;
   int duration;
 
-  Ability({cooldown = 0, duration: 0});
+  Ability({
+    this.cooldown = 0,
+    this.duration = 0,
+  });
 
   @override
   String toString() {

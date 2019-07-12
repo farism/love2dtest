@@ -8,10 +8,14 @@ class ComponentFlags {
   static const int Sprite = 1 << 6;
   static const int Damage = 1 << 7;
   static const int Ability = 1 << 8;
+  static const int Map = 1 << 9;
 }
 
-class SystemFlags {}
+class ProcessingSystemFlags {
+  static const int ProcessDeath = 1 << 0;
+}
 
-class RendererFlags {
-  static const int DebugWorld = 1 << 0;
+class RenderingSystemFlags {
+  static const int RenderDebugWorld = 1 << 0;
+  static const int RenderSprite = 1 << 1;
 }

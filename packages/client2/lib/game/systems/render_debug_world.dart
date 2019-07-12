@@ -1,22 +1,22 @@
 import 'dart:ui';
-import 'package:client2/ecs/manager.dart';
 
-import '../../ecs/aspect.dart';
-import '../../ecs/renderer.dart';
+import 'package:box2d_flame/box2d.dart';
+
+import '../../ecs/ecs.dart';
 import '../camera.dart';
 import '../components/game_object.dart';
 import '../flags.dart';
 
-class DebugWorld extends Renderer {
-  static const int Flag = RendererFlags.DebugWorld;
-  int flag = DebugWorld.Flag;
+class RenderDebugWorld extends RenderingSystem {
+  static const int Flag = RenderingSystemFlags.RenderDebugWorld;
+  int flag = RenderDebugWorld.Flag;
 
-  static const String Id = 'DebugWorld';
-  String id = DebugWorld.Id;
+  static const String Id = 'RenderDebugWorld';
+  String id = RenderDebugWorld.Id;
 
   Camera camera;
 
-  DebugWorld(Manager manager, this.camera) : super(manager);
+  RenderDebugWorld(Manager manager, this.camera) : super(manager);
 
   Aspect aspect = Aspect(all: [
     GameObject.Flag,
@@ -31,28 +31,27 @@ class DebugWorld extends Renderer {
         return;
       }
 
-      // final body = gameObject.body;
+      final body = gameObject.body;
 
-      // body.getFixtureList();
+      for (Fixture fixture = body.getFixtureList();
+          fixture != null;
+          fixture = fixture.getNext()) {
+        ShapeType type = fixture.getType();
 
-      // for (Fixture fixture = body.getFixtureList();
-      //     fixture != null;
-      //     fixture = fixture.getNext()) {
-      //   switch (fixture.getType()) {
-      //     case ShapeType.CHAIN:
-      //       throw Exception('not implemented');
-      //       break;
-      //     case ShapeType.CIRCLE:
-      //       _renderCircle(canvas, camera, body, fixture);
-      //       break;
-      //     case ShapeType.EDGE:
-      //       throw Exception('not implemented');
-      //       break;
-      //     case ShapeType.POLYGON:
-      //       _renderPolygon(canvas, camera, body, fixture);
-      //       break;
-      //   }
-      // }
+        if (type == ShapeType.CHAIN) {
+          throw Exception('not implemented');
+        } else if (type == ShapeType.CIRCLE) {
+          CircleShape shape = fixture.getShape();
+
+          canvas.drawCircle(
+              Offset(body.position.x, body.position.y),
+              shape.radius,
+              Paint()
+                ..style = PaintingStyle.stroke
+                ..color = const Color.fromARGB(255, 255, 255, 255));
+        } else if (type == ShapeType.EDGE) {
+        } else if (type == ShapeType.POLYGON) {}
+      }
     });
   }
 

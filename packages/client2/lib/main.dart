@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:client2/ui/components/tabs.dart';
+
 import 'package:client2/ui/screens/deck.dart';
 import 'package:client2/ui/screens/modes.dart';
 import 'package:client2/ui/screens/settings.dart';
@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_size/window_size.dart' show setWindowFrame;
 
-import './game/bashem.dart';
+import './game/game.dart';
+import './ui/components/tabs.dart';
 import './ui/widgets.dart';
 
 void main() {
@@ -20,7 +21,7 @@ void main() {
 
   // setWindowFrame(Rect.fromLTWH(1440, 200, 320, 480));
 
-  final game = BashEm();
+  final game = Game();
 
   final app = MaterialApp(
     home: Material(
@@ -28,22 +29,22 @@ void main() {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Stack(children: [
-          // DefaultTabController(
-          //   length: 4,
-          //   child: Scaffold(
-          //     bottomNavigationBar: CustomTabBar(
-          //       tabs: ['Social', 'Deck', 'Modes', 'Settings'],
-          //     ),
-          //     body: CustomTabBarView(
-          //       children: [
-          //         Social(),
-          //         Deck(),
-          //         Modes(),
-          //         Settings(),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+          DefaultTabController(
+            length: 4,
+            child: Scaffold(
+              bottomNavigationBar: CustomTabBar(
+                tabs: ['Social', 'Deck', 'Modes', 'Settings'],
+              ),
+              body: CustomTabBarView(
+                children: [
+                  Social(),
+                  Deck(),
+                  Modes(),
+                  Settings(),
+                ],
+              ),
+            ),
+          ),
           Container(
             child: RenderWidget(game),
             color: Color(0xFF222222),
