@@ -32,14 +32,10 @@ class Aspect {
 
 class AlwaysAspect extends Aspect {
   @override
-  bool check(_) {
-    return true;
-  }
+  bool check(_) => true;
 }
 
 class NeverAspect extends Aspect {
   @override
-  bool check(_) {
-    return false;
-  }
+  bool check(_) => false;
 }

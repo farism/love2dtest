@@ -18,4 +18,11 @@ class Camera extends ViewportTransform {
     extents = Vector2(size.width / 2, size.height / 2);
     center = Vector2(size.width / 2, size.height / 2);
   }
+
+  Vector2 project(Body body, Vector2 point) {
+    final out = body.getWorldPoint(point.clone());
+    getWorldToScreen(out, out);
+
+    return out;
+  }
 }

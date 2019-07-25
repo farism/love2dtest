@@ -4,12 +4,6 @@ import './aspect.dart';
 import './entity.dart';
 import './manager.dart';
 
-enum SystemType {
-  collision,
-  processing,
-  rendering,
-}
-
 abstract class ISystem {
   Aspect aspect;
   int flag;
@@ -21,18 +15,18 @@ abstract class System implements ISystem {
   Manager manager;
   bool paused = false;
 
-  System(this.manager);
+  void setManager(Manager m) {
+    manager = m;
+  }
 
-  SystemType getSystemType() => null;
-
-  set setAspect(Aspect aspect) {
-    aspect = aspect;
+  void setAspect(Aspect a) {
+    aspect = a;
 
     checkAll();
   }
 
-  bool isTracking(Entity entity) {
-    return entities[entity.id] != null;
+  bool hasEntities(Entity entityA, Entity entityB) {
+    return entities[entityA.id] != null && entities[entityB.id] != null;
   }
 
   void checkAll() {
@@ -70,4 +64,6 @@ abstract class System implements ISystem {
   void onAdd(Entity entity) {}
 
   void onRemove(Entity entity) {}
+
+  void update(double dt);
 }

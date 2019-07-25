@@ -17,13 +17,17 @@ environment:
   sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
-  flame: ^0.12.0
-  box2d_flame: ^0.4.3
+  # box2d_flame: ^0.4.3
+  box2d_flame:
+    git:
+      url: git://github.com/msywensky/box2d.dart.git
   flutter:
     sdk: flutter
+  flutter_hooks: ^0.6.0
+  provider: ^3.0.0+1
   screen: ^0.0.5
-  window_size:
-    path: ../window_size
+  # window_size:
+  #   path: ../window_size
 dev_dependencies:
   flutter_test:
     sdk: flutter

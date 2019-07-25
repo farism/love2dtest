@@ -11,7 +11,7 @@ class Damage extends Component {
   int hitpoints;
 
   Damage({
-    this.hitpoints,
+    this.hitpoints = 0,
   });
 
   @override

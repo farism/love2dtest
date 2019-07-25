@@ -7,8 +7,9 @@ class Entity {
   Manager manager;
   int renderers = 0;
   int systems = 0;
+  String tag = '';
 
-  Entity(this.id, this.manager);
+  Entity(this.manager, this.id, this.tag);
 
   T as<T extends Component>(String id) {
     return manager.getComponent<T>(this, id);
@@ -56,6 +57,6 @@ class Entity {
 
   @override
   String toString() {
-    return 'Entity (id: $id)';
+    return 'Entity (tag: $tag, id: $id)';
   }
 }

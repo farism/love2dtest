@@ -9,6 +9,7 @@ class Player extends Component {
   String id = Player.Id;
 
   String alias;
+  bool isUser;
 
   Player({
     this.alias = '',

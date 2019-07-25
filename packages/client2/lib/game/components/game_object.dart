@@ -1,7 +1,6 @@
 import 'package:box2d_flame/box2d.dart';
 
 import '../../ecs/component.dart';
-import '../../ecs/entity.dart';
 import '../flags.dart';
 
 class GameObject extends Component {
@@ -13,12 +12,7 @@ class GameObject extends Component {
 
   Body body;
 
-  GameObject({this.body});
-
-  set entity(Entity entity) {
-    entity = entity;
-    body.userData = {entity: entity};
-
-    print(body.userData);
+  GameObject(this.body, entity) {
+    this.body.userData = {'entity': entity};
   }
 }
