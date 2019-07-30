@@ -7,12 +7,12 @@ import '../components/damage.dart';
 import '../components/health.dart';
 import '../flags.dart';
 
-class DamageSystem extends CollisionSystem {
-  static const int Flag = SystemFlags.Damage;
-  int flag = DamageSystem.Flag;
+class CollisionDamage extends CollisionSystem {
+  static const int Flag = SystemFlags.CollisionDamage;
+  int flag = CollisionDamage.Flag;
 
-  static const String Id = 'DamageSystem';
-  String id = DamageSystem.Id;
+  static const String Id = 'CollisionDamage';
+  String id = CollisionDamage.Id;
 
   Aspect aspect = Aspect(all: [
     Health.Flag,

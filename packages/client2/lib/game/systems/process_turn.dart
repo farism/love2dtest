@@ -4,7 +4,7 @@ import '../components/turn.dart';
 import '../flags.dart';
 
 class TurnSystem extends BaseSystem {
-  static const int Flag = SystemFlags.Turn;
+  static const int Flag = SystemFlags.ProcessTurn;
   int flag = TurnSystem.Flag;
 
   static const String Id = 'TurnSystem';

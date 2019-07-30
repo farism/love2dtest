@@ -1,11 +1,11 @@
 import 'package:box2d_flame/box2d.dart';
 
-import '../ecs/ecs.dart';
 import './components/damage.dart';
-import './components/drag_input.dart';
 import './components/game_object.dart';
 import './components/health.dart';
+import './components/input.dart';
 import './components/position.dart' as pos;
+import '../ecs/ecs.dart';
 
 class EntityFactory {
   Manager manager;
@@ -50,7 +50,7 @@ class EntityFactory {
 
     return entity
       ..addComponent(GameObject(body, entity))
-      ..addComponent(DragInput())
+      ..addComponent(Input())
       ..addComponent(Damage(hitpoints: 1))
       ..addComponent(Health(maxHitpoints: 10, hitpoints: 1))
       ..addComponent(pos.Position());

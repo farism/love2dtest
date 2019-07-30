@@ -9,12 +9,12 @@ import '../camera.dart';
 import '../components/game_object.dart';
 import '../flags.dart';
 
-class DebugWorldSystem extends RenderSystem {
-  static const int Flag = SystemFlags.DebugWorld;
-  int flag = DebugWorldSystem.Flag;
+class RenderDebugWorld extends RenderSystem {
+  static const int Flag = SystemFlags.RenderDebugWorld;
+  int flag = RenderDebugWorld.Flag;
 
-  static const String Id = 'DebugWorldSystem';
-  String id = DebugWorldSystem.Id;
+  static const String Id = 'RenderDebugWorld';
+  String id = RenderDebugWorld.Id;
 
   Camera camera;
 
@@ -22,7 +22,7 @@ class DebugWorldSystem extends RenderSystem {
     GameObject.Flag,
   ]);
 
-  DebugWorldSystem(this.camera);
+  RenderDebugWorld(this.camera);
 
   @override
   void render(Canvas canvas) {
@@ -68,16 +68,6 @@ class DebugWorldSystem extends RenderSystem {
               Paint()
                 ..style = PaintingStyle.stroke
                 ..color = Color(0xFFFFFFFF));
-
-          canvas.drawLine(
-              Offset(body.position.x, body.position.y),
-              Offset(
-                body.position.x + cos(body.getAngle()) * shape.radius,
-                body.position.y + sin(body.getAngle()) * shape.radius,
-              ),
-              Paint()
-                ..style = PaintingStyle.stroke
-                ..color = const Color.fromARGB(255, 255, 255, 255));
         } else if (type == ShapeType.EDGE) {
         } else if (type == ShapeType.POLYGON) {}
       }

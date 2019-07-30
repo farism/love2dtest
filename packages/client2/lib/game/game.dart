@@ -38,22 +38,22 @@ class Game implements ContactListener, GestureListener, RenderLoopListener {
     world = World.withGravity(Vector2(0, 0))..setContactListener(this);
 
     inputSystems.addAll([
-      DragInputSystem(),
+      InputDrag(),
     ]);
 
     collisionSystems.addAll([
-      DamageSystem(),
+      CollisionDamage(),
     ]);
 
     processSystems.addAll([
-      SyncPositionSystem(camera),
-      AttackSystem(),
+      ProcessSyncPosition(camera),
+      ProcessAttack(),
     ]);
 
     renderSystems.addAll([
-      DebugWorldSystem(camera),
-      AttackTrajectorySystem(camera),
-      HealthSystem(camera),
+      RenderDebugWorld(camera),
+      RenderAttackTrajectory(camera),
+      RenderHealth(camera),
     ]);
 
     manager = Manager()

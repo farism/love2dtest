@@ -7,7 +7,7 @@ class GameObject extends Component {
   static const int Flag = ComponentFlags.GameObject;
   int flag = GameObject.Flag;
 
-  static const String Id = 'Input';
+  static const String Id = 'GameObject';
   String id = GameObject.Id;
 
   Body body;

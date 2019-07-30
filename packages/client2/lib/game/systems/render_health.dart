@@ -9,18 +9,18 @@ import '../components/health.dart';
 import '../components/position.dart';
 import '../flags.dart';
 
-class HealthSystem extends RenderSystem {
-  static const int Flag = SystemFlags.Health;
-  int flag = HealthSystem.Flag;
+class RenderHealth extends RenderSystem {
+  static const int Flag = SystemFlags.RenderHealth;
+  int flag = RenderHealth.Flag;
 
-  static const String Id = 'HealthSystem';
-  String id = HealthSystem.Id;
+  static const String Id = 'RenderHealth';
+  String id = RenderHealth.Id;
 
   Aspect aspect = Aspect(all: [Health.Flag, Position.Flag]);
 
   Camera camera;
 
-  HealthSystem(this.camera);
+  RenderHealth(this.camera);
 
   @override
   void render(Canvas canvas) {
@@ -43,12 +43,12 @@ class HealthSystem extends RenderSystem {
         ),
       );
 
-      textPainter
-        ..layout()
-        ..paint(
-          canvas,
-          Offset(pos.x - textPainter.width / 2, pos.y - textPainter.height / 2),
-        );
+      textPainter.layout();
+
+      textPainter.paint(
+        canvas,
+        Offset(pos.x - textPainter.width / 2, pos.y - textPainter.height / 2),
+      );
     });
   }
 }

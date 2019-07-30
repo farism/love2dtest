@@ -7,12 +7,12 @@ import '../components/game_object.dart';
 import '../components/position.dart';
 import '../flags.dart';
 
-class SyncPositionSystem extends BaseSystem {
-  static const int Flag = SystemFlags.SyncPositionSystem;
-  int flag = SyncPositionSystem.Flag;
+class ProcessSyncPosition extends BaseSystem {
+  static const int Flag = SystemFlags.ProcessSyncPosition;
+  int flag = ProcessSyncPosition.Flag;
 
-  static const String Id = 'SyncPositionSystem';
-  String id = SyncPositionSystem.Id;
+  static const String Id = 'ProcessSyncPosition';
+  String id = ProcessSyncPosition.Id;
 
   Aspect aspect = Aspect(all: [
     Position.Flag,
@@ -21,7 +21,7 @@ class SyncPositionSystem extends BaseSystem {
 
   Camera camera;
 
-  SyncPositionSystem(this.camera);
+  ProcessSyncPosition(this.camera);
 
   @override
   void update(double dt) {
