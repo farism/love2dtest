@@ -1,8 +1,24 @@
+import 'dart:math';
+
 import 'package:mobx/mobx.dart';
+import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'app.g.dart';
 
-class AppState = _AppState with _$AppState;
+const String defaultDescription =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut cursus dui eget turpis mollis fermentum. Donec porta felis imperdiet egestas porttitor.';
+
+enum DeckView {
+  deckList,
+  cardsIndex,
+}
+
+enum SocialView {
+  achievements,
+  trade,
+  team,
+}
 
 enum HeroType {
   assassin,
@@ -16,180 +32,480 @@ enum ArenaType {
   hexagon,
 }
 
-class Card {
-  Card({this.name, this.description = '', this.hero});
+class Achievement {
+  Achievement({this.name = '', this.description = '', this.total = 0});
 
   final String name;
+
   final String description;
+
+  final int total;
+
+  final int current = 0;
+
+  double get progress => current / total;
+}
+
+class Card {
+  Card({
+    this.name,
+    this.hero,
+    this.description = defaultDescription,
+    this.gold = 0,
+  });
+
+  final String name;
+
   final HeroType hero;
 
-  String get category => hero != null ? heroString(hero) : 'General';
+  int gold;
+
+  String description;
+
+  String get heroString => Hero.string(hero);
 }
 
-List<Card> allCards = [
-  Card(name: 'Zeus'),
-  Card(name: 'Hera'),
-  Card(name: 'Poseidon', hero: HeroType.assassin),
-  Card(name: 'Demeter', hero: HeroType.assassin),
-  Card(name: 'Ares', hero: HeroType.assassin),
-  Card(name: 'Athena', hero: HeroType.warrior),
-  Card(name: 'Apollo', hero: HeroType.warrior),
-  Card(name: 'Artemis', hero: HeroType.warrior),
-  Card(name: 'Hephaestus', hero: HeroType.warrior),
-  Card(name: 'Aphrodite', hero: HeroType.healer),
-  Card(name: 'Hermes', hero: HeroType.healer),
-  Card(name: 'Dionysus', hero: HeroType.healer),
-  Card(name: 'Hades', hero: HeroType.healer),
-];
+class Deck {
+  Deck({this.id, this.name, this.hero, this.cards}) {
+    cards ??= [];
+  }
 
-class MyDeck {
-  MyDeck({this.name, this.cards = const []});
+  final String id;
 
   final String name;
-  final List<Card> cards;
+
+  final HeroType hero;
+
+  List<String> cards;
+
+  String get category => hero != null ? Hero.string(hero) : 'General';
 }
 
-List<MyDeck> myDecks = [
-  MyDeck(name: 'Deck 1', cards: allCards.skip(1).take(10).toList()),
-  MyDeck(name: 'Deck 2', cards: allCards.skip(2).take(2).toList()),
-  MyDeck(name: 'Deck 3', cards: allCards.skip(3).take(4).toList()),
-  MyDeck(name: 'Deck 4', cards: allCards.skip(4).take(3).toList()),
-  MyDeck(name: 'Deck 5', cards: allCards.skip(5).take(1).toList()),
-  MyDeck(name: 'Deck 6', cards: allCards.skip(6).take(5).toList()),
-  MyDeck(name: 'Deck 7', cards: allCards.skip(7).take(4).toList()),
-  MyDeck(name: 'Deck 8', cards: allCards.skip(8).take(2).toList()),
-  MyDeck(name: 'Deck 9', cards: allCards.skip(9).take(1).toList()),
-  MyDeck(name: 'Deck 10', cards: allCards.skip(10).take(1).toList()),
+class DeckCard {
+  DeckCard({this.card, this.isPurchased = false, this.isActive = false});
+
+  final Card card;
+
+  final bool isPurchased;
+
+  final bool isActive;
+
+  String get name => card.name;
+}
+
+class Arena {
+  static const String square = 'Square';
+
+  static const String pentagon = 'Pentagon';
+
+  static const String hexagon = 'Hexagon';
+
+  static ArenaType random() {
+    final rand = Random().nextInt(3);
+
+    switch (rand) {
+      case 0:
+        return ArenaType.square;
+      case 1:
+        return ArenaType.pentagon;
+      default:
+        return ArenaType.hexagon;
+    }
+  }
+
+  static ArenaType type(String type) {
+    switch (type) {
+      case Arena.square:
+        return ArenaType.square;
+      case Arena.pentagon:
+        return ArenaType.pentagon;
+      case Arena.hexagon:
+        return ArenaType.hexagon;
+    }
+
+    return null;
+  }
+
+  static String string(ArenaType type) {
+    switch (type) {
+      case ArenaType.square:
+        return Arena.square;
+      case ArenaType.pentagon:
+        return Arena.pentagon;
+      case ArenaType.hexagon:
+        return Arena.hexagon;
+    }
+
+    return 'Unknown ArenaType';
+  }
+}
+
+class Hero {
+  static const String assassin = 'Assassin';
+
+  static const String healer = 'Healer';
+
+  static const String warrior = 'Warrior';
+
+  static HeroType random() {
+    final rand = Random().nextInt(3);
+
+    switch (rand) {
+      case 0:
+        return HeroType.assassin;
+      case 1:
+        return HeroType.healer;
+      default:
+        return HeroType.warrior;
+    }
+  }
+
+  static HeroType type(String type) {
+    switch (type) {
+      case Hero.assassin:
+        return HeroType.assassin;
+      case Hero.healer:
+        return HeroType.healer;
+      case Hero.warrior:
+        return HeroType.warrior;
+    }
+
+    return null;
+  }
+
+  static String string(HeroType type) {
+    switch (type) {
+      case HeroType.assassin:
+        return Hero.assassin;
+      case HeroType.healer:
+        return Hero.healer;
+      case HeroType.warrior:
+        return Hero.warrior;
+    }
+
+    return 'Unknown HeroType';
+  }
+}
+
+List<String> allPurchases = ['Aphrodite', 'Apollo', 'Hades', 'Zeus'];
+
+List<Achievement> allAchievements = List.generate(11, (i) => i)
+    .map<Achievement>((i) => Achievement(name: 'Achievement $i', total: i))
+    .toList();
+
+List<Card> allCards = [
+  Card(name: 'Aphrodite'),
+  Card(name: 'Apollo'),
+  Card(name: 'Ares'),
+  Card(name: 'Artemis', hero: HeroType.assassin),
+  Card(name: 'Athena', hero: HeroType.assassin),
+  Card(name: 'Demeter', hero: HeroType.assassin),
+  Card(name: 'Dionysus', hero: HeroType.healer),
+  Card(name: 'Hades', hero: HeroType.healer),
+  Card(name: 'Hephaestus', hero: HeroType.healer),
+  Card(name: 'Hera', hero: HeroType.healer),
+  Card(name: 'Hermes', hero: HeroType.warrior),
+  Card(name: 'Poseidon', hero: HeroType.warrior),
+  Card(name: 'Zeus', hero: HeroType.warrior),
 ];
 
-String heroString(HeroType type) {
-  if (type == HeroType.assassin) {
-    return 'Assassin';
-  } else if (type == HeroType.healer) {
-    return 'Healer';
-  } else if (type == HeroType.warrior) {
-    return 'Warrior';
-  }
+List<Deck> myDecks = List.generate(11, (i) => i).map<Deck>((i) {
+  HeroType hero = Hero.random();
 
-  return '';
+  final cards = allCards
+      .where((card) =>
+          rand() &&
+          allPurchases.contains(card.name) &&
+          (card.hero == null || (card.hero == hero)))
+      .map((card) => card.name)
+      .toList();
+
+  return Deck(
+    id: uuid(),
+    name: 'Deck $i',
+    hero: hero,
+    cards: cards,
+  );
+}).toList();
+
+bool rand([int i = 2]) => Random().nextInt(i) == 0;
+
+String uuid() => Uuid().v4();
+
+mixin SharedPrefs on Object {
+  Future<SharedPreferences> prefs() async => SharedPreferences.getInstance();
 }
 
-String mapString(ArenaType type) {
-  if (type == ArenaType.square) {
-    return 'Square';
-  } else if (type == ArenaType.pentagon) {
-    return 'Pentagon';
-  } else if (type == ArenaType.hexagon) {
-    return 'Hexagon';
+class SettingsStore = _Settings with _$SettingsStore;
+
+abstract class _Settings with Store, SharedPrefs {
+  _Settings() {
+    _init();
   }
 
-  return '';
+  Future _init() async {
+    sound = (await prefs()).getBool('sound') ?? true;
+
+    music = (await prefs()).getBool('music') ?? true;
+  }
+
+  @observable
+  bool music = true;
+
+  @observable
+  bool sound = true;
+
+  @action
+  Future toggleSound() async {
+    (await prefs()).setBool('sound', sound = !sound);
+  }
+
+  @action
+  Future toggleMusic() async {
+    (await prefs()).setBool('music', music = !music);
+  }
 }
+
+class AchievementsStore = _Achievements with _$AchievementsStore;
+
+abstract class _Achievements with Store {
+  operator [](int i) => achievements[i];
+
+  @computed
+  int get length => achievements.length;
+
+  @observable
+  List<Achievement> achievements = List.from(allAchievements);
+}
+
+class NewDeckFormStore = _NewDeckFormStore with _$NewDeckFormStore;
+
+abstract class _NewDeckFormStore with Store {
+  @observable
+  String name = 'New Deck';
+
+  @observable
+  HeroType hero = HeroType.assassin;
+
+  @action
+  void setNewDeckName(String name) {
+    name = name;
+  }
+
+  @action
+  void setNewDeckHero(HeroType type) {
+    hero = type;
+  }
+}
+
+class UIStore = _UIStore with _$UIStore;
+
+abstract class _UIStore with Store {
+  NewDeckFormStore newDeckForm = NewDeckFormStore();
+
+  @observable
+  DeckView deckView = DeckView.deckList;
+
+  @observable
+  SocialView socialView = SocialView.achievements;
+
+  @observable
+  String activeDeckId;
+
+  @observable
+  String activeCardId;
+
+  @action
+  void setDeckView(DeckView view) {
+    deckView = view;
+  }
+
+  @action
+  void setSocialView(SocialView view) {
+    socialView = view;
+  }
+
+  @action
+  void setActiveDeck(String id) {
+    activeDeckId = id;
+  }
+
+  @action
+  void setActiveCard(String id) {
+    activeCardId = id;
+  }
+}
+
+class UserStore = _UserStore with _$UserStore;
+
+abstract class _UserStore with Store, SharedPrefs {
+  _UserStore() {
+    _init();
+  }
+
+  AchievementsStore achievements = AchievementsStore();
+
+  void _init() async {
+    setXp((await prefs()).getInt('xp') ?? 1);
+
+    setCheckpoint((await prefs()).getInt('checkpoint'));
+
+    setGold((await prefs()).getInt('gold'));
+
+    setArena(Arena.type((await prefs()).getString('arena') ?? Arena.square));
+
+    setHero(Hero.type((await prefs()).getString('hero') ?? Hero.assassin));
+
+    setPurchases((await prefs()).getStringList('purchases') ?? allPurchases);
+  }
+
+  @observable
+  int xp = 0;
+
+  @observable
+  int checkpoint = 0;
+
+  @observable
+  int gold = 0;
+
+  @observable
+  ArenaType arena = ArenaType.square;
+
+  @observable
+  HeroType hero = HeroType.assassin;
+
+  @observable
+  List<Deck> decks = [];
+
+  @observable
+  List<String> purchases = [];
+
+  @action
+  Future setXp(int val) async {
+    (await prefs()).setInt('xp', xp = val);
+  }
+
+  @action
+  Future setCheckpoint(int val) async {
+    (await prefs()).setInt('checkpoint', checkpoint = val);
+  }
+
+  @action
+  Future setGold(int val) async {
+    (await prefs()).setInt('gold', gold = val);
+  }
+
+  @action
+  Future addGold(int val) async {
+    (await prefs()).setInt('gold', gold += val);
+  }
+
+  @action
+  Future removeGold(int val) async {
+    (await prefs()).setInt('gold', gold -= val);
+  }
+
+  @action
+  Future setArena(ArenaType type) async {
+    arena = type;
+
+    (await prefs()).setString('arena', Arena.string(type));
+  }
+
+  @action
+  Future setHero(HeroType type) async {
+    hero = type;
+
+    (await prefs()).setString('hero', Hero.string(type));
+  }
+
+  @action
+  Future setPurchases(List<String> p) async {
+    (await prefs()).setStringList('purchases', purchases = p);
+  }
+
+  @action
+  Future purchaseCard(String cardId) async {
+    if (!purchases.contains(cardId)) {
+      final card = allCards.firstWhere((card) => card.name == cardId);
+
+      if (card != null && card.gold < gold) {
+        removeGold(card.gold);
+        setPurchases(purchases..add(cardId));
+      }
+    }
+  }
+
+  @action
+  Future addDeck(String name, HeroType hero, UIStore ui) async {
+    final id = uuid();
+
+    decks = decks
+      ..add(Deck(
+        id: id,
+        name: name,
+        hero: hero,
+      ));
+
+    ui.setActiveDeck(id);
+  }
+
+  @action
+  Future removeDeck(String id) async {
+    final id = uuid();
+
+    decks = decks..removeWhere((deck) => deck.id == id);
+  }
+
+  @action
+  void toggleCard(String deckId, String cardId) {
+    decks = decks.map((deck) {
+      if (deck.id == deckId) {
+        deck.cards.contains(cardId)
+            ? deck.cards.remove(cardId)
+            : deck.cards.add(cardId);
+      }
+
+      return deck;
+    }).toList();
+  }
+}
+
+class AppState = _AppState with _$AppState;
 
 abstract class _AppState with Store {
-  @observable
-  bool _music = true;
-  bool get music => _music;
+  SettingsStore settings = SettingsStore();
 
-  @observable
-  bool _sound = true;
-  bool get sound => _sound;
+  UIStore ui = UIStore();
 
-  @observable
-  ArenaType _map = ArenaType.square;
-  ArenaType get map => _map;
+  UserStore user = UserStore();
 
-  @observable
-  HeroType _hero = HeroType.assassin;
-  HeroType get hero => _hero;
-
-  @observable
-  int _xp = 0;
-  int get xp => _xp;
-
-  @observable
-  int _checkpoint = 0;
-  int get checkpoint => _checkpoint;
-
-  @observable
-  int _coins = 0;
-  int get coins => _coins;
-
-  @observable
-  int _gems = 0;
-  int get gems => _gems;
-
-  @observable
-  List<Card> _cards = List.from(allCards);
-  List<Card> get cards => _cards;
-
-  @observable
-  List<MyDeck> _decks = List.from(myDecks);
-  List<MyDeck> get decks => _decks;
-
-  @action
-  void toggleMusic() {
-    _music = !_music;
+  @computed
+  Card get activeCard {
+    return allCards.firstWhere((card) => card.name == ui.activeCardId);
   }
 
-  @action
-  void toggleSound() {
-    _sound = !_sound;
+  @computed
+  Deck get activeDeck {
+    return user.decks.firstWhere((deck) => deck.id == ui.activeDeckId);
   }
 
-  @action
-  void setMap(ArenaType type) {
-    _map = type;
-  }
-
-  @action
-  void setHero(HeroType type) {
-    _hero = type;
-  }
-
-  @action
-  void setCoins(int val) {
-    if (val < 0) {
-      throw StateError('Cannot go below zero coins');
-    }
-
-    _coins = val;
-  }
-
-  @action
-  void addCoins(int val) {
-    _coins += val;
-  }
-
-  @action
-  void removeCoins(int val) {
-    if (val > coins) {
-      throw StateError('Cannot go below zero coins');
-    }
-
-    _coins -= val;
-  }
-
-  @action
-  void setGems(int val) {
-    if (val < 0) {
-      throw StateError('Cannot go below zero gems');
-    }
-
-    _gems = val;
-  }
-
-  @action
-  void addGems(int val) {
-    _gems += val;
-  }
-
-  @action
-  void removeGems(int val) {
-    if (val > gems) {
-      throw StateError('Cannot go below zero gems');
-    }
-
-    _gems -= val;
+  List<DeckCard> deckCards(
+    Deck deck,
+  ) {
+    return allCards
+        .where((card) => card.hero == null || card.hero == deck.hero)
+        .map(
+          (card) => DeckCard(
+            card: card,
+            isActive: deck.cards.contains(card.name),
+            isPurchased: user.purchases.contains(card.name),
+          ),
+        )
+        .toList()
+          ..sort(
+            (DeckCard a, DeckCard b) =>
+                (a.isPurchased ? 1 : 0).compareTo(b.isPurchased ? 1 : 0),
+          );
   }
 }

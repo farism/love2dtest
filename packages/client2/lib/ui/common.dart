@@ -3,7 +3,44 @@ import 'dart:ui';
 import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
 
-class Button extends StatefulWidget {
+class RawButton extends StatefulWidget {
+  const RawButton({
+    Key key,
+    @required this.builder,
+    @required this.onPressed,
+  }) : super(key: key);
+
+  final Widget Function(bool) builder;
+  final Function onPressed;
+
+  @override
+  _RawButtonState createState() => _RawButtonState();
+}
+
+class _RawButtonState extends State<RawButton> {
+  bool isPressed = false;
+
+  @override
+  Widget build(context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onPressed();
+      },
+      onTapDown: (details) => setState(() {
+        isPressed = true;
+      }),
+      onTapUp: (details) => setState(() {
+        isPressed = false;
+      }),
+      onTapCancel: () => setState(() {
+        isPressed = false;
+      }),
+      child: Container(child: widget.builder(isPressed)),
+    );
+  }
+}
+
+class Button extends StatelessWidget {
   const Button({
     Key key,
     @required this.label,
@@ -11,34 +48,21 @@ class Button extends StatefulWidget {
     this.color = Colors.black,
   }) : super(key: key);
 
+  final Color color;
   final String label;
   final Function onPressed;
-  final Color color;
 
   @override
-  _ButtonState createState() => _ButtonState();
-}
-
-class _ButtonState extends State<Button> {
-  bool isPressed = false;
-
   Widget build(context) {
-    return GestureDetector(
-      onTapDown: (details) => setState(() {
-        isPressed = true;
-      }),
-      onTapUp: (details) => setState(() {
-        isPressed = false;
-        widget.onPressed();
-      }),
-      onTapCancel: () => setState(() {
-        isPressed = false;
-      }),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Text(widget.label),
-        color: isPressed ? Colors.red : widget.color,
-      ),
+    return RawButton(
+      builder: (isPressed) {
+        return Container(
+          padding: const EdgeInsets.all(10),
+          child: Text(label),
+          color: isPressed ? Colors.red : color,
+        );
+      },
+      onPressed: onPressed,
     );
   }
 }
@@ -62,11 +86,14 @@ class Modal extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Button(
-              label: 'X',
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            Align(
+              alignment: Alignment.centerRight,
+              child: Button(
+                label: 'X',
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
             child
           ],

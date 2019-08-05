@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import './common.dart';
 import '../state/app.dart';
-import '../state/ui.dart';
 
 class ArenaRoute extends StatelessWidget {
   @override
@@ -20,21 +19,21 @@ class ArenaRoute extends StatelessWidget {
         Button(
           label: 'Square',
           onPressed: () {
-            appState.setMap(ArenaType.square);
+            appState.user.setArena(ArenaType.square);
             close();
           },
         ),
         Button(
           label: 'Pentagon',
           onPressed: () {
-            appState.setMap(ArenaType.pentagon);
+            appState.user.setArena(ArenaType.pentagon);
             close();
           },
         ),
         Button(
           label: 'Hexagon',
           onPressed: () {
-            appState.setMap(ArenaType.hexagon);
+            appState.user.setArena(ArenaType.hexagon);
             close();
           },
         ),

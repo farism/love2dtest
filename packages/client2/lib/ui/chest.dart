@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import './common.dart';
 import '../state/app.dart';
-import '../state/ui.dart';
 
 class ChestRoute extends StatelessWidget {
   @override

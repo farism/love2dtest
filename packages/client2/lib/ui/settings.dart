@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './common.dart';
 import '../state/app.dart';
-import '../state/ui.dart';
 
 class SettingsRoute extends StatelessWidget {
   @override
@@ -12,21 +12,26 @@ class SettingsRoute extends StatelessWidget {
     final appState = Provider.of<AppState>(context);
 
     return Observer(builder: (_) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+      final settings = appState.settings;
+
+      return Wrap(
+        direction: Axis.vertical,
+        alignment: WrapAlignment.center,
+        runAlignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 10,
         children: [
           const Text("Settings"),
           Button(
-            label: 'Sound: ${appState.sound ? 'On' : 'Off'}',
+            label: 'Sound: ${appState.settings.sound ? 'On' : 'Off'}',
             onPressed: () {
-              appState.toggleSound();
+              appState.settings.toggleSound();
             },
           ),
           Button(
-            label: 'Music: ${appState.music ? 'On' : 'Off'}',
+            label: 'Music: ${settings.music ? 'On' : 'Off'}',
             onPressed: () {
-              appState.toggleMusic();
+              appState.settings.toggleMusic();
             },
           ),
           Button(
@@ -38,7 +43,7 @@ class SettingsRoute extends StatelessWidget {
           Button(
             label: 'Contact',
             onPressed: () {
-              Navigator.of(context).pushNamed("/settings/contact");
+              launch('mailto:farismmk@gmail.com');
             },
           ),
           Button(

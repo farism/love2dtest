@@ -1,24 +1,25 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:client2/ui/about.dart';
-import 'package:client2/ui/contact.dart';
-import 'package:client2/ui/language.dart';
+import 'package:client2/ui/card.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
 
 import './state/app.dart';
-import './state/ui.dart';
+import './ui/about.dart';
 import './ui/arena.dart';
 import './ui/chest.dart';
 import './ui/common.dart';
-import './ui/deck.dart';
+import './ui/contact.dart';
+import './ui/decks.dart';
 import './ui/hero.dart';
 import './ui/home.dart';
+import './ui/language.dart';
 import './ui/play.dart';
 import './ui/settings.dart';
 import './ui/social.dart';
@@ -44,7 +45,7 @@ PageRoute splashRoute() {
 
 PageRoute homeRoute() {
   return PageRouteBuilder(
-    barrierColor: Color(0xFFFF0000),
+    barrierColor: Color(0xFF333333),
     pageBuilder: (context, animation, secondaryAnimation) {
       return HomeRoute();
     },
@@ -78,14 +79,20 @@ Route generateRoute(RouteSettings settings) {
       return splashRoute();
     case "/":
       return homeRoute();
-    case "/map":
+    case "/arena":
       return modalRoute(builder: (context) => ArenaRoute());
     case "/hero":
       return modalRoute(builder: (context) => HeroRoute());
     case "/social":
       return modalRoute(builder: (context) => SocialRoute());
-    case "/deck":
-      return modalRoute(builder: (context) => DeckRoute());
+    case "/decks":
+      return modalRoute(builder: (context) => DecksRoute());
+    case "/decks/new":
+      return modalRoute(builder: (context) => NewDeckRoute());
+    case "/decks/detail":
+      return modalRoute(builder: (context) => DeckDetailRoute());
+    case "/card":
+      return modalRoute(builder: (context) => CardRoute());
     case "/chest":
       return modalRoute(builder: (context) => ChestRoute());
     case "/play":
@@ -109,18 +116,17 @@ Route generateRoute(RouteSettings settings) {
 
 class App extends StatelessWidget {
   final _appState = AppState();
-  final _uiState = UIState();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<AppState>.value(value: _appState),
-        Provider<UIState>.value(value: _uiState),
       ],
       child: WidgetsApp(
+        localizationsDelegates: [DefaultMaterialLocalizations.delegate],
         onGenerateRoute: generateRoute,
-        initialRoute: "/",
+        initialRoute: "/decks",
         color: Colors.black,
       ),
     );

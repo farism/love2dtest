@@ -14,29 +14,34 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.2.2 <3.0.0'
 
 dependencies:
-  # box2d_flame: ^0.4.3
   box2d_flame:
     git:
       url: git://github.com/msywensky/box2d.dart.git
   flutter:
     sdk: flutter
-  flutter_hooks: ^0.6.0
-  provider: ^3.0.0+1
-  redux: ^3.0.0
-  flutter_redux: ^0.5.3
-  flutter_mobx: ^0.3.0+1
-  mobx: ^0.3.5
-  screen: ^0.0.5
-  collection: ^1.14.11
+  intl:
+  provider:
+  flutter_redux:
+  flutter_mobx:
+  mobx:
+  screen:
+  collection:
+  shared_preferences:
+  shared_preferences_fde:
+    path: ../shared_preferences_fde
+  uuid:
+  url_launcher:
+  url_launcher_fde:
+    path: ../url_launcher_fde
   window_size:
     path: ../window_size
 dev_dependencies:
-  build_runner: ^1.0.0
-  build_test: ^0.10.3
-  mobx_codegen: ^0.3.3+1
+  build_runner:
+  build_test:
+  mobx_codegen:
   flutter_test:
     sdk: flutter
 

@@ -9,7 +9,7 @@ class AboutRoute extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text("About"),
+        const Text('About'),
         Button(
           label: 'Back',
           onPressed: () {

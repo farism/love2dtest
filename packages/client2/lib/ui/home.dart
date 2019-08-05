@@ -3,26 +3,29 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import './common.dart';
-import '../state/app.dart';
-import '../state/ui.dart';
+import '../state/app.dart' as App;
 
 class HomeRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
+    final appState = Provider.of<App.AppState>(context);
 
     return Observer(builder: (_) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Wrap(
+        direction: Axis.vertical,
+        alignment: WrapAlignment.center,
+        runAlignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 10,
         children: [
           Button(
-            label: 'Map: ${mapString(appState.map)}',
+            label: 'Arena: ${App.Arena.string(appState.user.arena)}',
             onPressed: () {
-              Navigator.of(context).pushNamed("/map");
+              Navigator.of(context).pushNamed("/arena");
             },
           ),
           Button(
-            label: 'Hero: ${heroString(appState.hero)}',
+            label: 'Hero: ${App.Hero.string(appState.user.hero)}',
             onPressed: () {
               Navigator.of(context).pushNamed("/hero");
             },
@@ -36,7 +39,7 @@ class HomeRoute extends StatelessWidget {
           Button(
             label: 'Deck',
             onPressed: () {
-              Navigator.of(context).pushNamed("/deck");
+              Navigator.of(context).pushNamed("/decks");
             },
           ),
           Button(

@@ -8,276 +8,481 @@ part of 'app.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
 
+mixin _$SettingsStore on _Settings, Store {
+  final _$musicAtom = Atom(name: '_Settings.music');
+
+  @override
+  bool get music {
+    _$musicAtom.context.enforceReadPolicy(_$musicAtom);
+    _$musicAtom.reportObserved();
+    return super.music;
+  }
+
+  @override
+  set music(bool value) {
+    _$musicAtom.context.conditionallyRunInAction(() {
+      super.music = value;
+      _$musicAtom.reportChanged();
+    }, _$musicAtom, name: '${_$musicAtom.name}_set');
+  }
+
+  final _$soundAtom = Atom(name: '_Settings.sound');
+
+  @override
+  bool get sound {
+    _$soundAtom.context.enforceReadPolicy(_$soundAtom);
+    _$soundAtom.reportObserved();
+    return super.sound;
+  }
+
+  @override
+  set sound(bool value) {
+    _$soundAtom.context.conditionallyRunInAction(() {
+      super.sound = value;
+      _$soundAtom.reportChanged();
+    }, _$soundAtom, name: '${_$soundAtom.name}_set');
+  }
+
+  final _$toggleSoundAsyncAction = AsyncAction('toggleSound');
+
+  @override
+  Future<dynamic> toggleSound() {
+    return _$toggleSoundAsyncAction.run(() => super.toggleSound());
+  }
+
+  final _$toggleMusicAsyncAction = AsyncAction('toggleMusic');
+
+  @override
+  Future<dynamic> toggleMusic() {
+    return _$toggleMusicAsyncAction.run(() => super.toggleMusic());
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
+mixin _$AchievementsStore on _Achievements, Store {
+  Computed<int> _$lengthComputed;
+
+  @override
+  int get length =>
+      (_$lengthComputed ??= Computed<int>(() => super.length)).value;
+
+  final _$achievementsAtom = Atom(name: '_Achievements.achievements');
+
+  @override
+  List<Achievement> get achievements {
+    _$achievementsAtom.context.enforceReadPolicy(_$achievementsAtom);
+    _$achievementsAtom.reportObserved();
+    return super.achievements;
+  }
+
+  @override
+  set achievements(List<Achievement> value) {
+    _$achievementsAtom.context.conditionallyRunInAction(() {
+      super.achievements = value;
+      _$achievementsAtom.reportChanged();
+    }, _$achievementsAtom, name: '${_$achievementsAtom.name}_set');
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
+mixin _$NewDeckFormStore on _NewDeckFormStore, Store {
+  final _$nameAtom = Atom(name: '_NewDeckFormStore.name');
+
+  @override
+  String get name {
+    _$nameAtom.context.enforceReadPolicy(_$nameAtom);
+    _$nameAtom.reportObserved();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.context.conditionallyRunInAction(() {
+      super.name = value;
+      _$nameAtom.reportChanged();
+    }, _$nameAtom, name: '${_$nameAtom.name}_set');
+  }
+
+  final _$heroAtom = Atom(name: '_NewDeckFormStore.hero');
+
+  @override
+  HeroType get hero {
+    _$heroAtom.context.enforceReadPolicy(_$heroAtom);
+    _$heroAtom.reportObserved();
+    return super.hero;
+  }
+
+  @override
+  set hero(HeroType value) {
+    _$heroAtom.context.conditionallyRunInAction(() {
+      super.hero = value;
+      _$heroAtom.reportChanged();
+    }, _$heroAtom, name: '${_$heroAtom.name}_set');
+  }
+
+  final _$_NewDeckFormStoreActionController =
+      ActionController(name: '_NewDeckFormStore');
+
+  @override
+  void setNewDeckName(String name) {
+    final _$actionInfo = _$_NewDeckFormStoreActionController.startAction();
+    try {
+      return super.setNewDeckName(name);
+    } finally {
+      _$_NewDeckFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setNewDeckHero(HeroType type) {
+    final _$actionInfo = _$_NewDeckFormStoreActionController.startAction();
+    try {
+      return super.setNewDeckHero(type);
+    } finally {
+      _$_NewDeckFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
+mixin _$UIStore on _UIStore, Store {
+  final _$deckViewAtom = Atom(name: '_UIStore.deckView');
+
+  @override
+  DeckView get deckView {
+    _$deckViewAtom.context.enforceReadPolicy(_$deckViewAtom);
+    _$deckViewAtom.reportObserved();
+    return super.deckView;
+  }
+
+  @override
+  set deckView(DeckView value) {
+    _$deckViewAtom.context.conditionallyRunInAction(() {
+      super.deckView = value;
+      _$deckViewAtom.reportChanged();
+    }, _$deckViewAtom, name: '${_$deckViewAtom.name}_set');
+  }
+
+  final _$socialViewAtom = Atom(name: '_UIStore.socialView');
+
+  @override
+  SocialView get socialView {
+    _$socialViewAtom.context.enforceReadPolicy(_$socialViewAtom);
+    _$socialViewAtom.reportObserved();
+    return super.socialView;
+  }
+
+  @override
+  set socialView(SocialView value) {
+    _$socialViewAtom.context.conditionallyRunInAction(() {
+      super.socialView = value;
+      _$socialViewAtom.reportChanged();
+    }, _$socialViewAtom, name: '${_$socialViewAtom.name}_set');
+  }
+
+  final _$activeDeckIdAtom = Atom(name: '_UIStore.activeDeckId');
+
+  @override
+  String get activeDeckId {
+    _$activeDeckIdAtom.context.enforceReadPolicy(_$activeDeckIdAtom);
+    _$activeDeckIdAtom.reportObserved();
+    return super.activeDeckId;
+  }
+
+  @override
+  set activeDeckId(String value) {
+    _$activeDeckIdAtom.context.conditionallyRunInAction(() {
+      super.activeDeckId = value;
+      _$activeDeckIdAtom.reportChanged();
+    }, _$activeDeckIdAtom, name: '${_$activeDeckIdAtom.name}_set');
+  }
+
+  final _$activeCardIdAtom = Atom(name: '_UIStore.activeCardId');
+
+  @override
+  String get activeCardId {
+    _$activeCardIdAtom.context.enforceReadPolicy(_$activeCardIdAtom);
+    _$activeCardIdAtom.reportObserved();
+    return super.activeCardId;
+  }
+
+  @override
+  set activeCardId(String value) {
+    _$activeCardIdAtom.context.conditionallyRunInAction(() {
+      super.activeCardId = value;
+      _$activeCardIdAtom.reportChanged();
+    }, _$activeCardIdAtom, name: '${_$activeCardIdAtom.name}_set');
+  }
+
+  final _$_UIStoreActionController = ActionController(name: '_UIStore');
+
+  @override
+  void setDeckView(DeckView view) {
+    final _$actionInfo = _$_UIStoreActionController.startAction();
+    try {
+      return super.setDeckView(view);
+    } finally {
+      _$_UIStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setSocialView(SocialView view) {
+    final _$actionInfo = _$_UIStoreActionController.startAction();
+    try {
+      return super.setSocialView(view);
+    } finally {
+      _$_UIStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setActiveDeck(String id) {
+    final _$actionInfo = _$_UIStoreActionController.startAction();
+    try {
+      return super.setActiveDeck(id);
+    } finally {
+      _$_UIStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setActiveCard(String id) {
+    final _$actionInfo = _$_UIStoreActionController.startAction();
+    try {
+      return super.setActiveCard(id);
+    } finally {
+      _$_UIStoreActionController.endAction(_$actionInfo);
+    }
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
+mixin _$UserStore on _UserStore, Store {
+  final _$xpAtom = Atom(name: '_UserStore.xp');
+
+  @override
+  int get xp {
+    _$xpAtom.context.enforceReadPolicy(_$xpAtom);
+    _$xpAtom.reportObserved();
+    return super.xp;
+  }
+
+  @override
+  set xp(int value) {
+    _$xpAtom.context.conditionallyRunInAction(() {
+      super.xp = value;
+      _$xpAtom.reportChanged();
+    }, _$xpAtom, name: '${_$xpAtom.name}_set');
+  }
+
+  final _$checkpointAtom = Atom(name: '_UserStore.checkpoint');
+
+  @override
+  int get checkpoint {
+    _$checkpointAtom.context.enforceReadPolicy(_$checkpointAtom);
+    _$checkpointAtom.reportObserved();
+    return super.checkpoint;
+  }
+
+  @override
+  set checkpoint(int value) {
+    _$checkpointAtom.context.conditionallyRunInAction(() {
+      super.checkpoint = value;
+      _$checkpointAtom.reportChanged();
+    }, _$checkpointAtom, name: '${_$checkpointAtom.name}_set');
+  }
+
+  final _$goldAtom = Atom(name: '_UserStore.gold');
+
+  @override
+  int get gold {
+    _$goldAtom.context.enforceReadPolicy(_$goldAtom);
+    _$goldAtom.reportObserved();
+    return super.gold;
+  }
+
+  @override
+  set gold(int value) {
+    _$goldAtom.context.conditionallyRunInAction(() {
+      super.gold = value;
+      _$goldAtom.reportChanged();
+    }, _$goldAtom, name: '${_$goldAtom.name}_set');
+  }
+
+  final _$arenaAtom = Atom(name: '_UserStore.arena');
+
+  @override
+  ArenaType get arena {
+    _$arenaAtom.context.enforceReadPolicy(_$arenaAtom);
+    _$arenaAtom.reportObserved();
+    return super.arena;
+  }
+
+  @override
+  set arena(ArenaType value) {
+    _$arenaAtom.context.conditionallyRunInAction(() {
+      super.arena = value;
+      _$arenaAtom.reportChanged();
+    }, _$arenaAtom, name: '${_$arenaAtom.name}_set');
+  }
+
+  final _$heroAtom = Atom(name: '_UserStore.hero');
+
+  @override
+  HeroType get hero {
+    _$heroAtom.context.enforceReadPolicy(_$heroAtom);
+    _$heroAtom.reportObserved();
+    return super.hero;
+  }
+
+  @override
+  set hero(HeroType value) {
+    _$heroAtom.context.conditionallyRunInAction(() {
+      super.hero = value;
+      _$heroAtom.reportChanged();
+    }, _$heroAtom, name: '${_$heroAtom.name}_set');
+  }
+
+  final _$decksAtom = Atom(name: '_UserStore.decks');
+
+  @override
+  List<Deck> get decks {
+    _$decksAtom.context.enforceReadPolicy(_$decksAtom);
+    _$decksAtom.reportObserved();
+    return super.decks;
+  }
+
+  @override
+  set decks(List<Deck> value) {
+    _$decksAtom.context.conditionallyRunInAction(() {
+      super.decks = value;
+      _$decksAtom.reportChanged();
+    }, _$decksAtom, name: '${_$decksAtom.name}_set');
+  }
+
+  final _$purchasesAtom = Atom(name: '_UserStore.purchases');
+
+  @override
+  List<String> get purchases {
+    _$purchasesAtom.context.enforceReadPolicy(_$purchasesAtom);
+    _$purchasesAtom.reportObserved();
+    return super.purchases;
+  }
+
+  @override
+  set purchases(List<String> value) {
+    _$purchasesAtom.context.conditionallyRunInAction(() {
+      super.purchases = value;
+      _$purchasesAtom.reportChanged();
+    }, _$purchasesAtom, name: '${_$purchasesAtom.name}_set');
+  }
+
+  final _$setXpAsyncAction = AsyncAction('setXp');
+
+  @override
+  Future<dynamic> setXp(int val) {
+    return _$setXpAsyncAction.run(() => super.setXp(val));
+  }
+
+  final _$setCheckpointAsyncAction = AsyncAction('setCheckpoint');
+
+  @override
+  Future<dynamic> setCheckpoint(int val) {
+    return _$setCheckpointAsyncAction.run(() => super.setCheckpoint(val));
+  }
+
+  final _$setGoldAsyncAction = AsyncAction('setGold');
+
+  @override
+  Future<dynamic> setGold(int val) {
+    return _$setGoldAsyncAction.run(() => super.setGold(val));
+  }
+
+  final _$addGoldAsyncAction = AsyncAction('addGold');
+
+  @override
+  Future<dynamic> addGold(int val) {
+    return _$addGoldAsyncAction.run(() => super.addGold(val));
+  }
+
+  final _$removeGoldAsyncAction = AsyncAction('removeGold');
+
+  @override
+  Future<dynamic> removeGold(int val) {
+    return _$removeGoldAsyncAction.run(() => super.removeGold(val));
+  }
+
+  final _$setArenaAsyncAction = AsyncAction('setArena');
+
+  @override
+  Future<dynamic> setArena(ArenaType type) {
+    return _$setArenaAsyncAction.run(() => super.setArena(type));
+  }
+
+  final _$setHeroAsyncAction = AsyncAction('setHero');
+
+  @override
+  Future<dynamic> setHero(HeroType type) {
+    return _$setHeroAsyncAction.run(() => super.setHero(type));
+  }
+
+  final _$setPurchasesAsyncAction = AsyncAction('setPurchases');
+
+  @override
+  Future<dynamic> setPurchases(List<String> p) {
+    return _$setPurchasesAsyncAction.run(() => super.setPurchases(p));
+  }
+
+  final _$purchaseCardAsyncAction = AsyncAction('purchaseCard');
+
+  @override
+  Future<dynamic> purchaseCard(String cardId) {
+    return _$purchaseCardAsyncAction.run(() => super.purchaseCard(cardId));
+  }
+
+  final _$addDeckAsyncAction = AsyncAction('addDeck');
+
+  @override
+  Future<dynamic> addDeck(String name, HeroType hero, UIStore ui) {
+    return _$addDeckAsyncAction.run(() => super.addDeck(name, hero, ui));
+  }
+
+  final _$removeDeckAsyncAction = AsyncAction('removeDeck');
+
+  @override
+  Future<dynamic> removeDeck(String id) {
+    return _$removeDeckAsyncAction.run(() => super.removeDeck(id));
+  }
+
+  final _$_UserStoreActionController = ActionController(name: '_UserStore');
+
+  @override
+  void toggleCard(String deckId, String cardId) {
+    final _$actionInfo = _$_UserStoreActionController.startAction();
+    try {
+      return super.toggleCard(deckId, cardId);
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
 mixin _$AppState on _AppState, Store {
-  final _$_musicAtom = Atom(name: '_AppState._music');
+  Computed<Card> _$activeCardComputed;
 
   @override
-  bool get _music {
-    _$_musicAtom.context.enforceReadPolicy(_$_musicAtom);
-    _$_musicAtom.reportObserved();
-    return super._music;
-  }
+  Card get activeCard =>
+      (_$activeCardComputed ??= Computed<Card>(() => super.activeCard)).value;
+  Computed<Deck> _$activeDeckComputed;
 
   @override
-  set _music(bool value) {
-    _$_musicAtom.context.conditionallyRunInAction(() {
-      super._music = value;
-      _$_musicAtom.reportChanged();
-    }, _$_musicAtom, name: '${_$_musicAtom.name}_set');
-  }
-
-  final _$_soundAtom = Atom(name: '_AppState._sound');
-
-  @override
-  bool get _sound {
-    _$_soundAtom.context.enforceReadPolicy(_$_soundAtom);
-    _$_soundAtom.reportObserved();
-    return super._sound;
-  }
-
-  @override
-  set _sound(bool value) {
-    _$_soundAtom.context.conditionallyRunInAction(() {
-      super._sound = value;
-      _$_soundAtom.reportChanged();
-    }, _$_soundAtom, name: '${_$_soundAtom.name}_set');
-  }
-
-  final _$_mapAtom = Atom(name: '_AppState._map');
-
-  @override
-  ArenaType get _map {
-    _$_mapAtom.context.enforceReadPolicy(_$_mapAtom);
-    _$_mapAtom.reportObserved();
-    return super._map;
-  }
-
-  @override
-  set _map(ArenaType value) {
-    _$_mapAtom.context.conditionallyRunInAction(() {
-      super._map = value;
-      _$_mapAtom.reportChanged();
-    }, _$_mapAtom, name: '${_$_mapAtom.name}_set');
-  }
-
-  final _$_heroAtom = Atom(name: '_AppState._hero');
-
-  @override
-  HeroType get _hero {
-    _$_heroAtom.context.enforceReadPolicy(_$_heroAtom);
-    _$_heroAtom.reportObserved();
-    return super._hero;
-  }
-
-  @override
-  set _hero(HeroType value) {
-    _$_heroAtom.context.conditionallyRunInAction(() {
-      super._hero = value;
-      _$_heroAtom.reportChanged();
-    }, _$_heroAtom, name: '${_$_heroAtom.name}_set');
-  }
-
-  final _$_xpAtom = Atom(name: '_AppState._xp');
-
-  @override
-  int get _xp {
-    _$_xpAtom.context.enforceReadPolicy(_$_xpAtom);
-    _$_xpAtom.reportObserved();
-    return super._xp;
-  }
-
-  @override
-  set _xp(int value) {
-    _$_xpAtom.context.conditionallyRunInAction(() {
-      super._xp = value;
-      _$_xpAtom.reportChanged();
-    }, _$_xpAtom, name: '${_$_xpAtom.name}_set');
-  }
-
-  final _$_checkpointAtom = Atom(name: '_AppState._checkpoint');
-
-  @override
-  int get _checkpoint {
-    _$_checkpointAtom.context.enforceReadPolicy(_$_checkpointAtom);
-    _$_checkpointAtom.reportObserved();
-    return super._checkpoint;
-  }
-
-  @override
-  set _checkpoint(int value) {
-    _$_checkpointAtom.context.conditionallyRunInAction(() {
-      super._checkpoint = value;
-      _$_checkpointAtom.reportChanged();
-    }, _$_checkpointAtom, name: '${_$_checkpointAtom.name}_set');
-  }
-
-  final _$_coinsAtom = Atom(name: '_AppState._coins');
-
-  @override
-  int get _coins {
-    _$_coinsAtom.context.enforceReadPolicy(_$_coinsAtom);
-    _$_coinsAtom.reportObserved();
-    return super._coins;
-  }
-
-  @override
-  set _coins(int value) {
-    _$_coinsAtom.context.conditionallyRunInAction(() {
-      super._coins = value;
-      _$_coinsAtom.reportChanged();
-    }, _$_coinsAtom, name: '${_$_coinsAtom.name}_set');
-  }
-
-  final _$_gemsAtom = Atom(name: '_AppState._gems');
-
-  @override
-  int get _gems {
-    _$_gemsAtom.context.enforceReadPolicy(_$_gemsAtom);
-    _$_gemsAtom.reportObserved();
-    return super._gems;
-  }
-
-  @override
-  set _gems(int value) {
-    _$_gemsAtom.context.conditionallyRunInAction(() {
-      super._gems = value;
-      _$_gemsAtom.reportChanged();
-    }, _$_gemsAtom, name: '${_$_gemsAtom.name}_set');
-  }
-
-  final _$_cardsAtom = Atom(name: '_AppState._cards');
-
-  @override
-  List<Card> get _cards {
-    _$_cardsAtom.context.enforceReadPolicy(_$_cardsAtom);
-    _$_cardsAtom.reportObserved();
-    return super._cards;
-  }
-
-  @override
-  set _cards(List<Card> value) {
-    _$_cardsAtom.context.conditionallyRunInAction(() {
-      super._cards = value;
-      _$_cardsAtom.reportChanged();
-    }, _$_cardsAtom, name: '${_$_cardsAtom.name}_set');
-  }
-
-  final _$_decksAtom = Atom(name: '_AppState._decks');
-
-  @override
-  List<MyDeck> get _decks {
-    _$_decksAtom.context.enforceReadPolicy(_$_decksAtom);
-    _$_decksAtom.reportObserved();
-    return super._decks;
-  }
-
-  @override
-  set _decks(List<MyDeck> value) {
-    _$_decksAtom.context.conditionallyRunInAction(() {
-      super._decks = value;
-      _$_decksAtom.reportChanged();
-    }, _$_decksAtom, name: '${_$_decksAtom.name}_set');
-  }
-
-  final _$_AppStateActionController = ActionController(name: '_AppState');
-
-  @override
-  void toggleMusic() {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.toggleMusic();
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void toggleSound() {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.toggleSound();
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setMap(ArenaType type) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.setMap(type);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setHero(HeroType type) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.setHero(type);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setCoins(int val) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.setCoins(val);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void addCoins(int val) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.addCoins(val);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removeCoins(int val) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.removeCoins(val);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setGems(int val) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.setGems(val);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void addGems(int val) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.addGems(val);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removeGems(int val) {
-    final _$actionInfo = _$_AppStateActionController.startAction();
-    try {
-      return super.removeGems(val);
-    } finally {
-      _$_AppStateActionController.endAction(_$actionInfo);
-    }
-  }
+  Deck get activeDeck =>
+      (_$activeDeckComputed ??= Computed<Deck>(() => super.activeDeck)).value;
 }

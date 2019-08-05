@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import './common.dart';
 import '../state/app.dart';
-import '../state/ui.dart';
 
 class HeroRoute extends StatelessWidget {
   @override
@@ -20,21 +19,21 @@ class HeroRoute extends StatelessWidget {
         Button(
           label: 'Assassin',
           onPressed: () {
-            appState.setHero(HeroType.assassin);
+            appState.user.setHero(HeroType.assassin);
             close();
           },
         ),
         Button(
           label: 'Healer',
           onPressed: () {
-            appState.setHero(HeroType.healer);
+            appState.user.setHero(HeroType.healer);
             close();
           },
         ),
         Button(
           label: 'Warrior',
           onPressed: () {
-            appState.setHero(HeroType.warrior);
+            appState.user.setHero(HeroType.warrior);
             close();
           },
         ),
