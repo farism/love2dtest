@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.2.1 (swiftlang-1000.11.42 clang-1000.11.45.1)"
+options: "604d3aee726e7566108d83f66b157453"
+build_time: [1565151002, 82158000]
+inputs:
+  "/Users/farismustafa/Documents/Projects/games/icepicker/packages/shared_preferences_fde/macos/Classes/SharedPreferencesPlugin.swift": [1564781199, 0]

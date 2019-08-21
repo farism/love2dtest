@@ -1,0 +1,183 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "RegisterGeneratedPlugins"
+provides-nominal:
+provides-member:
+provides-dynamic-lookup:
+depends-top-level:
+- "FlutterPluginRegistry"
+- "RegisterGeneratedPlugins"
+- !private "SharedPreferencesPlugin"
+- !private "StringLiteralType"
+- !private "UrlLauncherPlugin"
+- !private "WindowSizePlugin"
+depends-member:
+- !private ["SK", "init"]
+- !private ["SK", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "register"]
+- !private ["Sl", "init"]
+- !private ["Sl", "init"]
+- !private ["SL", "init"]
+- !private ["SL", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "register"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "register"]
+- !private ["Se", "init"]
+- !private ["Se", "init"]
+- !private ["SE", "init"]
+- !private ["SE", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "init"]
+- !private ["SQ", "register"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["So13FlutterPluginP", "register"]
+- !private ["So21FlutterPluginRegistryP", "registrar"]
+- !private ["SH", "init"]
+- !private ["SH", "init"]
+- !private ["SH", "register"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["So8NSObjectC", "register"]
+- !private ["So8NSObjectP", "register"]
+- !private ["So8NSObjectP", "registrar"]
+- !private ["Sm", "init"]
+- !private ["Sm", "init"]
+- !private ["ST", "init"]
+- !private ["ST", "init"]
+- !private ["22shared_preferences_fde23SharedPreferencesPluginC", "register"]
+- !private ["SS", "init"]
+- !private ["SS", "init"]
+- !private ["Sy", "init"]
+- !private ["Sy", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["16url_launcher_fde17UrlLauncherPluginC", "register"]
+- !private ["11window_size16WindowSizePluginC", "register"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["s33_ExpressibleByStringInterpolationP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "register"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+- !private ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- !private "SK"
+- !private "s7CVarArgP"
+- !private "Sl"
+- !private "SL"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "Se"
+- !private "SE"
+- !private "SQ"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "So13FlutterPluginP"
+- !private "So21FlutterPluginRegistryP"
+- !private "SH"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "So8NSObjectC"
+- !private "So8NSObjectP"
+- !private "Sm"
+- !private "ST"
+- !private "22shared_preferences_fde23SharedPreferencesPluginC"
+- !private "SS"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "16url_launcher_fde17UrlLauncherPluginC"
+- !private "11window_size16WindowSizePluginC"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s33_ExpressibleByStringInterpolationP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.apinotesc"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Modules/url_launcher_fde.swiftmodule/x86_64.swiftmodule"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Modules/shared_preferences_fde.swiftmodule/x86_64.swiftmodule"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Modules/window_size.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/XPC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreData.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreImage.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/QuartzCore.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Metal.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreFoundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/CoreGraphics.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/Swift.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/IOKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/AppKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterPluginMacOS.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterPluginRegistrarMacOS.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterMacOS.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Headers/url_launcher_fde-umbrella.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Headers/shared_preferences_fde-umbrella.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Headers/window_size-umbrella.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FLEEngine.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Headers/FLEWindowSizePlugin.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterBinaryMessenger.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FLEViewController.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterCodecs.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterChannels.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FlutterMacros.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Headers/FLEDartProject.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Headers/url_launcher_fde-Swift.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Headers/shared_preferences_fde-Swift.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Headers/window_size-Swift.h"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/ephemeral/FlutterMacOS.framework/Modules/module.modulemap"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Modules/module.modulemap"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Modules/module.modulemap"
+- "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Modules/module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/xpc/XPC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/ApplicationServices.framework/Headers/ApplicationServices.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AppKit.framework/Headers/AppKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "1bc3435c65c746077065f6379910a9e8"

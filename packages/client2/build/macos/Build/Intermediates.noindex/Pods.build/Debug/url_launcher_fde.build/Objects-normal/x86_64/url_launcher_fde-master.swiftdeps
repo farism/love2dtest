@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.2.1 (swiftlang-1000.11.42 clang-1000.11.45.1)"
+options: "51666646116e06edab034b6c9aabd47c"
+build_time: [1565227280, 126944000]
+inputs:
+  "/Users/farismustafa/Documents/Projects/games/icepicker/packages/url_launcher_fde/macos/Classes/UrlLauncherPlugin.swift": [1564781199, 0]

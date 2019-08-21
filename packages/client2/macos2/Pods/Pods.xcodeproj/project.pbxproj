@@ -1,0 +1,1471 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		CA272E8348BAB4CE0B0C804FB7B818C4 /* FlutterMacOS */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 389C1199C80F2753C9A7D0B425260C5E /* Build configuration list for PBXAggregateTarget "FlutterMacOS" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = FlutterMacOS;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		12CE6B93310C976B0EAF24A9DCA4D8AC /* UrlLauncherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC21CC0D0AADF180F47297847A0ABC /* UrlLauncherPlugin.swift */; };
+		26EBA1567AB92641A07BD1B3E7708ACD /* Pods-Runner-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FAC8546C36EBD1C7C68818A0B9BEE92 /* Pods-Runner-dummy.m */; };
+		2C2DB3097DD8B6ACFCF67CEF3030EAAD /* Pods-Runner-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 739795E6BBA1F3202BD87F75F6EB8463 /* Pods-Runner-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		398C51277B3C396AF934ACEB409FD9D8 /* FLEWindowSizePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = FD16D2E59BBB6E447139AC93CDB8A2F3 /* FLEWindowSizePlugin.m */; };
+		3C33CB29FB6C92003AADEB401B5F2513 /* shared_preferences_fde-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 26257A3AFE6F07297D7B330C54F68D40 /* shared_preferences_fde-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		43CAE24360E8990AA1AAAB9D9272A4E2 /* WindowSizePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53E011147C0DBD7EA93A5F633DF45D /* WindowSizePlugin.swift */; };
+		67241E0A61F112850F1AA86E34885CA7 /* url_launcher_fde-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E48F3EC7C4EF383CE98360A6462E8492 /* url_launcher_fde-dummy.m */; };
+		788E0FEC8A0C23947C657E4BDCEE7D36 /* window_size-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DF6605E4A7A7F0A51820E60C053BBD /* window_size-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8EA484281BD3BC397258442D8C7468E4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940C819049CFF8741C0F5E3E075E607 /* Cocoa.framework */; };
+		9495D109A32C19F96AD52C98B54EC729 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940C819049CFF8741C0F5E3E075E607 /* Cocoa.framework */; };
+		9F8137F2EC53C0EFF522300CD2EF4144 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940C819049CFF8741C0F5E3E075E607 /* Cocoa.framework */; };
+		AA2AC3ADBF039C11E9AB326D8BBED8E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F940C819049CFF8741C0F5E3E075E607 /* Cocoa.framework */; };
+		D919F36FDC4D701C33F7822B24D57EC9 /* FLEWindowSizePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 175B1B4CB08BD1740D3A5CDB1941617B /* FLEWindowSizePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DEC1ADEB8137BE3189E5E84883EE773F /* window_size-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B0061AD84C3479862D87EED4C976E65A /* window_size-dummy.m */; };
+		E288A9D390AF3E3A1E897F1F1B57BA21 /* SharedPreferencesPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34F0DBCDDFAFE28A3A69DB463BD51E3 /* SharedPreferencesPlugin.swift */; };
+		F6D0EAF3747008CB8330B9297032FC42 /* url_launcher_fde-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EA750A14925110C703084BF553006013 /* url_launcher_fde-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F981E07B3E76F63C338BC0DB556186DF /* shared_preferences_fde-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A37E23EC4CD82E0CECDBDBC6A34230 /* shared_preferences_fde-dummy.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		014AD865169356D635477D97BC0F2131 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC369427877B1442161E19A5EA581D47;
+			remoteInfo = url_launcher_fde;
+		};
+		1D4CFEBD66E762A885B86EA4A3232FC7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F6EEF2B78A1F5F1DAD8848871924135C;
+			remoteInfo = window_size;
+		};
+		598124A14831EDA7710CC1E2464B43FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA272E8348BAB4CE0B0C804FB7B818C4;
+			remoteInfo = FlutterMacOS;
+		};
+		6B94A21685464A3B318FD1ED265B6009 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F4DA183BE72F4497F67CFEF31A66E478;
+			remoteInfo = shared_preferences_fde;
+		};
+		869997A989D14ACF692737B37938A3A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA272E8348BAB4CE0B0C804FB7B818C4;
+			remoteInfo = FlutterMacOS;
+		};
+		956A0B47FDE9E3EB96F4AF36EEB6AF13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA272E8348BAB4CE0B0C804FB7B818C4;
+			remoteInfo = FlutterMacOS;
+		};
+		9D79B2A2AFE2CBA620F4D27528467693 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA272E8348BAB4CE0B0C804FB7B818C4;
+			remoteInfo = FlutterMacOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0CB2FDFA73AA0084EDCB4B5F860F439D /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		0FAC8546C36EBD1C7C68818A0B9BEE92 /* Pods-Runner-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Runner-dummy.m"; sourceTree = "<group>"; };
+		11F2D6B83FB5CC0DAB1E169E84E82BF2 /* Pods-Runner-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Runner-frameworks.sh"; sourceTree = "<group>"; };
+		175B1B4CB08BD1740D3A5CDB1941617B /* FLEWindowSizePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FLEWindowSizePlugin.h; path = ../../../../../../../../../window_size/macos/Classes/FLEWindowSizePlugin.h; sourceTree = "<group>"; };
+		18CEBD37137F8BF7A8F2237D120706C8 /* Pods-Runner-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Runner-acknowledgements.plist"; sourceTree = "<group>"; };
+		1DBC21CC0D0AADF180F47297847A0ABC /* UrlLauncherPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UrlLauncherPlugin.swift; path = ../../../../../../../../../url_launcher_fde/macos/Classes/UrlLauncherPlugin.swift; sourceTree = "<group>"; };
+		25A083BAD8FE2286CCAE7D54FBCCD819 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../../../../../../../../url_launcher_fde/LICENSE; sourceTree = "<group>"; };
+		26257A3AFE6F07297D7B330C54F68D40 /* shared_preferences_fde-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "shared_preferences_fde-umbrella.h"; sourceTree = "<group>"; };
+		27212F9A9D4EC4F28EBD20BE5E31212B /* Pods-Runner-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Runner-acknowledgements.markdown"; sourceTree = "<group>"; };
+		37974C8B4D64A1F3CDBE86FE4B157256 /* Pods-Runner-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Runner-Info.plist"; sourceTree = "<group>"; };
+		3863E2FDFB4FE816A535A1A27DC1C836 /* shared_preferences_fde.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = shared_preferences_fde.xcconfig; sourceTree = "<group>"; };
+		3CE4F235461B2AF7A1776D2CD0328EE3 /* window_size-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "window_size-prefix.pch"; sourceTree = "<group>"; };
+		3FA4B3A8A32110A2FCF9FF1E02F8FC7E /* window_size.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = window_size.xcconfig; sourceTree = "<group>"; };
+		4E45055CAC7D74BF5FDB05DEC5BA5233 /* Pods-Runner.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Runner.modulemap"; sourceTree = "<group>"; };
+		4F1FA5B6CF1CA947A7245C5CB90E4C26 /* shared_preferences_fde.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = shared_preferences_fde.podspec; path = ../../../../../../../../shared_preferences_fde/macos/shared_preferences_fde.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		57858FB7556689BE4889D27D438E671C /* window_size.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = window_size.podspec; path = ../../../../../../../../window_size/macos/window_size.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		5D53E011147C0DBD7EA93A5F633DF45D /* WindowSizePlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WindowSizePlugin.swift; path = ../../../../../../../../../window_size/macos/Classes/WindowSizePlugin.swift; sourceTree = "<group>"; };
+		60B9951A67EBCCE8AA56DBA4C5D1606B /* shared_preferences_fde.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = shared_preferences_fde.framework; path = shared_preferences_fde.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		669E8F25E1897672BDB80B7EB784DA24 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Runner.framework; path = "Pods-Runner.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		68DA1E3E79F6EF32C4AF364B2C1E1DD8 /* window_size.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = window_size.modulemap; sourceTree = "<group>"; };
+		739795E6BBA1F3202BD87F75F6EB8463 /* Pods-Runner-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Runner-umbrella.h"; sourceTree = "<group>"; };
+		7AAA460D39D8EA5BFD10EE07FA55C1FB /* url_launcher_fde.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = url_launcher_fde.framework; path = url_launcher_fde.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8976665ACF8FCD92A3E7EDD69C8BE445 /* shared_preferences_fde-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "shared_preferences_fde-Info.plist"; sourceTree = "<group>"; };
+		93DF6605E4A7A7F0A51820E60C053BBD /* window_size-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "window_size-umbrella.h"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A733DC78232B071C00DD9622073A10A5 /* FlutterMacOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FlutterMacOS.framework; path = "../../../../../../../../../../../../flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.framework"; sourceTree = "<group>"; };
+		B0061AD84C3479862D87EED4C976E65A /* window_size-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "window_size-dummy.m"; sourceTree = "<group>"; };
+		B0B3FF87E923A10BEE50CAFE1BEF691B /* url_launcher_fde.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = url_launcher_fde.modulemap; sourceTree = "<group>"; };
+		B828C87B811AF56FE5727EC4325D8EDB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../../../../../../../../window_size/LICENSE; sourceTree = "<group>"; };
+		C1C46E09DD310E3884546D815977AC30 /* FlutterMacOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = FlutterMacOS.podspec; path = "../../../../../../../../../../../../flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.podspec"; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		C3F271D87436107F38BA3B772D564094 /* url_launcher_fde-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "url_launcher_fde-Info.plist"; sourceTree = "<group>"; };
+		C8D5C5459C78256D715F6F94D992D6C6 /* url_launcher_fde-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "url_launcher_fde-prefix.pch"; sourceTree = "<group>"; };
+		C8FAC4681D3C602FD2A2E10B63A2A263 /* shared_preferences_fde.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = shared_preferences_fde.modulemap; sourceTree = "<group>"; };
+		C9A60F3D4E7EEBE110CE0EC0F929856C /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		D34F0DBCDDFAFE28A3A69DB463BD51E3 /* SharedPreferencesPlugin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedPreferencesPlugin.swift; path = ../../../../../../../../../shared_preferences_fde/macos/Classes/SharedPreferencesPlugin.swift; sourceTree = "<group>"; };
+		D43A8F0D4564E6553CB20627CC21D019 /* window_size-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "window_size-Info.plist"; sourceTree = "<group>"; };
+		D4AF8193CDDD0E1D1C080C0AF6427DD1 /* url_launcher_fde.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = url_launcher_fde.podspec; path = ../../../../../../../../url_launcher_fde/macos/url_launcher_fde.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		D824A754E350001C8636FDC9B155F97A /* FlutterMacOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FlutterMacOS.xcconfig; sourceTree = "<group>"; };
+		E3A37E23EC4CD82E0CECDBDBC6A34230 /* shared_preferences_fde-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "shared_preferences_fde-dummy.m"; sourceTree = "<group>"; };
+		E48F3EC7C4EF383CE98360A6462E8492 /* url_launcher_fde-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "url_launcher_fde-dummy.m"; sourceTree = "<group>"; };
+		EA750A14925110C703084BF553006013 /* url_launcher_fde-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "url_launcher_fde-umbrella.h"; sourceTree = "<group>"; };
+		EB9AF3CC2D7E12F89E9B3351125F54C4 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../../../../../../../../shared_preferences_fde/LICENSE; sourceTree = "<group>"; };
+		F584634DA149AA92B1E7283894870F99 /* url_launcher_fde.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = url_launcher_fde.xcconfig; sourceTree = "<group>"; };
+		F88CE807BFD36909CF2779381E90D625 /* window_size.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = window_size.framework; path = window_size.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F940C819049CFF8741C0F5E3E075E607 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		FD16D2E59BBB6E447139AC93CDB8A2F3 /* FLEWindowSizePlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FLEWindowSizePlugin.m; path = ../../../../../../../../../window_size/macos/Classes/FLEWindowSizePlugin.m; sourceTree = "<group>"; };
+		FDE92F10846808C34B9898707A7E29BC /* shared_preferences_fde-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "shared_preferences_fde-prefix.pch"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		536BE33F814928E0C5AEC50CF72150E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8EA484281BD3BC397258442D8C7468E4 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		767FB0FD86C72500D5D67777E4BDDC02 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F8137F2EC53C0EFF522300CD2EF4144 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A68E0BF104B4406113CF44220BE9242 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9495D109A32C19F96AD52C98B54EC729 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AFD137FC99E59395829D710B75D9AB90 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA2AC3ADBF039C11E9AB326D8BBED8E2 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01F54F30FD28D994ACC2C3A4DEEB355C /* ephemeral */ = {
+			isa = PBXGroup;
+			children = (
+				97E4479E31F01A8973F2476252BB8946 /* .symlinks */,
+			);
+			name = ephemeral;
+			path = ephemeral;
+			sourceTree = "<group>";
+		};
+		02FC3F9193EAF7069F559474A626F058 /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				2F066703BAAE3848E97BC069B21CFB7D /* window_size */,
+			);
+			name = plugins;
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		03CDE3FB1AFD3D6CF05BF356181CFCBC /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				25A083BAD8FE2286CCAE7D54FBCCD819 /* LICENSE */,
+				D4AF8193CDDD0E1D1C080C0AF6427DD1 /* url_launcher_fde.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		040AF7D642E01D9569AE894BE52ED9EA /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				88C5F40E5B1376B5098F2117CBB1F3DC /* client2 */,
+			);
+			name = ..;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		061373D6E486AE82BBB2F6880CC767BB /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				B828C87B811AF56FE5727EC4325D8EDB /* LICENSE */,
+				57858FB7556689BE4889D27D438E671C /* window_size.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		0A464FB89625D254117C1D9CBD4A52EC /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				E3A42B085B4CD9A0902270F7066D7715 /* Flutter */,
+			);
+			name = macos;
+			path = macos;
+			sourceTree = "<group>";
+		};
+		0BB4C16D81F05CDFE9347324644AAEBF /* Flutter */ = {
+			isa = PBXGroup;
+			children = (
+				01F54F30FD28D994ACC2C3A4DEEB355C /* ephemeral */,
+			);
+			name = Flutter;
+			path = Flutter;
+			sourceTree = "<group>";
+		};
+		0D5A90C6BA87105F040B5A215BAA7C89 /* ephemeral */ = {
+			isa = PBXGroup;
+			children = (
+				439231A61BCD672FC083F6160A1DB3E3 /* .symlinks */,
+			);
+			name = ephemeral;
+			path = ephemeral;
+			sourceTree = "<group>";
+		};
+		13D265FFAABC22132BC93BD92A0190E6 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				4297627FA93D4C16CBC00A2C4D417005 /* .. */,
+			);
+			name = ..;
+			path = ../../../../../../../../window_size/macos;
+			sourceTree = "<group>";
+		};
+		2F066703BAAE3848E97BC069B21CFB7D /* window_size */ = {
+			isa = PBXGroup;
+			children = (
+				32DA7542BE74563591C7CE28AC65C79E /* macos */,
+			);
+			name = window_size;
+			path = window_size;
+			sourceTree = "<group>";
+		};
+		2F12A3F4E803B4BE426890ED75B57B58 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				56F69564BAD8FB01C0D026F376B6884A /* .. */,
+			);
+			name = ..;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		2F3813C178EE57B12AB771AF991D0F83 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				68DA1E3E79F6EF32C4AF364B2C1E1DD8 /* window_size.modulemap */,
+				3FA4B3A8A32110A2FCF9FF1E02F8FC7E /* window_size.xcconfig */,
+				B0061AD84C3479862D87EED4C976E65A /* window_size-dummy.m */,
+				D43A8F0D4564E6553CB20627CC21D019 /* window_size-Info.plist */,
+				3CE4F235461B2AF7A1776D2CD0328EE3 /* window_size-prefix.pch */,
+				93DF6605E4A7A7F0A51820E60C053BBD /* window_size-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../../../../../../Pods/Target Support Files/window_size";
+			sourceTree = "<group>";
+		};
+		2F78C0EBDC39096ACE16F3A4A371EBF6 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				EB9AF3CC2D7E12F89E9B3351125F54C4 /* LICENSE */,
+				4F1FA5B6CF1CA947A7245C5CB90E4C26 /* shared_preferences_fde.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		32DA7542BE74563591C7CE28AC65C79E /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				EEDC0AFBFC7E386E71B36956F14F0B1A /* Classes */,
+			);
+			name = macos;
+			path = macos;
+			sourceTree = "<group>";
+		};
+		387BB9E5A77E9DC10E95D81AF0F21B0F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				669E8F25E1897672BDB80B7EB784DA24 /* Pods_Runner.framework */,
+				60B9951A67EBCCE8AA56DBA4C5D1606B /* shared_preferences_fde.framework */,
+				7AAA460D39D8EA5BFD10EE07FA55C1FB /* url_launcher_fde.framework */,
+				F88CE807BFD36909CF2779381E90D625 /* window_size.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A6078F9A407B9E61B1FF2A86B4B96FA /* client2 */ = {
+			isa = PBXGroup;
+			children = (
+				486CE2098BF4381FD0F5DE16D21229B3 /* macos */,
+			);
+			name = client2;
+			path = client2;
+			sourceTree = "<group>";
+		};
+		42002C5617F415C299BE0DDC1EEF25B9 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				C1C46E09DD310E3884546D815977AC30 /* FlutterMacOS.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		4297627FA93D4C16CBC00A2C4D417005 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				77D4BC347E0857F10D33434CD5FCEB52 /* .. */,
+			);
+			name = ..;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		439231A61BCD672FC083F6160A1DB3E3 /* .symlinks */ = {
+			isa = PBXGroup;
+			children = (
+				6FE44FE843E2017778BFBD1312EDB5EB /* plugins */,
+			);
+			name = .symlinks;
+			path = .symlinks;
+			sourceTree = "<group>";
+		};
+		4658300C82A81CF0B2B4F94E675A5845 /* ephemeral */ = {
+			isa = PBXGroup;
+			children = (
+				C5E00057AF693BAEACBC4558B22ADC01 /* .symlinks */,
+			);
+			name = ephemeral;
+			path = ephemeral;
+			sourceTree = "<group>";
+		};
+		486CE2098BF4381FD0F5DE16D21229B3 /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				0BB4C16D81F05CDFE9347324644AAEBF /* Flutter */,
+			);
+			name = macos;
+			path = macos;
+			sourceTree = "<group>";
+		};
+		4A8ED52221A029B92AAB6F2405D1F1B4 /* window_size */ = {
+			isa = PBXGroup;
+			children = (
+				13D265FFAABC22132BC93BD92A0190E6 /* .. */,
+				061373D6E486AE82BBB2F6880CC767BB /* Pod */,
+				2F3813C178EE57B12AB771AF991D0F83 /* Support Files */,
+			);
+			name = window_size;
+			path = ../Flutter/ephemeral/.symlinks/plugins/window_size/macos;
+			sourceTree = "<group>";
+		};
+		4A9900115CCF2E0982AC7789BD8C2829 /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				CB88B9D32052888083E1878CD6F05B93 /* Classes */,
+			);
+			name = macos;
+			path = macos;
+			sourceTree = "<group>";
+		};
+		56F69564BAD8FB01C0D026F376B6884A /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				3A6078F9A407B9E61B1FF2A86B4B96FA /* client2 */,
+			);
+			name = ..;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		5AB2E0A6F5B89A4146437EBC9B6AE457 /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				E6BB4ED2A59BB68B9A3C4B50F4F61F68 /* Classes */,
+			);
+			name = macos;
+			path = macos;
+			sourceTree = "<group>";
+		};
+		60D62E57EFA5F0283C0386F7157BE998 /* shared_preferences_fde */ = {
+			isa = PBXGroup;
+			children = (
+				5AB2E0A6F5B89A4146437EBC9B6AE457 /* macos */,
+			);
+			name = shared_preferences_fde;
+			path = shared_preferences_fde;
+			sourceTree = "<group>";
+		};
+		632684ADADCA62CAB8F51ACFADB1C936 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FB6D73B614CB098526493EE29E046115 /* FlutterMacOS */,
+				7DEA760931079CC2B4DD3E2C6A23CE74 /* shared_preferences_fde */,
+				CAD151A92FEE3D000E7D6EEC6DBB0926 /* url_launcher_fde */,
+				4A8ED52221A029B92AAB6F2405D1F1B4 /* window_size */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		68F67A1FEBAA7D55456877E973250598 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D824A754E350001C8636FDC9B155F97A /* FlutterMacOS.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../../../../../Pods/Target Support Files/FlutterMacOS";
+			sourceTree = "<group>";
+		};
+		6B295A96D11C4FFFC2C6E6D0AD35797D /* Flutter */ = {
+			isa = PBXGroup;
+			children = (
+				0D5A90C6BA87105F040B5A215BAA7C89 /* ephemeral */,
+			);
+			name = Flutter;
+			path = Flutter;
+			sourceTree = "<group>";
+		};
+		6C8465831939CBBEBB9222A392B0B8E1 /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				8B68FFF99B5CBA226F43F5FEE9AEFC48 /* url_launcher_fde */,
+			);
+			name = plugins;
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		6FE44FE843E2017778BFBD1312EDB5EB /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				60D62E57EFA5F0283C0386F7157BE998 /* shared_preferences_fde */,
+			);
+			name = plugins;
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		739EBEAC12B439FE4C7852F331BE796B /* Pods-Runner */ = {
+			isa = PBXGroup;
+			children = (
+				4E45055CAC7D74BF5FDB05DEC5BA5233 /* Pods-Runner.modulemap */,
+				27212F9A9D4EC4F28EBD20BE5E31212B /* Pods-Runner-acknowledgements.markdown */,
+				18CEBD37137F8BF7A8F2237D120706C8 /* Pods-Runner-acknowledgements.plist */,
+				0FAC8546C36EBD1C7C68818A0B9BEE92 /* Pods-Runner-dummy.m */,
+				11F2D6B83FB5CC0DAB1E169E84E82BF2 /* Pods-Runner-frameworks.sh */,
+				37974C8B4D64A1F3CDBE86FE4B157256 /* Pods-Runner-Info.plist */,
+				739795E6BBA1F3202BD87F75F6EB8463 /* Pods-Runner-umbrella.h */,
+				C9A60F3D4E7EEBE110CE0EC0F929856C /* Pods-Runner.debug.xcconfig */,
+				0CB2FDFA73AA0084EDCB4B5F860F439D /* Pods-Runner.release.xcconfig */,
+			);
+			name = "Pods-Runner";
+			path = "Target Support Files/Pods-Runner";
+			sourceTree = "<group>";
+		};
+		77D4BC347E0857F10D33434CD5FCEB52 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				FFFA33A535E13FA8877134692E8F801B /* client2 */,
+			);
+			name = ..;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		7C35E8E55BE7EA49540C8D07C9C1B024 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				739EBEAC12B439FE4C7852F331BE796B /* Pods-Runner */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		7DEA760931079CC2B4DD3E2C6A23CE74 /* shared_preferences_fde */ = {
+			isa = PBXGroup;
+			children = (
+				DE19200AD0A71529EF9DD421A5EBD978 /* .. */,
+				2F78C0EBDC39096ACE16F3A4A371EBF6 /* Pod */,
+				B4DAB50CE28062077444687FA6B6E123 /* Support Files */,
+			);
+			name = shared_preferences_fde;
+			path = ../Flutter/ephemeral/.symlinks/plugins/shared_preferences_fde/macos;
+			sourceTree = "<group>";
+		};
+		88C5F40E5B1376B5098F2117CBB1F3DC /* client2 */ = {
+			isa = PBXGroup;
+			children = (
+				FD5943DD78A40FB65115A37CD41D37EB /* macos */,
+			);
+			name = client2;
+			path = client2;
+			sourceTree = "<group>";
+		};
+		8B68FFF99B5CBA226F43F5FEE9AEFC48 /* url_launcher_fde */ = {
+			isa = PBXGroup;
+			children = (
+				4A9900115CCF2E0982AC7789BD8C2829 /* macos */,
+			);
+			name = url_launcher_fde;
+			path = url_launcher_fde;
+			sourceTree = "<group>";
+		};
+		97E4479E31F01A8973F2476252BB8946 /* .symlinks */ = {
+			isa = PBXGroup;
+			children = (
+				6C8465831939CBBEBB9222A392B0B8E1 /* plugins */,
+			);
+			name = .symlinks;
+			path = .symlinks;
+			sourceTree = "<group>";
+		};
+		B4DAB50CE28062077444687FA6B6E123 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				C8FAC4681D3C602FD2A2E10B63A2A263 /* shared_preferences_fde.modulemap */,
+				3863E2FDFB4FE816A535A1A27DC1C836 /* shared_preferences_fde.xcconfig */,
+				E3A37E23EC4CD82E0CECDBDBC6A34230 /* shared_preferences_fde-dummy.m */,
+				8976665ACF8FCD92A3E7EDD69C8BE445 /* shared_preferences_fde-Info.plist */,
+				FDE92F10846808C34B9898707A7E29BC /* shared_preferences_fde-prefix.pch */,
+				26257A3AFE6F07297D7B330C54F68D40 /* shared_preferences_fde-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../../../../../../Pods/Target Support Files/shared_preferences_fde";
+			sourceTree = "<group>";
+		};
+		BE93E51DB798E76D9CF934694B1D3C70 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A733DC78232B071C00DD9622073A10A5 /* FlutterMacOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C5E00057AF693BAEACBC4558B22ADC01 /* .symlinks */ = {
+			isa = PBXGroup;
+			children = (
+				02FC3F9193EAF7069F559474A626F058 /* plugins */,
+			);
+			name = .symlinks;
+			path = .symlinks;
+			sourceTree = "<group>";
+		};
+		C6FB5B289D47E6B7A96544F22E836DBF /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				040AF7D642E01D9569AE894BE52ED9EA /* .. */,
+			);
+			name = ..;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		C757F697DA34188FBA678F8E253B6337 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B0B3FF87E923A10BEE50CAFE1BEF691B /* url_launcher_fde.modulemap */,
+				F584634DA149AA92B1E7283894870F99 /* url_launcher_fde.xcconfig */,
+				E48F3EC7C4EF383CE98360A6462E8492 /* url_launcher_fde-dummy.m */,
+				C3F271D87436107F38BA3B772D564094 /* url_launcher_fde-Info.plist */,
+				C8D5C5459C78256D715F6F94D992D6C6 /* url_launcher_fde-prefix.pch */,
+				EA750A14925110C703084BF553006013 /* url_launcher_fde-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../../../../../../Pods/Target Support Files/url_launcher_fde";
+			sourceTree = "<group>";
+		};
+		CAD151A92FEE3D000E7D6EEC6DBB0926 /* url_launcher_fde */ = {
+			isa = PBXGroup;
+			children = (
+				DBF33F196B8947C76FB36FEF267E6666 /* .. */,
+				03CDE3FB1AFD3D6CF05BF356181CFCBC /* Pod */,
+				C757F697DA34188FBA678F8E253B6337 /* Support Files */,
+			);
+			name = url_launcher_fde;
+			path = ../Flutter/ephemeral/.symlinks/plugins/url_launcher_fde/macos;
+			sourceTree = "<group>";
+		};
+		CB88B9D32052888083E1878CD6F05B93 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1DBC21CC0D0AADF180F47297847A0ABC /* UrlLauncherPlugin.swift */,
+			);
+			name = Classes;
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		CBD43E0947D94E318A0ED1350CFF29ED /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				F940C819049CFF8741C0F5E3E075E607 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				632684ADADCA62CAB8F51ACFADB1C936 /* Development Pods */,
+				E0A1E60606E0BF6E2E10F1F01350DFE8 /* Frameworks */,
+				387BB9E5A77E9DC10E95D81AF0F21B0F /* Products */,
+				7C35E8E55BE7EA49540C8D07C9C1B024 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		DBF33F196B8947C76FB36FEF267E6666 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				2F12A3F4E803B4BE426890ED75B57B58 /* .. */,
+			);
+			name = ..;
+			path = ../../../../../../../../url_launcher_fde/macos;
+			sourceTree = "<group>";
+		};
+		DE19200AD0A71529EF9DD421A5EBD978 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				C6FB5B289D47E6B7A96544F22E836DBF /* .. */,
+			);
+			name = ..;
+			path = ../../../../../../../../shared_preferences_fde/macos;
+			sourceTree = "<group>";
+		};
+		E0A1E60606E0BF6E2E10F1F01350DFE8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CBD43E0947D94E318A0ED1350CFF29ED /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E3A42B085B4CD9A0902270F7066D7715 /* Flutter */ = {
+			isa = PBXGroup;
+			children = (
+				4658300C82A81CF0B2B4F94E675A5845 /* ephemeral */,
+			);
+			name = Flutter;
+			path = Flutter;
+			sourceTree = "<group>";
+		};
+		E6BB4ED2A59BB68B9A3C4B50F4F61F68 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D34F0DBCDDFAFE28A3A69DB463BD51E3 /* SharedPreferencesPlugin.swift */,
+			);
+			name = Classes;
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		EEDC0AFBFC7E386E71B36956F14F0B1A /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				175B1B4CB08BD1740D3A5CDB1941617B /* FLEWindowSizePlugin.h */,
+				FD16D2E59BBB6E447139AC93CDB8A2F3 /* FLEWindowSizePlugin.m */,
+				5D53E011147C0DBD7EA93A5F633DF45D /* WindowSizePlugin.swift */,
+			);
+			name = Classes;
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		FB6D73B614CB098526493EE29E046115 /* FlutterMacOS */ = {
+			isa = PBXGroup;
+			children = (
+				BE93E51DB798E76D9CF934694B1D3C70 /* Frameworks */,
+				42002C5617F415C299BE0DDC1EEF25B9 /* Pod */,
+				68F67A1FEBAA7D55456877E973250598 /* Support Files */,
+			);
+			name = FlutterMacOS;
+			path = "../Flutter/ephemeral/.symlinks/flutter/darwin-x64";
+			sourceTree = "<group>";
+		};
+		FD5943DD78A40FB65115A37CD41D37EB /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				6B295A96D11C4FFFC2C6E6D0AD35797D /* Flutter */,
+			);
+			name = macos;
+			path = macos;
+			sourceTree = "<group>";
+		};
+		FFFA33A535E13FA8877134692E8F801B /* client2 */ = {
+			isa = PBXGroup;
+			children = (
+				0A464FB89625D254117C1D9CBD4A52EC /* macos */,
+			);
+			name = client2;
+			path = client2;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1DEF4285555AA20E49D1EA4E124990EA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C2DB3097DD8B6ACFCF67CEF3030EAAD /* Pods-Runner-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91C4C508F4ED56B6056A1CD1D6A98F59 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6D0EAF3747008CB8330B9297032FC42 /* url_launcher_fde-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFF21E11D58E03093AE8F640A85E995E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D919F36FDC4D701C33F7822B24D57EC9 /* FLEWindowSizePlugin.h in Headers */,
+				788E0FEC8A0C23947C657E4BDCEE7D36 /* window_size-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D26865FED1B60992767631E153F1D2D5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C33CB29FB6C92003AADEB401B5F2513 /* shared_preferences_fde-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8B74B458B450D74B75744B87BD747314 /* Pods-Runner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D0503C037FF038737AE599797A35AB3 /* Build configuration list for PBXNativeTarget "Pods-Runner" */;
+			buildPhases = (
+				1DEF4285555AA20E49D1EA4E124990EA /* Headers */,
+				9B94D9629521D9D90857C55A497BF21D /* Sources */,
+				AFD137FC99E59395829D710B75D9AB90 /* Frameworks */,
+				231DEB0AD91468ECC9F2496D7171DFEC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B9949B460A013EA6F3BA9637B74B03A /* PBXTargetDependency */,
+				AD700D7E93FA026C81B3AE1802323298 /* PBXTargetDependency */,
+				BDE1FB9E43B1BF725346D2C775EBB9F6 /* PBXTargetDependency */,
+				02EAADEC1A2E8FFA45718ACF4A4C9181 /* PBXTargetDependency */,
+			);
+			name = "Pods-Runner";
+			productName = "Pods-Runner";
+			productReference = 669E8F25E1897672BDB80B7EB784DA24 /* Pods_Runner.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		EC369427877B1442161E19A5EA581D47 /* url_launcher_fde */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A9BA51CF91E566CD069639A537FDA88 /* Build configuration list for PBXNativeTarget "url_launcher_fde" */;
+			buildPhases = (
+				91C4C508F4ED56B6056A1CD1D6A98F59 /* Headers */,
+				B32362B3F5A75565C9E273AB692BFAB6 /* Sources */,
+				536BE33F814928E0C5AEC50CF72150E4 /* Frameworks */,
+				BDBE7C4DF71D46F50AD5E9269BBA4C23 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CBA191C7A83CB5CBA82BB2312B1E428B /* PBXTargetDependency */,
+			);
+			name = url_launcher_fde;
+			productName = url_launcher_fde;
+			productReference = 7AAA460D39D8EA5BFD10EE07FA55C1FB /* url_launcher_fde.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F4DA183BE72F4497F67CFEF31A66E478 /* shared_preferences_fde */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A3FE3E7E2F86855D692AC5D948E6AD0 /* Build configuration list for PBXNativeTarget "shared_preferences_fde" */;
+			buildPhases = (
+				D26865FED1B60992767631E153F1D2D5 /* Headers */,
+				C7C4576C5486E681FBD73A00AFDB236B /* Sources */,
+				9A68E0BF104B4406113CF44220BE9242 /* Frameworks */,
+				0F9E678804B38DB6D73DED3369035F1B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B4A61810ACE77773206B830B89A2C74B /* PBXTargetDependency */,
+			);
+			name = shared_preferences_fde;
+			productName = shared_preferences_fde;
+			productReference = 60B9951A67EBCCE8AA56DBA4C5D1606B /* shared_preferences_fde.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F6EEF2B78A1F5F1DAD8848871924135C /* window_size */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C54398BAFB85285251A012B35125E944 /* Build configuration list for PBXNativeTarget "window_size" */;
+			buildPhases = (
+				CFF21E11D58E03093AE8F640A85E995E /* Headers */,
+				706FD1077D96BC0D13FE891A9F265EB5 /* Sources */,
+				767FB0FD86C72500D5D67777E4BDDC02 /* Frameworks */,
+				7DD2A4D91D9E280A67A1DDF3C4F788DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C37F43336F2A2009880E98305B917F4 /* PBXTargetDependency */,
+			);
+			name = window_size;
+			productName = window_size;
+			productReference = F88CE807BFD36909CF2779381E90D625 /* window_size.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = 387BB9E5A77E9DC10E95D81AF0F21B0F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CA272E8348BAB4CE0B0C804FB7B818C4 /* FlutterMacOS */,
+				8B74B458B450D74B75744B87BD747314 /* Pods-Runner */,
+				F4DA183BE72F4497F67CFEF31A66E478 /* shared_preferences_fde */,
+				EC369427877B1442161E19A5EA581D47 /* url_launcher_fde */,
+				F6EEF2B78A1F5F1DAD8848871924135C /* window_size */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0F9E678804B38DB6D73DED3369035F1B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		231DEB0AD91468ECC9F2496D7171DFEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7DD2A4D91D9E280A67A1DDF3C4F788DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDBE7C4DF71D46F50AD5E9269BBA4C23 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		706FD1077D96BC0D13FE891A9F265EB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				398C51277B3C396AF934ACEB409FD9D8 /* FLEWindowSizePlugin.m in Sources */,
+				DEC1ADEB8137BE3189E5E84883EE773F /* window_size-dummy.m in Sources */,
+				43CAE24360E8990AA1AAAB9D9272A4E2 /* WindowSizePlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9B94D9629521D9D90857C55A497BF21D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26EBA1567AB92641A07BD1B3E7708ACD /* Pods-Runner-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B32362B3F5A75565C9E273AB692BFAB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67241E0A61F112850F1AA86E34885CA7 /* url_launcher_fde-dummy.m in Sources */,
+				12CE6B93310C976B0EAF24A9DCA4D8AC /* UrlLauncherPlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7C4576C5486E681FBD73A00AFDB236B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F981E07B3E76F63C338BC0DB556186DF /* shared_preferences_fde-dummy.m in Sources */,
+				E288A9D390AF3E3A1E897F1F1B57BA21 /* SharedPreferencesPlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		02EAADEC1A2E8FFA45718ACF4A4C9181 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = window_size;
+			target = F6EEF2B78A1F5F1DAD8848871924135C /* window_size */;
+			targetProxy = 1D4CFEBD66E762A885B86EA4A3232FC7 /* PBXContainerItemProxy */;
+		};
+		2B9949B460A013EA6F3BA9637B74B03A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FlutterMacOS;
+			target = CA272E8348BAB4CE0B0C804FB7B818C4 /* FlutterMacOS */;
+			targetProxy = 9D79B2A2AFE2CBA620F4D27528467693 /* PBXContainerItemProxy */;
+		};
+		4C37F43336F2A2009880E98305B917F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FlutterMacOS;
+			target = CA272E8348BAB4CE0B0C804FB7B818C4 /* FlutterMacOS */;
+			targetProxy = 869997A989D14ACF692737B37938A3A3 /* PBXContainerItemProxy */;
+		};
+		AD700D7E93FA026C81B3AE1802323298 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = shared_preferences_fde;
+			target = F4DA183BE72F4497F67CFEF31A66E478 /* shared_preferences_fde */;
+			targetProxy = 6B94A21685464A3B318FD1ED265B6009 /* PBXContainerItemProxy */;
+		};
+		B4A61810ACE77773206B830B89A2C74B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FlutterMacOS;
+			target = CA272E8348BAB4CE0B0C804FB7B818C4 /* FlutterMacOS */;
+			targetProxy = 598124A14831EDA7710CC1E2464B43FA /* PBXContainerItemProxy */;
+		};
+		BDE1FB9E43B1BF725346D2C775EBB9F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = url_launcher_fde;
+			target = EC369427877B1442161E19A5EA581D47 /* url_launcher_fde */;
+			targetProxy = 014AD865169356D635477D97BC0F2131 /* PBXContainerItemProxy */;
+		};
+		CBA191C7A83CB5CBA82BB2312B1E428B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FlutterMacOS;
+			target = CA272E8348BAB4CE0B0C804FB7B818C4 /* FlutterMacOS */;
+			targetProxy = 956A0B47FDE9E3EB96F4AF36EEB6AF13 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		35ECB64F57E78308C564152C1104A6F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3863E2FDFB4FE816A535A1A27DC1C836 /* shared_preferences_fde.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/shared_preferences_fde/shared_preferences_fde-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/shared_preferences_fde/shared_preferences_fde-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/shared_preferences_fde/shared_preferences_fde.modulemap";
+				PRODUCT_MODULE_NAME = shared_preferences_fde;
+				PRODUCT_NAME = shared_preferences_fde;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		3A45B53416D4A80A87943E1D3A6C9BA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D824A754E350001C8636FDC9B155F97A /* FlutterMacOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		47D664820B5D9F14821286CC543248F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FA4B3A8A32110A2FCF9FF1E02F8FC7E /* window_size.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/window_size/window_size-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/window_size/window_size-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/window_size/window_size.modulemap";
+				PRODUCT_MODULE_NAME = window_size;
+				PRODUCT_NAME = window_size;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6984B5B7FB618392208325C96DE1E75D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C9A60F3D4E7EEBE110CE0EC0F929856C /* Pods-Runner.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-Runner/Pods-Runner.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		69903096E5EC6AAF1D6E45AD5F74359D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3863E2FDFB4FE816A535A1A27DC1C836 /* shared_preferences_fde.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/shared_preferences_fde/shared_preferences_fde-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/shared_preferences_fde/shared_preferences_fde-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/shared_preferences_fde/shared_preferences_fde.modulemap";
+				PRODUCT_MODULE_NAME = shared_preferences_fde;
+				PRODUCT_NAME = shared_preferences_fde;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		6F5316B092E01CB7F6232C3EBB286EA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FA4B3A8A32110A2FCF9FF1E02F8FC7E /* window_size.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/window_size/window_size-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/window_size/window_size-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/window_size/window_size.modulemap";
+				PRODUCT_MODULE_NAME = window_size;
+				PRODUCT_NAME = window_size;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		72D55BA972AA5A2D3868E4821935A212 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F584634DA149AA92B1E7283894870F99 /* url_launcher_fde.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/url_launcher_fde/url_launcher_fde-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/url_launcher_fde/url_launcher_fde-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/url_launcher_fde/url_launcher_fde.modulemap";
+				PRODUCT_MODULE_NAME = url_launcher_fde;
+				PRODUCT_NAME = url_launcher_fde;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		836B12D3BD8A1FA5F32988B355633959 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F584634DA149AA92B1E7283894870F99 /* url_launcher_fde.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/url_launcher_fde/url_launcher_fde-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/url_launcher_fde/url_launcher_fde-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/url_launcher_fde/url_launcher_fde.modulemap";
+				PRODUCT_MODULE_NAME = url_launcher_fde;
+				PRODUCT_NAME = url_launcher_fde;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		9382317ED75CFC741F429FC224405042 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		93FDD4C6E13F6A78C46464B103C0D692 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D824A754E350001C8636FDC9B155F97A /* FlutterMacOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B5EC4F4165267BBDF83A45D31EE61225 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CB2FDFA73AA0084EDCB4B5F860F439D /* Pods-Runner.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "Target Support Files/Pods-Runner/Pods-Runner-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-Runner/Pods-Runner.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E4DEAC9B52796426D2A37E7074A1738D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A9BA51CF91E566CD069639A537FDA88 /* Build configuration list for PBXNativeTarget "url_launcher_fde" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72D55BA972AA5A2D3868E4821935A212 /* Debug */,
+				836B12D3BD8A1FA5F32988B355633959 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		389C1199C80F2753C9A7D0B425260C5E /* Build configuration list for PBXAggregateTarget "FlutterMacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A45B53416D4A80A87943E1D3A6C9BA7 /* Debug */,
+				93FDD4C6E13F6A78C46464B103C0D692 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9382317ED75CFC741F429FC224405042 /* Debug */,
+				E4DEAC9B52796426D2A37E7074A1738D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A3FE3E7E2F86855D692AC5D948E6AD0 /* Build configuration list for PBXNativeTarget "shared_preferences_fde" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				69903096E5EC6AAF1D6E45AD5F74359D /* Debug */,
+				35ECB64F57E78308C564152C1104A6F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8D0503C037FF038737AE599797A35AB3 /* Build configuration list for PBXNativeTarget "Pods-Runner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6984B5B7FB618392208325C96DE1E75D /* Debug */,
+				B5EC4F4165267BBDF83A45D31EE61225 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C54398BAFB85285251A012B35125E944 /* Build configuration list for PBXNativeTarget "window_size" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F5316B092E01CB7F6232C3EBB286EA9 /* Debug */,
+				47D664820B5D9F14821286CC543248F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

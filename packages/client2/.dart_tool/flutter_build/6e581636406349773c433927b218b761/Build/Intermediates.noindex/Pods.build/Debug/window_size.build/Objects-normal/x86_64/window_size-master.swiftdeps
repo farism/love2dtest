@@ -1,0 +1,5 @@
+version: "Apple Swift version 4.2.1 (swiftlang-1000.11.42 clang-1000.11.45.1)"
+options: "b7268af1ee50fc7da53f883c31987f49"
+build_time: [1565151002, 81572000]
+inputs:
+  "/Users/farismustafa/Documents/Projects/games/icepicker/packages/window_size/macos/Classes/WindowSizePlugin.swift": [1564366551, 0]

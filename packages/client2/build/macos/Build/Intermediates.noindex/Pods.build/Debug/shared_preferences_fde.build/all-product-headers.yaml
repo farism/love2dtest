@@ -1,0 +1,119 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/Pods_Runner.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "Pods-Runner-umbrella.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Pods/Target Support Files/Pods-Runner/Pods-Runner-umbrella.h"
+        },
+        {
+          'type': 'file',
+          'name': "Pods_Runner-Swift.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/Pods_Runner.framework/Versions/A/Headers/Pods_Runner-Swift.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/Pods_Runner.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Intermediates.noindex/Pods.build/Debug/Pods-Runner.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "shared_preferences_fde-Swift.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Versions/A/Headers/shared_preferences_fde-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "shared_preferences_fde-umbrella.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Pods/Target Support Files/shared_preferences_fde/shared_preferences_fde-umbrella.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Intermediates.noindex/Pods.build/Debug/shared_preferences_fde.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "url_launcher_fde-Swift.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Versions/A/Headers/url_launcher_fde-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "url_launcher_fde-umbrella.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Pods/Target Support Files/url_launcher_fde/url_launcher_fde-umbrella.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/url_launcher_fde/url_launcher_fde.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Intermediates.noindex/Pods.build/Debug/url_launcher_fde.build/module.modulemap"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "FLEWindowSizePlugin.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/window_size/macos/Classes/FLEWindowSizePlugin.h"
+        },
+        {
+          'type': 'file',
+          'name': "window_size-Swift.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Versions/A/Headers/window_size-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "window_size-umbrella.h",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Pods/Target Support Files/window_size/window_size-umbrella.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/window_size/window_size.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Intermediates.noindex/Pods.build/Debug/window_size.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

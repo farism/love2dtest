@@ -1,0 +1,7 @@
+version: "Apple Swift version 4.2.1 (swiftlang-1000.11.42 clang-1000.11.45.1)"
+options: "1d70bbaab12bc1113d054d9d3eaf05d1"
+build_time: [1565151036, 517236000]
+inputs:
+  "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/ExampleWindow.swift": [1565046212, 0]
+  "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/AppDelegate.swift": [1565046212, 0]
+  "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/macos/Flutter/GeneratedPluginRegistrant.swift": [1565151020, 0]

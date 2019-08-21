@@ -1,0 +1,13 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Products/Debug/shared_preferences_fde/shared_preferences_fde.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/farismustafa/Documents/Projects/games/icepicker/packages/client2/build/macos/Build/Intermediates.noindex/Pods.build/Debug/shared_preferences_fde.build/unextended-module.modulemap",
+    }]
+  }]
+}
