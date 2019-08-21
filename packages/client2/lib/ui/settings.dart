@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import './common.dart';
 import '../state/app.dart';
@@ -43,7 +43,7 @@ class SettingsRoute extends StatelessWidget {
           Button(
             label: 'Contact',
             onPressed: () {
-              launch('mailto:farismmk@gmail.com');
+              // launch('mailto:farismmk@gmail.com');
             },
           ),
           Button(

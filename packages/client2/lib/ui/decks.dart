@@ -53,10 +53,11 @@ class DecksRoute extends StatelessWidget {
 class NewDeckRoute extends StatelessWidget {
   final nameController = TextEditingController.fromValue(
     TextEditingValue(
-        selection: TextSelection(
-      baseOffset: 0,
-      extentOffset: 10,
-    )),
+      selection: TextSelection(
+        baseOffset: 0,
+        extentOffset: 10,
+      ),
+    ),
   );
 
   @override
@@ -69,20 +70,6 @@ class NewDeckRoute extends StatelessWidget {
       return Container(
         child: Column(
           children: [
-            Container(
-              color: Colors.white,
-              child: EditableText(
-                focusNode: FocusNode(),
-                controller: nameController,
-                backgroundCursorColor: Colors.red,
-                cursorColor: Colors.blue,
-                autofocus: true,
-                onChanged: (value) {
-                  appState.ui.newDeckForm.setNewDeckName(value);
-                },
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
             Row(
               children: [
                 Button(
@@ -115,14 +102,33 @@ class NewDeckRoute extends StatelessWidget {
               ],
             ),
             Padding(padding: EdgeInsets.all(20)),
+            Container(
+              color: Colors.white,
+              child: EditableText(
+                focusNode: FocusNode(),
+                controller: nameController,
+                backgroundCursorColor: Colors.red,
+                cursorColor: Colors.blue,
+                autofocus: true,
+                onChanged: (value) {
+                  appState.ui.newDeckForm.setNewDeckName(value);
+                },
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            Padding(padding: EdgeInsets.all(20)),
             Button(
               label: 'Create',
               onPressed: () {
-                appState.user.addDeck(
-                  appState.ui.newDeckForm.name,
-                  appState.ui.newDeckForm.hero,
-                  appState.ui,
-                );
+                final id = uuid();
+
+                appState.user.addDeck(Deck(
+                  id: id,
+                  hero: appState.ui.newDeckForm.hero,
+                  name: nameController.text,
+                ));
+
+                appState.ui.setActiveDeck(id);
 
                 Navigator.of(context).pushReplacementNamed('/decks/detail');
               },
@@ -134,10 +140,69 @@ class NewDeckRoute extends StatelessWidget {
   }
 }
 
-class DeckDetailItem extends StatelessWidget {
-  DeckDetailItem({this.card});
+class RenameDeckRoute extends StatelessWidget {
+  final nameController = TextEditingController.fromValue(
+    TextEditingValue(
+      selection: TextSelection(
+        baseOffset: 0,
+        extentOffset: 10,
+      ),
+    ),
+  );
 
-  final DeckCard card;
+  @override
+  Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+
+    nameController.text = appState.activeDeck.name;
+
+    return Container(
+      child: Column(
+        children: [
+          Text('Rename deck'),
+          Container(
+            color: Colors.white,
+            child: EditableText(
+              focusNode: FocusNode(),
+              controller: nameController,
+              backgroundCursorColor: Colors.red,
+              cursorColor: Colors.blue,
+              autofocus: true,
+              onChanged: (value) {
+                appState.ui.newDeckForm.setNewDeckName(value);
+              },
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          Button(
+            label: 'Cancel',
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          Button(
+            label: 'Update',
+            onPressed: () {
+              appState.user.renameDeck(
+                appState.activeDeck.id,
+                nameController.text,
+              );
+
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DeckDetailItem extends StatelessWidget {
+  DeckDetailItem({this.active, this.card});
+
+  final active;
+
+  final card;
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +218,8 @@ class DeckDetailItem extends StatelessWidget {
                 margin: EdgeInsets.only(top: 20),
                 color: isPressed
                     ? Colors.red
-                    : (card.isPurchased
-                        ? (card.isActive ? Colors.green : Colors.blue)
+                    : (card.purchased
+                        ? (card.active ? Colors.green : Colors.blue)
                         : Colors.grey),
                 child: Text(card.name),
                 padding: EdgeInsets.all(20),
@@ -172,7 +237,7 @@ class DeckDetailItem extends StatelessWidget {
         );
       },
       onPressed: () {
-        if (card.isPurchased) {
+        if (card.purchased) {
           appState.user.toggleCard(appState.activeDeck.id, card.name);
         }
       },
@@ -186,9 +251,6 @@ class DeckDetailRoute extends StatelessWidget {
     final appState = Provider.of<AppState>(context);
 
     return Observer(builder: (_) {
-      // reactive updates don't work without this for some reason
-      final _ = appState.user.decks;
-
       final deck = appState.activeDeck;
 
       if (deck == null) {
@@ -197,22 +259,30 @@ class DeckDetailRoute extends StatelessWidget {
         );
       }
 
-      final cards = appState.deckCards(deck);
+      final cards = appState.activeDeckCards;
 
-      final generalCards = cards.where((card) => card.card.hero == null);
+      final generalCards = cards.where((card) => card.hero == null);
 
-      final heroCards = cards.where((card) => card.card.hero == deck.hero);
+      final heroCards = cards.where((card) => card.hero == deck.hero);
 
       return Expanded(
         child: Column(
           children: [
             Row(children: [
-              RawButton(
-                builder: (isPressed) => Container(
-                  color: isPressed ? Colors.red : Colors.grey,
-                  child: Text('Delete'),
-                ),
-                onPressed: () => appState.user.removeDeck(deck.id),
+              Button(
+                label: 'Delete',
+                onPressed: () {
+                  appState.user.removeDeck(deck.id);
+                },
+              ),
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(deck.name),
+              Button(
+                label: 'Edit',
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/decks/rename');
+                },
               ),
             ]),
             Text(deck.category),
@@ -296,67 +366,70 @@ class CardIndexView extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
-    final categories =
-        groupBy<Card, String>(allCards, (card) => card.heroString);
+    final cards = appState.cards;
 
-    return Observer(
-      builder: (_) => Container(
+    final categories = cards.map((card) => card.heroString).toSet();
+
+    return Observer(builder: (_) {
+      return Container(
         child: ListView(
-            children: categories.entries
-                .map(
-                  (cat) => CardIndexCategory(name: cat.key, cards: cat.value),
-                )
-                .toList()),
-      ),
-    );
+          children: categories
+              .map((category) => CardIndexCategory(category: category))
+              .toList(),
+        ),
+      );
+    });
   }
 }
 
 class CardIndexCategory extends StatelessWidget {
-  CardIndexCategory({this.name, this.cards});
+  CardIndexCategory({this.category});
 
-  final String name;
-  final List<Card> cards;
+  final String category;
 
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
-    return Column(children: [
-      Padding(
-        padding: EdgeInsets.all(20),
-        child: Text(name),
-      ),
-      Container(
-        color: Colors.blue,
-        padding: EdgeInsets.all(20),
-        height: 100,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: cards.map(
-            (card) {
-              // final purchased = appState.isPurchased(card.name);
+    return Observer(builder: (_) {
+      final cards = appState.cards.where((card) => card.heroString == category);
 
-              return RawButton(
-                builder: (isPressed) => Container(
-                  padding: EdgeInsets.all(20),
-                  color: isPressed ? Colors.red : Colors.grey,
-                  child: Column(
-                    children: [
-                      Text(card.name),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  appState.ui.setActiveCard(card.name);
-
-                  Navigator.of(context).pushNamed('/card');
-                },
-              );
-            },
-          ).toList(),
+      return Column(children: [
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Text(category),
         ),
-      )
-    ]);
+        Container(
+          color: Colors.blue,
+          padding: EdgeInsets.all(20),
+          height: 100,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: cards.map(
+              (card) {
+                return RawButton(
+                  builder: (isPressed) => Container(
+                    padding: EdgeInsets.all(20),
+                    color: isPressed
+                        ? Colors.red
+                        : card.purchased ? Colors.green : Colors.grey,
+                    child: Column(
+                      children: [
+                        Text(card.name),
+                      ],
+                    ),
+                  ),
+                  onPressed: () {
+                    appState.ui.setActiveCard(card.name);
+
+                    Navigator.of(context).pushNamed('/card');
+                  },
+                );
+              },
+            ).toList(),
+          ),
+        )
+      ]);
+    });
   }
 }

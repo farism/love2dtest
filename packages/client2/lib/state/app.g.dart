@@ -87,6 +87,67 @@ mixin _$AchievementsStore on _Achievements, Store {
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
 
+mixin _$ChestStore on _Chest, Store {
+  Computed<DateTime> _$savedComputed;
+
+  @override
+  DateTime get saved =>
+      (_$savedComputed ??= Computed<DateTime>(() => super.saved)).value;
+  Computed<DateTime> _$nowComputed;
+
+  @override
+  DateTime get now =>
+      (_$nowComputed ??= Computed<DateTime>(() => super.now)).value;
+  Computed<Duration> _$durationComputed;
+
+  @override
+  Duration get duration =>
+      (_$durationComputed ??= Computed<Duration>(() => super.duration)).value;
+
+  final _$timestampSavedAtom = Atom(name: '_Chest.timestampSaved');
+
+  @override
+  int get timestampSaved {
+    _$timestampSavedAtom.context.enforceReadPolicy(_$timestampSavedAtom);
+    _$timestampSavedAtom.reportObserved();
+    return super.timestampSaved;
+  }
+
+  @override
+  set timestampSaved(int value) {
+    _$timestampSavedAtom.context.conditionallyRunInAction(() {
+      super.timestampSaved = value;
+      _$timestampSavedAtom.reportChanged();
+    }, _$timestampSavedAtom, name: '${_$timestampSavedAtom.name}_set');
+  }
+
+  final _$timestampNowAtom = Atom(name: '_Chest.timestampNow');
+
+  @override
+  int get timestampNow {
+    _$timestampNowAtom.context.enforceReadPolicy(_$timestampNowAtom);
+    _$timestampNowAtom.reportObserved();
+    return super.timestampNow;
+  }
+
+  @override
+  set timestampNow(int value) {
+    _$timestampNowAtom.context.conditionallyRunInAction(() {
+      super.timestampNow = value;
+      _$timestampNowAtom.reportChanged();
+    }, _$timestampNowAtom, name: '${_$timestampNowAtom.name}_set');
+  }
+
+  final _$setTimestampAsyncAction = AsyncAction('setTimestamp');
+
+  @override
+  Future<dynamic> setTimestamp(int t) {
+    return _$setTimestampAsyncAction.run(() => super.setTimestamp(t));
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
 mixin _$NewDeckFormStore on _NewDeckFormStore, Store {
   final _$nameAtom = Atom(name: '_NewDeckFormStore.name');
 
@@ -148,7 +209,58 @@ mixin _$NewDeckFormStore on _NewDeckFormStore, Store {
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
 
+mixin _$PlayFormStore on _PlayFormStore, Store {
+  final _$deckIdAtom = Atom(name: '_PlayFormStore.deckId');
+
+  @override
+  String get deckId {
+    _$deckIdAtom.context.enforceReadPolicy(_$deckIdAtom);
+    _$deckIdAtom.reportObserved();
+    return super.deckId;
+  }
+
+  @override
+  set deckId(String value) {
+    _$deckIdAtom.context.conditionallyRunInAction(() {
+      super.deckId = value;
+      _$deckIdAtom.reportChanged();
+    }, _$deckIdAtom, name: '${_$deckIdAtom.name}_set');
+  }
+
+  final _$_PlayFormStoreActionController =
+      ActionController(name: '_PlayFormStore');
+
+  @override
+  void setDeckId(String id) {
+    final _$actionInfo = _$_PlayFormStoreActionController.startAction();
+    try {
+      return super.setDeckId(id);
+    } finally {
+      _$_PlayFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+}
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
+
 mixin _$UIStore on _UIStore, Store {
+  final _$playViewAtom = Atom(name: '_UIStore.playView');
+
+  @override
+  PlayView get playView {
+    _$playViewAtom.context.enforceReadPolicy(_$playViewAtom);
+    _$playViewAtom.reportObserved();
+    return super.playView;
+  }
+
+  @override
+  set playView(PlayView value) {
+    _$playViewAtom.context.conditionallyRunInAction(() {
+      super.playView = value;
+      _$playViewAtom.reportChanged();
+    }, _$playViewAtom, name: '${_$playViewAtom.name}_set');
+  }
+
   final _$deckViewAtom = Atom(name: '_UIStore.deckView');
 
   @override
@@ -218,6 +330,16 @@ mixin _$UIStore on _UIStore, Store {
   }
 
   final _$_UIStoreActionController = ActionController(name: '_UIStore');
+
+  @override
+  void setPlayView(PlayView view) {
+    final _$actionInfo = _$_UIStoreActionController.startAction();
+    try {
+      return super.setPlayView(view);
+    } finally {
+      _$_UIStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setDeckView(DeckView view) {
@@ -410,11 +532,11 @@ mixin _$UserStore on _UserStore, Store {
     return _$addGoldAsyncAction.run(() => super.addGold(val));
   }
 
-  final _$removeGoldAsyncAction = AsyncAction('removeGold');
+  final _$subtractGoldAsyncAction = AsyncAction('subtractGold');
 
   @override
-  Future<dynamic> removeGold(int val) {
-    return _$removeGoldAsyncAction.run(() => super.removeGold(val));
+  Future<dynamic> subtractGold(int val) {
+    return _$subtractGoldAsyncAction.run(() => super.subtractGold(val));
   }
 
   final _$setArenaAsyncAction = AsyncAction('setArena');
@@ -445,11 +567,18 @@ mixin _$UserStore on _UserStore, Store {
     return _$purchaseCardAsyncAction.run(() => super.purchaseCard(cardId));
   }
 
+  final _$setDecksAsyncAction = AsyncAction('setDecks');
+
+  @override
+  Future<dynamic> setDecks(List<Deck> d) {
+    return _$setDecksAsyncAction.run(() => super.setDecks(d));
+  }
+
   final _$addDeckAsyncAction = AsyncAction('addDeck');
 
   @override
-  Future<dynamic> addDeck(String name, HeroType hero, UIStore ui) {
-    return _$addDeckAsyncAction.run(() => super.addDeck(name, hero, ui));
+  Future<dynamic> addDeck(Deck deck) {
+    return _$addDeckAsyncAction.run(() => super.addDeck(deck));
   }
 
   final _$removeDeckAsyncAction = AsyncAction('removeDeck');
@@ -457,6 +586,13 @@ mixin _$UserStore on _UserStore, Store {
   @override
   Future<dynamic> removeDeck(String id) {
     return _$removeDeckAsyncAction.run(() => super.removeDeck(id));
+  }
+
+  final _$renameDeckAsyncAction = AsyncAction('renameDeck');
+
+  @override
+  Future<dynamic> renameDeck(String id, String name) {
+    return _$renameDeckAsyncAction.run(() => super.renameDeck(id, name));
   }
 
   final _$_UserStoreActionController = ActionController(name: '_UserStore');
@@ -475,14 +611,20 @@ mixin _$UserStore on _UserStore, Store {
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars
 
 mixin _$AppState on _AppState, Store {
-  Computed<Card> _$activeCardComputed;
+  Computed<List<Card>> _$cardsComputed;
 
   @override
-  Card get activeCard =>
-      (_$activeCardComputed ??= Computed<Card>(() => super.activeCard)).value;
+  List<Card> get cards =>
+      (_$cardsComputed ??= Computed<List<Card>>(() => super.cards)).value;
   Computed<Deck> _$activeDeckComputed;
 
   @override
   Deck get activeDeck =>
       (_$activeDeckComputed ??= Computed<Deck>(() => super.activeDeck)).value;
+  Computed<List<Card>> _$activeDeckCardsComputed;
+
+  @override
+  List<Card> get activeDeckCards => (_$activeDeckCardsComputed ??=
+          Computed<List<Card>>(() => super.activeDeckCards))
+      .value;
 }

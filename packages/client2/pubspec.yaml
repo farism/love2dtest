@@ -20,22 +20,21 @@ dependencies:
   box2d_flame:
     git:
       url: git://github.com/msywensky/box2d.dart.git
+  collection:
   flutter:
     sdk: flutter
+  flutter_mobx:
   intl:
   provider:
-  flutter_redux:
-  flutter_mobx:
   mobx:
-  screen:
-  collection:
+  # screen:
   shared_preferences:
   shared_preferences_fde:
     path: ../shared_preferences_fde
-  uuid:
   url_launcher:
   url_launcher_fde:
     path: ../url_launcher_fde
+  uuid:
   window_size:
     path: ../window_size
 dev_dependencies:
@@ -57,7 +56,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/logo.png
-    - assets/Bob_Minion.flr
   # fonts:
   # - family: Roboto
   #   fonts:

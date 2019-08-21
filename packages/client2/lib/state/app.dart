@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:mobx/mobx.dart';
@@ -8,6 +10,11 @@ part 'app.g.dart';
 
 const String defaultDescription =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut cursus dui eget turpis mollis fermentum. Donec porta felis imperdiet egestas porttitor.';
+
+enum PlayView {
+  strategy,
+  timed,
+}
 
 enum DeckView {
   deckList,
@@ -52,6 +59,8 @@ class Card {
     this.hero,
     this.description = defaultDescription,
     this.gold = 0,
+    this.active = false,
+    this.purchased = false,
   });
 
   final String name;
@@ -62,6 +71,10 @@ class Card {
 
   String description;
 
+  bool purchased = false;
+
+  bool active = false;
+
   String get heroString => Hero.string(hero);
 }
 
@@ -70,27 +83,31 @@ class Deck {
     cards ??= [];
   }
 
-  final String id;
+  String id;
 
-  final String name;
+  HeroType hero;
 
-  final HeroType hero;
+  String name;
 
   List<String> cards;
 
   String get category => hero != null ? Hero.string(hero) : 'General';
-}
 
-class DeckCard {
-  DeckCard({this.card, this.isPurchased = false, this.isActive = false});
+  Deck.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    hero = Hero.type(json['hero']);
+    cards = ((jsonDecode(json['cards']) ?? []) as Iterable).cast<String>();
+  }
 
-  final Card card;
-
-  final bool isPurchased;
-
-  final bool isActive;
-
-  String get name => card.name;
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'hero': Hero.string(hero),
+      'cards': jsonEncode(cards),
+    };
+  }
 }
 
 class Arena {
@@ -183,50 +200,37 @@ class Hero {
         return Hero.warrior;
     }
 
-    return 'Unknown HeroType';
+    return 'General';
   }
 }
 
-List<String> allPurchases = ['Aphrodite', 'Apollo', 'Hades', 'Zeus'];
+// String decksToJSON(List<Deck> decks) {
+//   jsonEncode(decks);
+// }
+
+// List<Deck> decksFromJSON(String str) {}
 
 List<Achievement> allAchievements = List.generate(11, (i) => i)
     .map<Achievement>((i) => Achievement(name: 'Achievement $i', total: i))
     .toList();
 
 List<Card> allCards = [
-  Card(name: 'Aphrodite'),
-  Card(name: 'Apollo'),
-  Card(name: 'Ares'),
-  Card(name: 'Artemis', hero: HeroType.assassin),
-  Card(name: 'Athena', hero: HeroType.assassin),
-  Card(name: 'Demeter', hero: HeroType.assassin),
-  Card(name: 'Dionysus', hero: HeroType.healer),
-  Card(name: 'Hades', hero: HeroType.healer),
-  Card(name: 'Hephaestus', hero: HeroType.healer),
-  Card(name: 'Hera', hero: HeroType.healer),
-  Card(name: 'Hermes', hero: HeroType.warrior),
-  Card(name: 'Poseidon', hero: HeroType.warrior),
-  Card(name: 'Zeus', hero: HeroType.warrior),
+  Card(name: 'Aphrodite', gold: 10),
+  Card(name: 'Apollo', gold: 50),
+  Card(name: 'Ares', gold: 100),
+  Card(name: 'Artemis', hero: HeroType.assassin, gold: 10),
+  Card(name: 'Athena', hero: HeroType.assassin, gold: 50),
+  Card(name: 'Demeter', hero: HeroType.assassin, gold: 100),
+  Card(name: 'Dionysus', hero: HeroType.healer, gold: 10),
+  Card(name: 'Hades', hero: HeroType.healer, gold: 50),
+  Card(name: 'Hephaestus', hero: HeroType.healer, gold: 100),
+  Card(name: 'Hera', hero: HeroType.healer, gold: 200),
+  Card(name: 'Hermes', hero: HeroType.warrior, gold: 10),
+  Card(name: 'Poseidon', hero: HeroType.warrior, gold: 50),
+  Card(name: 'Zeus', hero: HeroType.warrior, gold: 100),
 ];
 
-List<Deck> myDecks = List.generate(11, (i) => i).map<Deck>((i) {
-  HeroType hero = Hero.random();
-
-  final cards = allCards
-      .where((card) =>
-          rand() &&
-          allPurchases.contains(card.name) &&
-          (card.hero == null || (card.hero == hero)))
-      .map((card) => card.name)
-      .toList();
-
-  return Deck(
-    id: uuid(),
-    name: 'Deck $i',
-    hero: hero,
-    cards: cards,
-  );
-}).toList();
+List<String> allPurchases = ['Aphrodite', 'Apollo', 'Athena', 'Hades', 'Zeus'];
 
 bool rand([int i = 2]) => Random().nextInt(i) == 0;
 
@@ -278,6 +282,42 @@ abstract class _Achievements with Store {
   List<Achievement> achievements = List.from(allAchievements);
 }
 
+class ChestStore = _Chest with _$ChestStore;
+
+abstract class _Chest with Store, SharedPrefs {
+  _Chest() {
+    _init();
+  }
+
+  Future _init() async {
+    setTimestamp((await prefs()).getInt('timestamp') ?? _now());
+
+    Timer.periodic(Duration(seconds: 1), (timer) => timestampNow = _now());
+  }
+
+  int _now() => DateTime.now().millisecondsSinceEpoch;
+
+  @observable
+  int timestampSaved;
+
+  @observable
+  int timestampNow;
+
+  @computed
+  DateTime get saved => DateTime.fromMillisecondsSinceEpoch(timestampSaved);
+
+  @computed
+  DateTime get now => DateTime.fromMillisecondsSinceEpoch(timestampNow);
+
+  @computed
+  Duration get duration => saved.add(Duration(minutes: 30)).difference(now);
+
+  @action
+  Future setTimestamp(int t) async {
+    (await prefs()).setInt('timestamp', timestampSaved = t);
+  }
+}
+
 class NewDeckFormStore = _NewDeckFormStore with _$NewDeckFormStore;
 
 abstract class _NewDeckFormStore with Store {
@@ -298,10 +338,33 @@ abstract class _NewDeckFormStore with Store {
   }
 }
 
+class PlayFormStore = _PlayFormStore with _$PlayFormStore;
+
+abstract class _PlayFormStore with Store {
+  @observable
+  String deckId;
+
+  // @observable
+  // PlayMode mode;
+
+  @action
+  void setDeckId(String id) {
+    deckId = deckId;
+  }
+
+  // @action
+  // void setMode(PlayMode mode) {
+  //   mode = mode;
+  // }
+}
+
 class UIStore = _UIStore with _$UIStore;
 
 abstract class _UIStore with Store {
   NewDeckFormStore newDeckForm = NewDeckFormStore();
+
+  @observable
+  PlayView playView;
 
   @observable
   DeckView deckView = DeckView.deckList;
@@ -314,6 +377,11 @@ abstract class _UIStore with Store {
 
   @observable
   String activeCardId;
+
+  @action
+  void setPlayView(PlayView view) {
+    playView = view;
+  }
 
   @action
   void setDeckView(DeckView view) {
@@ -346,17 +414,25 @@ abstract class _UserStore with Store, SharedPrefs {
   AchievementsStore achievements = AchievementsStore();
 
   void _init() async {
-    setXp((await prefs()).getInt('xp') ?? 1);
+    final p = await prefs();
 
-    setCheckpoint((await prefs()).getInt('checkpoint'));
+    setXp(p.getInt('xp') ?? 1);
 
-    setGold((await prefs()).getInt('gold'));
+    setCheckpoint(p.getInt('checkpoint') ?? 1);
 
-    setArena(Arena.type((await prefs()).getString('arena') ?? Arena.square));
+    setGold(p.getInt('gold') ?? 0);
 
-    setHero(Hero.type((await prefs()).getString('hero') ?? Hero.assassin));
+    setArena(Arena.type(p.getString('arena') ?? Arena.square));
 
-    setPurchases((await prefs()).getStringList('purchases') ?? allPurchases);
+    setHero(Hero.type(p.getString('hero') ?? Hero.assassin));
+
+    setPurchases(p.getStringList('purchases') ?? allPurchases);
+
+    setDecks(
+      ((jsonDecode(p.getString('decks')) ?? []) as Iterable)
+          .map((deck) => Deck.fromJson(deck))
+          .toList(),
+    );
   }
 
   @observable
@@ -401,7 +477,11 @@ abstract class _UserStore with Store, SharedPrefs {
   }
 
   @action
-  Future removeGold(int val) async {
+  Future subtractGold(int val) async {
+    if (val > gold) {
+      throw Error();
+    }
+
     (await prefs()).setInt('gold', gold -= val);
   }
 
@@ -426,54 +506,75 @@ abstract class _UserStore with Store, SharedPrefs {
 
   @action
   Future purchaseCard(String cardId) async {
-    if (!purchases.contains(cardId)) {
-      final card = allCards.firstWhere((card) => card.name == cardId);
+    if (purchases.contains(cardId)) {
+      return;
+    }
 
-      if (card != null && card.gold < gold) {
-        removeGold(card.gold);
+    allCards.forEach((card) {
+      if (card.name == cardId && card.gold <= gold) {
+        subtractGold(card.gold);
         setPurchases(purchases..add(cardId));
       }
-    }
+    });
   }
 
   @action
-  Future addDeck(String name, HeroType hero, UIStore ui) async {
-    final id = uuid();
+  Future setDecks(List<Deck> d) async {
+    (await prefs()).setString('decks', jsonEncode(d));
 
-    decks = decks
-      ..add(Deck(
-        id: id,
-        name: name,
-        hero: hero,
-      ));
+    decks = d;
+  }
 
-    ui.setActiveDeck(id);
+  @action
+  Future addDeck(Deck deck) async {
+    final newDecks = decks..add(deck);
+
+    setDecks(newDecks);
   }
 
   @action
   Future removeDeck(String id) async {
-    final id = uuid();
+    final newDecks = decks..removeWhere((deck) => deck.id == id);
 
-    decks = decks..removeWhere((deck) => deck.id == id);
+    setDecks(newDecks);
   }
 
   @action
-  void toggleCard(String deckId, String cardId) {
-    decks = decks.map((deck) {
-      if (deck.id == deckId) {
-        deck.cards.contains(cardId)
-            ? deck.cards.remove(cardId)
-            : deck.cards.add(cardId);
+  Future renameDeck(String id, String name) async {
+    final newDecks = decks.map((deck) {
+      if (deck.id == id) {
+        deck.name = name;
       }
 
       return deck;
     }).toList();
+
+    setDecks(newDecks);
+  }
+
+  @action
+  void toggleCard(String deckId, String cardId) {
+    final newDecks = decks.map((deck) {
+      if (deck.id == deckId) {
+        if (deck.cards.contains(cardId)) {
+          deck.cards.remove(cardId);
+        } else {
+          deck.cards.add(cardId);
+        }
+      }
+
+      return deck;
+    }).toList();
+
+    setDecks(newDecks);
   }
 }
 
 class AppState = _AppState with _$AppState;
 
 abstract class _AppState with Store {
+  ChestStore chest = ChestStore();
+
   SettingsStore settings = SettingsStore();
 
   UIStore ui = UIStore();
@@ -481,8 +582,10 @@ abstract class _AppState with Store {
   UserStore user = UserStore();
 
   @computed
-  Card get activeCard {
-    return allCards.firstWhere((card) => card.name == ui.activeCardId);
+  List<Card> get cards {
+    return allCards
+        .map((card) => card..purchased = user.purchases.contains(card.name))
+        .toList();
   }
 
   @computed
@@ -490,22 +593,16 @@ abstract class _AppState with Store {
     return user.decks.firstWhere((deck) => deck.id == ui.activeDeckId);
   }
 
-  List<DeckCard> deckCards(
-    Deck deck,
-  ) {
-    return allCards
-        .where((card) => card.hero == null || card.hero == deck.hero)
-        .map(
-          (card) => DeckCard(
-            card: card,
-            isActive: deck.cards.contains(card.name),
-            isPurchased: user.purchases.contains(card.name),
-          ),
-        )
-        .toList()
-          ..sort(
-            (DeckCard a, DeckCard b) =>
-                (a.isPurchased ? 1 : 0).compareTo(b.isPurchased ? 1 : 0),
-          );
+  @computed
+  List<Card> get activeDeckCards {
+    final deck = user.decks.firstWhere((deck) => deck.id == ui.activeDeckId);
+
+    if (deck == null) {
+      return [];
+    }
+
+    return cards
+        .map((card) => card..active = deck.cards.contains(card.name))
+        .toList();
   }
 }

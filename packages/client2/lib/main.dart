@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:client2/ui/card.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
-import 'package:flutter/material.dart' show Colors;
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show Colors, DefaultMaterialLocalizations;
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
@@ -24,6 +24,7 @@ import './ui/play.dart';
 import './ui/settings.dart';
 import './ui/social.dart';
 import './ui/store.dart';
+import './ui/user.dart';
 
 PageRoute splashRoute() {
   return PageRouteBuilder(
@@ -73,6 +74,23 @@ PageRoute modalRoute({Widget Function(BuildContext) builder}) {
   );
 }
 
+PageRoute overlayRoute({Widget Function(BuildContext) builder}) {
+  return PageRouteBuilder(
+    transitionDuration: Duration(milliseconds: 300),
+    opaque: true,
+    barrierColor: Color.fromRGBO(0, 0, 0, 1),
+    pageBuilder: (context, animation, secondaryAnimation) {
+      return builder(context);
+    },
+    transitionsBuilder: (context, animation, second, child) {
+      return FadeTransition(
+        opacity: Tween<double>(begin: 0, end: 1).animate(animation),
+        child: child,
+      );
+    },
+  );
+}
+
 Route generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case "splash":
@@ -89,6 +107,8 @@ Route generateRoute(RouteSettings settings) {
       return modalRoute(builder: (context) => DecksRoute());
     case "/decks/new":
       return modalRoute(builder: (context) => NewDeckRoute());
+    case "/decks/rename":
+      return modalRoute(builder: (context) => RenameDeckRoute());
     case "/decks/detail":
       return modalRoute(builder: (context) => DeckDetailRoute());
     case "/card":
@@ -123,11 +143,17 @@ class App extends StatelessWidget {
       providers: [
         Provider<AppState>.value(value: _appState),
       ],
-      child: WidgetsApp(
-        localizationsDelegates: [DefaultMaterialLocalizations.delegate],
-        onGenerateRoute: generateRoute,
-        initialRoute: "/decks",
-        color: Colors.black,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          WidgetsApp(
+            localizationsDelegates: [DefaultMaterialLocalizations.delegate],
+            onGenerateRoute: generateRoute,
+            initialRoute: "/decks",
+            color: Colors.black,
+          ),
+          User()
+        ],
       ),
     );
   }
@@ -137,10 +163,10 @@ void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
 
   // laptop
-  setWindowFrame(Rect.fromLTWH(400, 100, 411, 731));
+  // setWindowFrame(Rect.fromLTWH(400, 100, 411, 731));
 
   // external
-  // setWindowFrame(Rect.fromLTWH(1500, 200, 411, 731));
+  setWindowFrame(Rect.fromLTWH(1500, 200, 411, 731));
 
   runApp(App());
 }
