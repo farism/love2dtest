@@ -54,7 +54,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-helmet": "5.0.8",
     "@types/styled-components": "4.1.16",
-    "lint-staged": "8.2.1",
+    "lint-staged": "9.5.0",
     "prettier": "1.18.2",
     "rimraf": "2.6.3"
   }
