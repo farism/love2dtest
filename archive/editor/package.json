@@ -28,9 +28,9 @@
     "reset-css": "4.0.1"
   },
   "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
-    "@babel/register": "7.4.4",
+    "@babel/core": "7.25.9",
+    "@babel/preset-env": "7.25.9",
+    "@babel/register": "7.25.9",
     "@types/node-ipc": "9.1.1",
     "@types/webpack": "4.4.32",
     "babel-loader": "8.0.6",
