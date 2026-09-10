@@ -18,7 +18,7 @@
     "chokidar": "3.0.1",
     "fs-extra": "8.0.1",
     "lint-staged": "8.2.1",
-    "love-typescript-definitions": "0.11.2",
+    "love-typescript-definitions": "0.24.3",
     "prettier": "1.18.2",
     "ts-node": "8.3.0",
     "typescript": "3.5.2",
