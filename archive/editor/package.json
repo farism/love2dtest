@@ -22,7 +22,7 @@
     "css-micro-reset": "1.0.0",
     "directory-tree": "2.2.3",
     "electron": "5.0.4",
-    "electron-context-menu": "0.12.1",
+    "electron-context-menu": "0.16.0",
     "node-ipc": "^9.1.1",
     "normalize.css": "8.0.1",
     "reset-css": "4.0.1"
